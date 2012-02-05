@@ -1,4 +1,15 @@
-
+/******************************************************************/
+/**
+ * @file	testApp.h
+ * @brief	Example for ofxKinectNui addon
+ * @note
+ * @todo
+ * @bug	
+ *
+ * @author	sadmb
+ * @date	Oct. 28, 2011
+ */
+/******************************************************************/
 #pragma once
 
 #include "ofxKinectNui.h"
@@ -6,6 +17,8 @@
 #include "ofxKinectNuiPlayer.h"
 #include "ofxKinectNuiRecorder.h"
 
+// uncomment this to read from two kinects simultaneously
+//#define USE_TWO_KINECTS
 
 
 class testApp : public ofBaseApp {

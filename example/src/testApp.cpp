@@ -1,19 +1,31 @@
-
+/******************************************************************/
+/**
+ * @file	testApp.cpp
+ * @brief	Example for ofxKinectNui addon
+ * @note
+ * @todo
+ * @bug	
+ *
+ * @author	sadmb
+ * @date	Oct. 28, 2011
+ */	
+/******************************************************************/
 #include "testApp.h"
 
 //--------------------------------------------------------------
 void testApp::setup() {
 	ofSetLogLevel(OF_LOG_VERBOSE);
+	ofSetFrameRate(60);
+	ofSetVerticalSync(true);
 	
-	kinect.init(false, true, false, true);
+	kinect.init(false, true, false, true); // enable all captures
 	kinect.open();
 
 	kinect.addKinectListener(this, &testApp::kinectPlugged, &testApp::kinectUnplugged);
 	
-	ofSetVerticalSync(true);
-
 	kinectSource = &kinect;
 	angle = kinect.getCurrentAngle();
+	kinect.setAngle(20);
 	bRecord = false;
 	bPlayback = false;
 	bPlugged = kinect.isConnected();
@@ -22,7 +34,7 @@ void testApp::setup() {
 
 	bDrawCalibratedTexture = false;
 
-	ofSetFrameRate(60);
+
 	
 	calibratedTexture.allocate(320, 240, GL_RGB);
 }
@@ -30,27 +42,99 @@ void testApp::setup() {
 //--------------------------------------------------------------
 void testApp::update() {
 	kinectSource->update();
-
+	if(bRecord){
+		kinectRecorder.update();
+	}
 }
 
 //--------------------------------------------------------------
 void testApp::draw() {
-	ofBackground(100, 100, 100);	
-	kinectPlayer.drawDepth(20, 20, 320, 240);	
-	kinectPlayer.drawSkeleton(20, 20, 400*3, 300*3);
+	ofBackground(100, 100, 100);
 
+	ofEnableAlphaBlending();
+		kinect.drawDepth(20, 20, 400, 300);	// draw depth images from kinect depth sensor
+	ofDisableAlphaBlending();
+	
+	//kinect.drawSkeleton(20, 20, 400, 300);	// draw skeleton images on video images
 
+	float x = 20;
+	float y = 20;
+	float w = 400;
+	float h = 300;
 
-	stringstream kinectReport;
-	if(bPlugged && !kinect.isOpened() && !bPlayback){
-		ofSetColor(0, 255, 0);
-		kinectReport << "Kinect is plugged..." << endl;
-		ofDrawBitmapString(kinectReport.str(), 200, 300);
-	}else if(!bPlugged){
-		ofSetColor(255, 0, 0);
-		kinectReport << "Kinect is unplugged..." << endl;
-		ofDrawBitmapString(kinectReport.str(), 200, 300);
+	ofPoint** skeletonPoints = kinect.getSkeletonPoints();
+	if(kinect.grabsSkeleton()){
+		// Get the skeleton data of next frame
+		kinect::nui::SkeletonFrame skeleton = kinect.kinect.Skeleton().GetNextFrame();
+		if(skeleton.IsFoundSkeleton()){
+			skeleton.TransformSmooth();
+			for(int i = 0; i < kinect::nui::SkeletonFrame::SKELETON_COUNT; i++){
+				if( skeleton[i].TrackingState() == NUI_SKELETON_TRACKED){
+					for(int j = 0; j < kinect::nui::SkeletonData::POSITION_COUNT; j++){
+						kinect::nui::SkeletonData::Point p = skeleton[i].TransformSkeletonToDepthImage(j);
+						skeletonPoints[i][j] = ofPoint(p.x, p.y, p.depth);
+					}
+
+					// push skeleton points data into vector in order to get them
+					ofPushMatrix();
+					ofTranslate(x, y + 15); // skeleton is a bit too high
+					ofPushStyle();
+					ofSetColor(255 * (int)pow(-1.0, i + 1), 255 * (int)pow(-1.0, i), 255 * (int)pow(-1.0, i + 1));
+					ofNoFill();
+					ofSetLineWidth(4);
+					// HEAD
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HIP_CENTER], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SPINE], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SPINE], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SHOULDER_CENTER], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SHOULDER_CENTER], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HEAD], w, h));
+		
+					// BODY_LEFT
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SHOULDER_CENTER], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SHOULDER_LEFT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SHOULDER_LEFT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_ELBOW_LEFT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_ELBOW_LEFT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_WRIST_LEFT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_WRIST_LEFT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HAND_LEFT], w, h));
+
+					// BODY_RIGHT
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SHOULDER_CENTER], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SHOULDER_RIGHT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_SHOULDER_RIGHT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_ELBOW_RIGHT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_ELBOW_RIGHT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_WRIST_RIGHT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_WRIST_RIGHT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HAND_RIGHT], w, h));
+		
+					// LEG_LEFT
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HIP_CENTER], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HIP_LEFT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HIP_LEFT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_KNEE_LEFT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_KNEE_LEFT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_ANKLE_LEFT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_ANKLE_LEFT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_FOOT_LEFT], w, h));
+
+					// LEG_RIGHT
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HIP_CENTER], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HIP_RIGHT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_HIP_RIGHT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_KNEE_RIGHT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_KNEE_RIGHT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_ANKLE_RIGHT], w, h));
+					ofLine(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_ANKLE_RIGHT], w, h), kinect.calculateScaledSkeletonPoint(skeletonPoints[i][NUI_SKELETON_POSITION_FOOT_RIGHT], w, h));
+		
+					ofSetColor(255 * (int)pow(-1.0, i + 1), 255 * (int)pow(-1.0, i + 1), 255 * (int)pow(-1.0, i));
+					ofSetLineWidth(0);
+					ofFill();
+					for(int k = 0; k < kinect::nui::SkeletonData::POSITION_COUNT; k++){
+						ofCircle(kinect.calculateScaledSkeletonPoint(skeletonPoints[i][k], w, h), 5);
+					}
+					ofPopStyle();
+					ofPopMatrix();
+
+				}
+			}
+		}
 	}
+
+
+	
+
+
+
+
+
+
+
+	
 
 	// draw instructions
 	ofSetColor(255, 255, 255);
@@ -103,6 +187,7 @@ void testApp::exit() {
 	kinect.removeKinectListener(this);
 	kinectPlayer.close();
 	kinectRecorder.close();
+
 }
 
 //--------------------------------------------------------------

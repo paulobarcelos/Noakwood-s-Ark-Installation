@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
+#include "ofxBox2d.h"
 #include "Player.h"
 
 #define PORT 12345
@@ -23,7 +24,11 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);		
 
-		ofxOscReceiver receiver;
-    
+		ofxOscReceiver receiver;    
         Player * player;
+    
+    ofxBox2d						box2d;			  //	the box2d world
+	vector		<ofxBox2dCircle>	circles;		  //	default box2d circles
+	vector		<ofxBox2dRect>		boxes;			  //	defalut box2d rects
+
 };

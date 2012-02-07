@@ -21,7 +21,7 @@
 #include "ofxOsc.h"
 
 
-#define HOST "192.168.0.12"
+#define HOST "192.168.1.190"
 #define PORT 12345
 
 class testApp : public ofBaseApp {

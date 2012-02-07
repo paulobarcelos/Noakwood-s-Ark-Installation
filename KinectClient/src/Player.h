@@ -2,17 +2,21 @@
 
 #include "ofMain.h"
 #include "ofxOsc.h"
+#include "ofxBox2d.h"
 #define PLAYER_IDLE_COUNT_MAX 10
 
 
 struct Limb {
 	float thickness;
 	float length;
+    float width;
+	float height;
 	ofPoint center;
 	ofPoint origin;
 	ofPoint end;
 	float angle;
 	ofImage texture;
+    ofxBox2dRect body;    
 };
 
 struct RawData {
@@ -42,11 +46,11 @@ struct RawData {
 class Player {
 	public:
 	
-	void setup();    
+	void setup(b2World* world);    
     void update(ofxOscMessage &m);
     void draw();
     
-    void setupLimb(Limb &limb, string imageFile, float lenght, float thickness);
+    void setupLimb(Limb &limb, string imageFile, float lenght, float thickness, float width, float height);
 	void calculateLimb(Limb &limb, ofPoint origin, ofPoint src, ofPoint dst);
 	void drawLimb(Limb &limb);
     
@@ -87,6 +91,8 @@ class Player {
 	Limb hipRightToKneeRight;
 	Limb kneeRightToAnkleRight;
 	Limb ankleRightToFootRight;
+    
+    b2World* world;
 	
 	
 };

@@ -18,11 +18,9 @@ void testApp::setup() {
 	ofSetFrameRate(60);
 	ofSetVerticalSync(true);
 
-	player1Location = ofPoint(0,0);
 	
 	kinect.init(false, true, true, true); // enable all captures
 	kinect.open();
-	player1Location = ofPoint( kinect.getDepthResolutionWidth()/4, kinect.getDepthResolutionHeight()/2);
 
 	player1Target = ofRectangle(0.125f, 0.25f, 0.25f, 0.5f);
 	player2Target = ofRectangle(0.125f * 5.f, 0.25f, 0.25f, 0.5f);
@@ -36,11 +34,6 @@ void testApp::setup() {
 	nearClipping = kinect.getNearClippingDistance();
 	farClipping = kinect.getFarClippingDistance();
 	
-	players = new Player[kinect::nui::SkeletonFrame::SKELETON_COUNT];
-	for(int i = 0; i < kinect::nui::SkeletonFrame::SKELETON_COUNT; i++){
-		players[i].setup();
-	}
-
 	player1SkeletonIndex = -1;
 	player2SkeletonIndex = -1;
 

@@ -51,6 +51,11 @@ void testApp::setup() {
 //--------------------------------------------------------------
 void testApp::update() {
 	kinectSource->update();
+
+	ofxOscMessage m;
+		m.setAddress( "/cu" );
+		m.addFloatArg(5.f);
+		sender.sendMessage(m);
 }
 
 //--------------------------------------------------------------
@@ -415,29 +420,6 @@ void testApp::draw() {
 			sender.sendMessage( player1ActiveMsg );
 		}
 	}
-
-
-
-	
-
-
-
-
-
-
-
-	
-
-	// draw instructions
-	ofSetColor(255, 255, 255);
-	stringstream reportStream;
-	reportStream << " (press: < >), fps: " << ofGetFrameRate() << endl
-				 << "press 'c' to close the stream and 'o' to open it again, stream is: " << kinect.isOpened() << endl
-				 << "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
-				 << "press LEFT and RIGHT to change the far clipping distance: " << farClipping << " mm" << endl
-				 << "press '+' and '-' to change the near clipping distance: " << nearClipping << " mm" << endl;
-				
-	ofDrawBitmapString(reportStream.str(), 20, 652);
 	
 }
 

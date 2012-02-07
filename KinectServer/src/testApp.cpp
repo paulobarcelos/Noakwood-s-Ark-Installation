@@ -166,259 +166,81 @@ void testApp::draw() {
 			}
 		}
 
-		ofxOscMessage player1ActiveMsg;
-		player1ActiveMsg.setAddress( "/player/1/active" );
-		if( player1SkeletonIndex != -1 && skeleton[player1SkeletonIndex].TrackingState() == NUI_SKELETON_TRACKED){
+        int index;
+        
+        // Player 1
+        index = player1SkeletonIndex;
+		ofxOscMessage p1Message;
+		p1Message.setAddress( "/player/1" );
+		if( index != -1 && skeleton[index].TrackingState() == NUI_SKELETON_TRACKED){
 			
-			player1ActiveMsg.addIntArg( 1 );
+			p1Message.addIntArg( 1 );
+            
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_SPINE].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_SPINE].y );
 
-			ofxOscMessage p1spine;
-			p1spine.setAddress( "/player/1/spine" );
-			p1spine.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_SPINE].x );
-			p1spine.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_SPINE].y );
-
-			ofxOscMessage p1shoulderCenter;
-			p1shoulderCenter.setAddress( "/player/1/shoulderCenter" );
-			p1shoulderCenter.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_CENTER].x );
-			p1shoulderCenter.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_CENTER].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_SHOULDER_CENTER].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_SHOULDER_CENTER].y );
 			
-			ofxOscMessage p1hipCenter;
-			p1hipCenter.setAddress( "/player/1/hipCenter" );
-			p1hipCenter.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HIP_CENTER].x );
-			p1hipCenter.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HIP_CENTER].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HIP_CENTER].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HIP_CENTER].y );
 
-			ofxOscMessage p1shoulderLeft;
-			p1shoulderLeft.setAddress( "/player/1/shoulderLeft" );
-			p1shoulderLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_LEFT].x );
-			p1shoulderLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_LEFT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_SHOULDER_LEFT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_SHOULDER_LEFT].y );
 
-			ofxOscMessage p1hipLeft;
-			p1hipLeft.setAddress( "/player/1/hipLeft" );
-			p1hipLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HIP_LEFT].x );
-			p1hipLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HIP_LEFT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HIP_LEFT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HIP_LEFT].y );
 
-			ofxOscMessage p1elbowLeft;
-			p1elbowLeft.setAddress( "/player/1/elbowLeft" );
-			p1elbowLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_ELBOW_LEFT].x );
-			p1elbowLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_ELBOW_LEFT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_ELBOW_LEFT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_ELBOW_LEFT].y );
 
-			ofxOscMessage p1wristLeft;
-			p1wristLeft.setAddress( "/player/1/wristLeft" );
-			p1wristLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_WRIST_LEFT].x );
-			p1wristLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_WRIST_LEFT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_WRIST_LEFT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_WRIST_LEFT].y );
 			
-			ofxOscMessage p1handLeft;
-			p1handLeft.setAddress( "/player/1/handLeft" );
-			p1handLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HAND_LEFT].x );
-			p1handLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HAND_LEFT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HAND_LEFT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HAND_LEFT].y );
 
-			ofxOscMessage p1kneeLeft;
-			p1kneeLeft.setAddress( "/player/1/kneeLeft" );
-			p1kneeLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_KNEE_LEFT].x );
-			p1kneeLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_KNEE_LEFT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_KNEE_LEFT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_KNEE_LEFT].y );
 			
-			ofxOscMessage p1ankleLeft;
-			p1ankleLeft.setAddress( "/player/1/ankleLeft" );
-			p1ankleLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_ANKLE_LEFT].x );
-			p1ankleLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_ANKLE_LEFT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_ANKLE_LEFT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_ANKLE_LEFT].y );
+
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_FOOT_LEFT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_FOOT_LEFT].y );
+
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_SHOULDER_RIGHT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_SHOULDER_RIGHT].y );
+
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HIP_RIGHT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HIP_RIGHT].y );
+
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_ELBOW_RIGHT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_ELBOW_RIGHT].y );
+
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_WRIST_RIGHT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_WRIST_RIGHT].y );
 			
-			ofxOscMessage p1footLeft;
-			p1footLeft.setAddress( "/player/1/footLeft" );
-			p1footLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_FOOT_LEFT].x );
-			p1footLeft.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_FOOT_LEFT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HAND_RIGHT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_HAND_RIGHT].y );
 
-			ofxOscMessage p1shoulderRight;
-			p1shoulderRight.setAddress( "/player/1/shoulderRight" );
-			p1shoulderRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_RIGHT].x );
-			p1shoulderRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_RIGHT].y );
-
-			ofxOscMessage p1hipRight;
-			p1hipRight.setAddress( "/player/1/hipRight" );
-			p1hipRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HIP_RIGHT].x );
-			p1hipRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HIP_RIGHT].y );
-
-			ofxOscMessage p1elbowRight;
-			p1elbowRight.setAddress( "/player/1/elbowRight" );
-			p1elbowRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_ELBOW_RIGHT].x );
-			p1elbowRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_ELBOW_RIGHT].y );
-
-			ofxOscMessage p1wristRight;
-			p1wristRight.setAddress( "/player/1/wristRight" );
-			p1wristRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_WRIST_RIGHT].x );
-			p1wristRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_WRIST_RIGHT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_KNEE_RIGHT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_KNEE_RIGHT].y );
 			
-			ofxOscMessage p1handRight;
-			p1handRight.setAddress( "/player/1/handRight" );
-			p1handRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HAND_RIGHT].x );
-			p1handRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_HAND_RIGHT].y );
-
-			ofxOscMessage p1kneeRight;
-			p1kneeRight.setAddress( "/player/1/kneeRight" );
-			p1kneeRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_KNEE_RIGHT].x );
-			p1kneeRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_KNEE_RIGHT].y );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_ANKLE_RIGHT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_ANKLE_RIGHT].y );
+	
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_FOOT_RIGHT].x );
+			p1Message.addFloatArg( skeletonPoints[index][NUI_SKELETON_POSITION_FOOT_RIGHT].y );		
 			
-			ofxOscMessage p1ankleRight;
-			p1ankleRight.setAddress( "/player/1/ankleRight" );
-			p1ankleRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_ANKLE_RIGHT].x );
-			p1ankleRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_ANKLE_RIGHT].y );
-			
-			ofxOscMessage p1footRight;
-			p1footRight.setAddress( "/player/1/footRight" );
-			p1footRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_FOOT_RIGHT].x );
-			p1footRight.addFloatArg( skeletonPoints[player1SkeletonIndex][NUI_SKELETON_POSITION_FOOT_RIGHT].y );
-
-
-			sender.sendMessage(player1ActiveMsg);
-			sender.sendMessage(p1spine);
-			sender.sendMessage(p1hipCenter);
-			sender.sendMessage(p1shoulderLeft);
-			sender.sendMessage(p1elbowLeft);
-			sender.sendMessage(p1wristLeft);
-			sender.sendMessage(p1handLeft);
-			sender.sendMessage(p1hipLeft);
-			sender.sendMessage(p1kneeLeft);
-			sender.sendMessage(p1ankleLeft);
-			sender.sendMessage(p1footLeft);
-			sender.sendMessage(p1shoulderRight);
-			sender.sendMessage(p1elbowRight);
-			sender.sendMessage(p1wristRight);
-			sender.sendMessage(p1handRight);
-			sender.sendMessage(p1hipRight);
-			sender.sendMessage(p1kneeRight);
-			sender.sendMessage(p1ankleRight);
-			sender.sendMessage(p1footRight);
 		}
 		else{
-			player1ActiveMsg.addIntArg( 0 );
-			sender.sendMessage( player1ActiveMsg );
+			p1Message.addIntArg( 0 );
 		}
+        
+        sender.sendMessage(p1Message);
 
-		ofxOscMessage player2ActiveMsg;
-		player2ActiveMsg.setAddress( "/player/2/active" );
-		if( player2SkeletonIndex != -1 && skeleton[player2SkeletonIndex].TrackingState() == NUI_SKELETON_TRACKED){
-			
-			player2ActiveMsg.addIntArg( 1 );
-
-			ofxOscMessage p2spine;
-			p2spine.setAddress( "/player/2/spine" );
-			p2spine.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_SPINE].x );
-			p2spine.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_SPINE].y );
-
-			ofxOscMessage p2shoulderCenter;
-			p2shoulderCenter.setAddress( "/player/2/shoulderCenter" );
-			p2shoulderCenter.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_CENTER].x );
-			p2shoulderCenter.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_CENTER].y );
-			
-			ofxOscMessage p2hipCenter;
-			p2hipCenter.setAddress( "/player/2/hipCenter" );
-			p2hipCenter.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HIP_CENTER].x );
-			p2hipCenter.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HIP_CENTER].y );
-
-			ofxOscMessage p2shoulderLeft;
-			p2shoulderLeft.setAddress( "/player/2/shoulderLeft" );
-			p2shoulderLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_LEFT].x );
-			p2shoulderLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_LEFT].y );
-
-			ofxOscMessage p2hipLeft;
-			p2hipLeft.setAddress( "/player/2/hipLeft" );
-			p2hipLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HIP_LEFT].x );
-			p2hipLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HIP_LEFT].y );
-
-			ofxOscMessage p2elbowLeft;
-			p2elbowLeft.setAddress( "/player/2/elbowLeft" );
-			p2elbowLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_ELBOW_LEFT].x );
-			p2elbowLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_ELBOW_LEFT].y );
-
-			ofxOscMessage p2wristLeft;
-			p2wristLeft.setAddress( "/player/2/wristLeft" );
-			p2wristLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_WRIST_LEFT].x );
-			p2wristLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_WRIST_LEFT].y );
-			
-			ofxOscMessage p2handLeft;
-			p2handLeft.setAddress( "/player/2/handLeft" );
-			p2handLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HAND_LEFT].x );
-			p2handLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HAND_LEFT].y );
-
-			ofxOscMessage p2kneeLeft;
-			p2kneeLeft.setAddress( "/player/2/kneeLeft" );
-			p2kneeLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_KNEE_LEFT].x );
-			p2kneeLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_KNEE_LEFT].y );
-			
-			ofxOscMessage p2ankleLeft;
-			p2ankleLeft.setAddress( "/player/2/ankleLeft" );
-			p2ankleLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_ANKLE_LEFT].x );
-			p2ankleLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_ANKLE_LEFT].y );
-			
-			ofxOscMessage p2footLeft;
-			p2footLeft.setAddress( "/player/2/footLeft" );
-			p2footLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_FOOT_LEFT].x );
-			p2footLeft.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_FOOT_LEFT].y );
-
-			ofxOscMessage p2shoulderRight;
-			p2shoulderRight.setAddress( "/player/2/shoulderRight" );
-			p2shoulderRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_RIGHT].x );
-			p2shoulderRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_SHOULDER_RIGHT].y );
-
-			ofxOscMessage p2hipRight;
-			p2hipRight.setAddress( "/player/2/hipRight" );
-			p2hipRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HIP_RIGHT].x );
-			p2hipRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HIP_RIGHT].y );
-
-			ofxOscMessage p2elbowRight;
-			p2elbowRight.setAddress( "/player/2/elbowRight" );
-			p2elbowRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_ELBOW_RIGHT].x );
-			p2elbowRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_ELBOW_RIGHT].y );
-
-			ofxOscMessage p2wristRight;
-			p2wristRight.setAddress( "/player/2/wristRight" );
-			p2wristRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_WRIST_RIGHT].x );
-			p2wristRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_WRIST_RIGHT].y );
-			
-			ofxOscMessage p2handRight;
-			p2handRight.setAddress( "/player/2/handRight" );
-			p2handRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HAND_RIGHT].x );
-			p2handRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_HAND_RIGHT].y );
-
-			ofxOscMessage p2kneeRight;
-			p2kneeRight.setAddress( "/player/2/kneeRight" );
-			p2kneeRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_KNEE_RIGHT].x );
-			p2kneeRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_KNEE_RIGHT].y );
-			
-			ofxOscMessage p2ankleRight;
-			p2ankleRight.setAddress( "/player/2/ankleRight" );
-			p2ankleRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_ANKLE_RIGHT].x );
-			p2ankleRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_ANKLE_RIGHT].y );
-			
-			ofxOscMessage p2footRight;
-			p2footRight.setAddress( "/player/2/footRight" );
-			p2footRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_FOOT_RIGHT].x );
-			p2footRight.addFloatArg( skeletonPoints[player2SkeletonIndex][NUI_SKELETON_POSITION_FOOT_RIGHT].y );
-
-
-			sender.sendMessage(player2ActiveMsg);
-			sender.sendMessage(p2spine);
-			sender.sendMessage(p2hipCenter);
-			sender.sendMessage(p2shoulderLeft);
-			sender.sendMessage(p2elbowLeft);
-			sender.sendMessage(p2wristLeft);
-			sender.sendMessage(p2handLeft);
-			sender.sendMessage(p2hipLeft);
-			sender.sendMessage(p2kneeLeft);
-			sender.sendMessage(p2ankleLeft);
-			sender.sendMessage(p2footLeft);
-			sender.sendMessage(p2shoulderRight);
-			sender.sendMessage(p2elbowRight);
-			sender.sendMessage(p2wristRight);
-			sender.sendMessage(p2handRight);
-			sender.sendMessage(p2hipRight);
-			sender.sendMessage(p2kneeRight);
-			sender.sendMessage(p2ankleRight);
-			sender.sendMessage(p2footRight);
-		}
-		else{
-			player1ActiveMsg.addIntArg( 0 );
-			sender.sendMessage( player1ActiveMsg );
-		}
+	
 	}
 	
 }

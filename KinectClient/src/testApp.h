@@ -4,9 +4,7 @@
 #include "ofxOsc.h"
 #include "Player.h"
 
-// listen on port 12345
 #define PORT 12345
-#define NUM_MSG_STRINGS 20
 
 class testApp : public ofBaseApp{
 	public:
@@ -25,7 +23,7 @@ class testApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);		
 
-		ofxOscReceiver	receiver;
+		ofxOscReceiver receiver;
     
-        Player * player1;
+        Player * player;
 };

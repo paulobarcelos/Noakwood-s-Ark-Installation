@@ -1,6 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxOsc.h"
+#define PLAYER_IDLE_COUNT_MAX 10
+
 
 struct Limb {
 	float thickness;
@@ -12,12 +15,53 @@ struct Limb {
 	ofImage texture;
 };
 
+struct RawData {
+    ofPoint spine;
+    ofPoint head;
+    ofPoint shoulderCenter;
+    ofPoint hipCenter;
+    ofPoint shoulderLeft;
+    ofPoint elbowLeft;
+    ofPoint wristLeft;
+    ofPoint handLeft;
+    ofPoint hipLeft;
+    ofPoint kneeLeft;
+    ofPoint ankleLeft;
+    ofPoint footLeft;
+    ofPoint shoulderRight;
+    ofPoint elbowRight;
+    ofPoint wristRight;
+    ofPoint handRight;
+    ofPoint hipRight;
+    ofPoint kneeRight;
+    ofPoint ankleRight;
+    ofPoint footRight;
+    ofPoint targetOffset;    
+};
 
 class Player {
 	public:
 	
-	void setup();
-
+	void setup();    
+    void update(ofxOscMessage &m);
+    void draw();
+    
+    void setupLimb(Limb &limb, string imageFile, float lenght, float thickness);
+	void calculateLimb(Limb &limb, ofPoint origin, ofPoint src, ofPoint dst);
+	void drawLimb(Limb &limb);
+    
+    void flagIdle();
+    void flagActive();
+    
+    bool active;
+    int idleCount;
+    
+    RawData data;
+    
+    ofPoint movingLimit;
+    
+    ofPoint position;
+    
 	Limb spineToShoulderCenter;
 	Limb spineToHipCenter;
 
@@ -44,7 +88,5 @@ class Player {
 	Limb kneeRightToAnkleRight;
 	Limb ankleRightToFootRight;
 	
-	void setupLimb(Limb &limb, string imageFile, float lenght, float thickness);
-	void calculateLimb(Limb &limb, ofPoint origin, ofPoint src, ofPoint dst);
-	void drawLimb(Limb &limb);
+	
 };

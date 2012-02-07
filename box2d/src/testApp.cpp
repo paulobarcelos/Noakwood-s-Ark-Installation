@@ -8,14 +8,14 @@ void testApp::setup() {
 	ofSetVerticalSync(true);
 	
 	// Box2d
-	box2d.init();
-	box2d.setGravity(0, 20);
+	//box2d.init();
+	/*box2d.setGravity(0, 20);
 	box2d.createGround();
-	box2d.setFPS(30.0);
+	box2d.setFPS(30.0);*/
 	
 	
 	// load the lines we saved...
-	ifstream f;
+	/*ifstream f;
 	f.open(ofToDataPath("lines.txt").c_str());
 	vector <string> strLines;
 	while (!f.eof()) {
@@ -40,26 +40,26 @@ void testApp::setup() {
 			polyLines.push_back(poly);
 		}
 	}
-	
+	*/
 }
 
 //--------------------------------------------------------------
 void testApp::update() {
 	
 	// add some circles every so often
-	if((int)ofRandom(0, 10) == 0) {
+/*	if((int)ofRandom(0, 10) == 0) {
 		ofxBox2dCircle c;
 		c.setPhysics(1, 0.5, 0.1);
 		c.setup(box2d.getWorld(), ofRandom(20, 50), -20, ofRandom(3, 10));
 		circles.push_back(c);		
 	}
 	
-	box2d.update();	
+	box2d.update();	*/
 }
 
 //--------------------------------------------------------------
 void testApp::draw() {
-	
+	/*
 	
 	// some circles :)
 	for (int i=0; i<circles.size(); i++) {
@@ -82,7 +82,7 @@ void testApp::draw() {
 	info += "Press c to clear everything\n";
 	
 	ofSetHexColor(0x444342);
-	ofDrawBitmapString(info, 10, 15);
+	ofDrawBitmapString(info, 10, 15);*/
 }
 
 

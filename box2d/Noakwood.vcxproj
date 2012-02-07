@@ -151,7 +151,6 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2PulleyJoint.cpp" />
     <ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2RevoluteJoint.cpp" />
     <ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
-    <ClCompile Include="..\..\..\addons\ofxBox2d\libs\triangle\del_impl.cpp" />
     <ClCompile Include="..\..\..\addons\ofxBox2d\src\ofxBox2d.cpp" />
     <ClCompile Include="..\..\..\addons\ofxBox2d\src\ofxBox2dBaseShape.cpp" />
     <ClCompile Include="..\..\..\addons\ofxBox2d\src\ofxBox2dCircle.cpp" />
@@ -204,11 +203,6 @@ if not exist "$(ProjectDir)\bin\data" mkdir  "$(ProjectDir)\bin\data"
     <ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2PulleyJoint.h" />
     <ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2RevoluteJoint.h" />
     <ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Dynamics\Joints\b2WeldJoint.h" />
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\assert.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\del_interface.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\dpoint.hpp" />
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\triangle.h" />
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\triangle_impl.hpp" />
     <ClInclude Include="..\..\..\addons\ofxBox2d\src\ofxBox2d.h" />
     <ClInclude Include="..\..\..\addons\ofxBox2d\src\ofxBox2dBaseShape.h" />
     <ClInclude Include="..\..\..\addons\ofxBox2d\src\ofxBox2dCircle.h" />

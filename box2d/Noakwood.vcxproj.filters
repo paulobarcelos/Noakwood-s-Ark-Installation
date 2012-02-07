@@ -25,9 +25,6 @@
     <ClCompile Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.cpp">
       <Filter>addons\ofxXmlSettings\src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\addons\ofxBox2d\libs\triangle\del_impl.cpp">
-      <Filter>addons\ofxBox2d\libs\triangle</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\addons\ofxBox2d\libs\Box2D\Collision\b2BroadPhase.cpp">
       <Filter>addons\ofxBox2d\libs\Box2D\Collision</Filter>
     </ClCompile>
@@ -189,9 +186,6 @@
     <Filter Include="addons\ofxBox2d\src">
       <UniqueIdentifier>{42cbd10a-d044-4e2f-acd1-1484ea1ad355}</UniqueIdentifier>
     </Filter>
-    <Filter Include="addons\ofxBox2d\libs\triangle">
-      <UniqueIdentifier>{ceac3183-b1b6-4481-9bce-17d81cd63e9b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="addons\ofxBox2d\libs\Box2D">
       <UniqueIdentifier>{01f5c9dc-903d-409a-8b21-3f324a25e1f3}</UniqueIdentifier>
     </Filter>
@@ -229,21 +223,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxXmlSettings\src\ofxXmlSettings.h">
       <Filter>addons\ofxXmlSettings\src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\triangle_impl.hpp">
-      <Filter>addons\ofxBox2d\libs\triangle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\assert.hpp">
-      <Filter>addons\ofxBox2d\libs\triangle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\del_interface.hpp">
-      <Filter>addons\ofxBox2d\libs\triangle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\dpoint.hpp">
-      <Filter>addons\ofxBox2d\libs\triangle</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\addons\ofxBox2d\libs\triangle\triangle.h">
-      <Filter>addons\ofxBox2d\libs\triangle</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\addons\ofxBox2d\libs\Box2D\Box2D.h">
       <Filter>addons\ofxBox2d\libs\Box2D</Filter>

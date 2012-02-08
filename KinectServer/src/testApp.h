@@ -16,7 +16,6 @@
 #include "ofMain.h"
 #include "ofxKinectNuiPlayer.h"
 #include "ofxKinectNuiRecorder.h"
-#include "Player.h"
 
 #include "ofxOsc.h"
 
@@ -46,10 +45,6 @@ class testApp : public ofBaseApp {
 		ofxKinectNui kinect;
 		ofxBase3DVideo* kinectSource;
 
-		Player * players;
-		ofPoint player1Location;
-		ofPoint player2Location;
-
 		ofRectangle player1Target;
 		ofRectangle player2Target;
 
@@ -66,7 +61,4 @@ class testApp : public ofBaseApp {
 		int mRotationX, mRotationY;
 
 		ofxOscSender sender;
-
-
-		ofImage test;
 };

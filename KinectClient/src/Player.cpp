@@ -34,7 +34,7 @@ void Player::setup(b2World* world) {
 	setupLimb(kneeRightToAnkleRight, "image.png", 80.f, 20.f, 80.f, 20.f );
 	setupLimb(ankleRightToFootRight, "image.png", 60.f, 20.f, 60.f, 20.f );
     
-    movingLimit.set( 600, hipLeftToKneeLeft.length + kneeLeftToAnkleLeft.length );
+    movingLimit.set( 600, (hipLeftToKneeLeft.length + kneeLeftToAnkleLeft.length) * 2 );
 
 }
 
@@ -47,12 +47,12 @@ void Player::setupLimb(Limb &limb, string imageFile, float lenght, float thickne
 	limb.height = height;
     
     limb.body.fixture.filter.groupIndex = -1;
-    limb.body.setPhysics(3.0, 0.53, 0.1);
-    limb.body.setup(world, limb.center.x, limb.center.y, limb.width, limb.height);
+    limb.body.setPhysics(0, 0.3, 0.9);
+    limb.body.setup(world, limb.center.x, limb.center.y, limb.width/2, limb.height/2);
     
 }
 
-void Player::update(ofxOscMessage &m){
+void Player::setData(ofxOscMessage &m){
     
     if( m.getArgAsInt32( 0 ) == 1 ){
         flagActive();
@@ -129,8 +129,7 @@ void Player::update(ofxOscMessage &m){
         
         calculateLimb(hipRightToKneeRight, hipCenterToHipRight.end, data.hipRight, data.kneeRight);
         calculateLimb(kneeRightToAnkleRight, hipRightToKneeRight.end, data.kneeRight, data.ankleRight);
-        calculateLimb(ankleRightToFootRight, kneeRightToAnkleRight.end, data.ankleRight, data.footRight);
-        
+        calculateLimb(ankleRightToFootRight, kneeRightToAnkleRight.end, data.ankleRight, data.footRight);       
     }
     else{
         flagIdle();
@@ -143,10 +142,41 @@ void Player::calculateLimb( Limb &limb, ofPoint origin, ofPoint src, ofPoint dst
 	limb.angle = atan2(diff.y, diff.x) * RAD_TO_DEG + 90;
 	limb.end = ofPoint(0, limb.length).getRotated(0,0,limb.angle);
 	limb.end += origin; 
-	limb.center = limb.origin.middle(limb.end);    
-    limb.body.setPosition(limb.center);
-    //limb.body.body->SetTransform(limb.body.body->GetPosition(), limb.angle * DEG_TO_RAD);
+	limb.center = limb.origin.middle(limb.end);
+}
+
+void Player::update(){
+    updateLimb(spineToShoulderCenter);
+    updateLimb(spineToHipCenter);
     
+    updateLimb(hipCenterToHipLeft);
+    updateLimb(hipCenterToHipRight);
+    
+    updateLimb(shoulderCenterToHead);
+    updateLimb(shoulderCenterToShoulderLeft);
+    updateLimb(shoulderCenterToShoulderRight);
+    
+    updateLimb(shoulderLeftToElbowLeft);
+    updateLimb(elbowLeftToWristLeft);
+    updateLimb(wristLeftToHandLeft);
+    
+    updateLimb(shoulderRightToElbowRight);
+    updateLimb(elbowRightToWristRight);
+    updateLimb(wristRightToHandRight);
+    
+    updateLimb(hipLeftToKneeLeft);
+    updateLimb(kneeLeftToAnkleLeft);
+    updateLimb(ankleLeftToFootLeft);
+    
+    updateLimb(hipRightToKneeRight);
+    updateLimb(kneeRightToAnkleRight);
+    updateLimb(ankleRightToFootRight);
+}
+
+void Player::updateLimb( Limb &limb ){
+	limb.body.setPosition(limb.center);
+    limb.body.body->SetTransform(limb.body.body->GetPosition(), (limb.angle - 90) * DEG_TO_RAD);
+   // limb.body.body->ApplyForce( limb.body.body->GetMass() * - world->GetGravity(), limb.body.body->GetWorldCenter() );
 }
 
 void Player::draw(){
@@ -190,7 +220,7 @@ void Player::drawLimb (Limb &limb){
 		ofSetColor(255);
 		ofPushMatrix();						
 			ofTranslate(limb.center);
-			ofRotate(limb.angle - 90);					
+			ofRotate(limb.angle -90);					
 			limb.texture.draw(0,0, limb.width, limb.height);
 		ofPopMatrix();
 	ofPopStyle();

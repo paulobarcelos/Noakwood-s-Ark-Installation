@@ -47,7 +47,9 @@ class Player {
 	public:
 	
 	void setup(b2World* world);    
-    void update(ofxOscMessage &m);
+    void setData(ofxOscMessage &m);
+    void update();
+    void updateLimb(Limb &limb);
     void draw();
     
     void setupLimb(Limb &limb, string imageFile, float lenght, float thickness, float width, float height);

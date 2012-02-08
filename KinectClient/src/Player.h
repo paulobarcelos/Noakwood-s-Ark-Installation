@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxBox2d.h"
-#define PLAYER_IDLE_COUNT_MAX 10
+#define PLAYER_IDLE_COUNT_MAX 20
 
 
 struct Limb {
@@ -42,17 +42,70 @@ struct RawData {
     ofPoint footRight;
     ofPoint targetOffset;    
 };
+struct LimbSkin {
+    void set(string textureFile, float horizontalOffset = 0, float verticalOffset = 0){
+        ofImage temp;
+        temp.loadImage(textureFile);
+        this->width = temp.getHeight();
+        this->height = temp.getWidth();
+        this->thickness = this->height - verticalOffset;
+        this->length = this->width - horizontalOffset;
+        this->textureFile = textureFile;
+    };
+    void set(string textureFile, float width, float height, float boneWidth, float boneHeight){
+        ofImage temp;
+        this->width = height;
+        this->height = width;
+        this->thickness = boneWidth;
+        this->length = boneHeight;
+        this->textureFile = textureFile;
+    };
+    float thickness;
+	float length;
+    float width;
+	float height;
+    string textureFile;
+};
+struct PlayerSkin {    
+    LimbSkin spineToShoulderCenter;
+	LimbSkin spineToHipCenter;
+    
+	LimbSkin hipCenterToHipLeft;
+	LimbSkin hipCenterToHipRight;
+    
+	LimbSkin shoulderCenterToHead;
+	LimbSkin shoulderCenterToShoulderLeft;
+	LimbSkin shoulderCenterToShoulderRight;
+    
+	LimbSkin shoulderLeftToElbowLeft;
+	LimbSkin elbowLeftToWristLeft;
+	LimbSkin wristLeftToHandLeft;
+    
+	LimbSkin shoulderRightToElbowRight;
+	LimbSkin elbowRightToWristRight;
+	LimbSkin wristRightToHandRight;
+    
+	LimbSkin hipLeftToKneeLeft;
+	LimbSkin kneeLeftToAnkleLeft;
+	LimbSkin ankleLeftToFootLeft;
+    
+	LimbSkin hipRightToKneeRight;
+	LimbSkin kneeRightToAnkleRight;
+	LimbSkin ankleRightToFootRight;
+    
+    ofPoint movingLimit;
+};
 
 class Player {
 	public:
 	
-	void setup(b2World* world);    
+	void setup(b2World* world, PlayerSkin skin);    
     void setData(ofxOscMessage &m);
     void update();
     void updateLimb(Limb &limb);
     void draw();
     
-    void setupLimb(Limb &limb, string imageFile, float lenght, float thickness, float width, float height);
+    void setupLimb(Limb &limb, LimbSkin skin);
 	void calculateLimb(Limb &limb, ofPoint origin, ofPoint src, ofPoint dst);
 	void drawLimb(Limb &limb);
     

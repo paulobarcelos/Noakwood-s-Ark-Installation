@@ -25,11 +25,10 @@ class testApp : public ofBaseApp{
 		void gotMessage(ofMessage msg);		
 
 		ofxOscReceiver receiver;    
-        Player * player;
+        Player * player1;
+        Player * player2;
     
-    ofxBox2d						box2d;			  //	the box2d world
-	vector		<ofxBox2dCircle>	circles;		  //	default box2d circles
-	vector		<ofxBox2dRect>		boxes;			  //	defalut box2d rects
-    
-    ofxBox2dRect test; 
+    ofxBox2d box2d;
+	vector <ofxBox2dCircle>	circles;
+
 };

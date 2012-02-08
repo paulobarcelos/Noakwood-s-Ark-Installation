@@ -2,54 +2,52 @@
 #include "Player.h"
 
 //--------------------------------------------------------------
-void Player::setup(b2World* world) {
+void Player::setup(b2World* world, PlayerSkin skin) {
     this->world = world;
     
     active = false;
     idleCount = 0;    
     
-	setupLimb(spineToShoulderCenter, "image.png", 150.f, 100.f, 150.f, 100.f  );
-	setupLimb(spineToHipCenter, "image.png", 40.f, 40.f, 40.f, 40.f );
+	setupLimb(spineToShoulderCenter, skin.spineToShoulderCenter);
+	setupLimb(spineToHipCenter, skin.spineToHipCenter);
 
-	setupLimb(hipCenterToHipLeft, "image.png", 50.f, 20.f, 50.f, 20.f );
-	setupLimb(hipCenterToHipRight, "image.png", 50.f, 20.f, 50.f, 20.f  );
+	setupLimb(hipCenterToHipLeft, skin.hipCenterToHipLeft);
+	setupLimb(hipCenterToHipRight, skin.hipCenterToHipRight);
 
-	setupLimb(shoulderCenterToHead, "image.png", 40.f, 40.f, 40.f, 40.f );
-	setupLimb(shoulderCenterToShoulderLeft, "image.png", 40.f, 20.f, 40.f, 20.f );
-	setupLimb(shoulderCenterToShoulderRight, "image.png", 40.f, 20.f, 40.f, 20.f );
+	setupLimb(shoulderCenterToHead, skin.shoulderCenterToHead);
+	setupLimb(shoulderCenterToShoulderLeft, skin.shoulderCenterToShoulderLeft);
+	setupLimb(shoulderCenterToShoulderRight, skin.shoulderCenterToShoulderRight);
 
-	setupLimb(shoulderLeftToElbowLeft, "image.png", 100.f, 20.f , 100.f, 20.f );
-	setupLimb(elbowLeftToWristLeft, "image.png", 80.f, 20.f, 80.f, 20.f );
-	setupLimb(wristLeftToHandLeft, "image.png", 50.f, 20.f , 50.f, 20.f );
+	setupLimb(shoulderLeftToElbowLeft, skin.shoulderLeftToElbowLeft);
+	setupLimb(elbowLeftToWristLeft, skin.elbowLeftToWristLeft);
+	setupLimb(wristLeftToHandLeft, skin.wristLeftToHandLeft);
 
-	setupLimb(shoulderRightToElbowRight, "image.png", 100.f, 20.f, 100.f, 20.f );
-	setupLimb(elbowRightToWristRight, "image.png", 80.f, 20.f, 80.f, 20.f );
-	setupLimb(wristRightToHandRight, "image.png", 50.f, 20.f , 50.f, 20.f );
+	setupLimb(shoulderRightToElbowRight, skin.shoulderRightToElbowRight);
+	setupLimb(elbowRightToWristRight, skin.elbowRightToWristRight);
+	setupLimb(wristRightToHandRight, skin.wristRightToHandRight);
 
-	setupLimb(hipLeftToKneeLeft, "image.png", 100.f, 20.f , 100.f, 20.f );
-	setupLimb(kneeLeftToAnkleLeft, "image.png", 80.f, 20.f, 80.f, 20.f );
-	setupLimb(ankleLeftToFootLeft, "image.png", 60.f, 20.f , 60.f, 20.f );
+	setupLimb(hipLeftToKneeLeft, skin.hipLeftToKneeLeft);
+	setupLimb(kneeLeftToAnkleLeft, skin.kneeLeftToAnkleLeft);
+	setupLimb(ankleLeftToFootLeft, skin.ankleLeftToFootLeft);
 
-	setupLimb(hipRightToKneeRight, "image.png", 100.f, 20.f, 100.f, 20.f );
-	setupLimb(kneeRightToAnkleRight, "image.png", 80.f, 20.f, 80.f, 20.f );
-	setupLimb(ankleRightToFootRight, "image.png", 60.f, 20.f, 60.f, 20.f );
+	setupLimb(hipRightToKneeRight, skin.hipRightToKneeRight);
+	setupLimb(kneeRightToAnkleRight, skin.kneeRightToAnkleRight);
+	setupLimb(ankleRightToFootRight, skin.ankleRightToFootRight);
     
-    movingLimit.set( 600, (hipLeftToKneeLeft.length + kneeLeftToAnkleLeft.length) * 2 );
-
+    movingLimit = skin.movingLimit;
 }
 
-void Player::setupLimb(Limb &limb, string imageFile, float lenght, float thickness, float width, float height){
-	limb.texture.loadImage(imageFile);
+void Player::setupLimb(Limb &limb, LimbSkin skin){
+	limb.texture.loadImage(skin.textureFile);
 	limb.texture.setAnchorPercent(0.5,0.5);
-	limb.thickness = thickness;
-	limb.length = lenght;
-    limb.width = width;
-	limb.height = height;
+	limb.thickness = skin.thickness;
+	limb.length = skin.length;
+    limb.width = skin.width;
+	limb.height = skin.height;
     
     limb.body.fixture.filter.groupIndex = -1;
     limb.body.setPhysics(0, 0.3, 0.9);
-    limb.body.setup(world, limb.center.x, limb.center.y, limb.width/2, limb.height/2);
-    
+    limb.body.setup(world, limb.center.x, limb.center.y, limb.length/2, limb.thickness/2);    
 }
 
 void Player::setData(ofxOscMessage &m){
@@ -115,19 +113,19 @@ void Player::setData(ofxOscMessage &m){
         calculateLimb(shoulderCenterToShoulderLeft, spineToShoulderCenter.end, data.shoulderCenter, data.shoulderLeft);
         calculateLimb(shoulderCenterToShoulderRight, spineToShoulderCenter.end, data.shoulderCenter, data.shoulderRight);
         
-        calculateLimb(shoulderLeftToElbowLeft, shoulderCenterToShoulderLeft.end, data.shoulderLeft, data.elbowLeft);
+        calculateLimb(shoulderLeftToElbowLeft, ofPoint(shoulderCenterToShoulderLeft.end.x, shoulderCenterToShoulderLeft.origin.y), data.shoulderLeft, data.elbowLeft);
         calculateLimb(elbowLeftToWristLeft, shoulderLeftToElbowLeft.end, data.elbowLeft, data.wristLeft);
         calculateLimb(wristLeftToHandLeft, elbowLeftToWristLeft.end, data.wristLeft, data.handLeft);
         
-        calculateLimb(shoulderRightToElbowRight, shoulderCenterToShoulderRight.end, data.shoulderRight, data.elbowRight);
+        calculateLimb(shoulderRightToElbowRight, ofPoint(shoulderCenterToShoulderRight.end.x, shoulderCenterToShoulderRight.origin.y), data.shoulderRight, data.elbowRight);
         calculateLimb(elbowRightToWristRight, shoulderRightToElbowRight.end, data.elbowRight, data.wristRight);
         calculateLimb(wristRightToHandRight, elbowRightToWristRight.end, data.wristRight, data.handRight);
         
-        calculateLimb(hipLeftToKneeLeft, hipCenterToHipLeft.end, data.hipLeft, data.kneeLeft);
+        calculateLimb(hipLeftToKneeLeft, ofPoint(hipCenterToHipLeft.end.x, hipCenterToHipLeft.origin.y), data.hipLeft, data.kneeLeft);
         calculateLimb(kneeLeftToAnkleLeft, hipLeftToKneeLeft.end, data.kneeLeft, data.ankleLeft);
         calculateLimb(ankleLeftToFootLeft, kneeLeftToAnkleLeft.end, data.ankleLeft, data.footLeft);
         
-        calculateLimb(hipRightToKneeRight, hipCenterToHipRight.end, data.hipRight, data.kneeRight);
+        calculateLimb(hipRightToKneeRight,  ofPoint(hipCenterToHipRight.end.x, hipCenterToHipRight.origin.y), data.hipRight, data.kneeRight);
         calculateLimb(kneeRightToAnkleRight, hipRightToKneeRight.end, data.kneeRight, data.ankleRight);
         calculateLimb(ankleRightToFootRight, kneeRightToAnkleRight.end, data.ankleRight, data.footRight);       
     }
@@ -220,15 +218,15 @@ void Player::drawLimb (Limb &limb){
 		ofSetColor(255);
 		ofPushMatrix();						
 			ofTranslate(limb.center);
-			ofRotate(limb.angle -90);					
-			limb.texture.draw(0,0, limb.width, limb.height);
+			ofRotate(limb.angle+180);					
+			limb.texture.draw(0,0, limb.height,limb.width);
 		ofPopMatrix();
 	ofPopStyle();
     
     ofPushMatrix();	
     ofPushStyle();
-        ofSetColor(255,0,0);
-        limb.body.draw();
+        ofSetColor(255,0,0, 100);
+        //limb.body.draw();
     ofPopStyle();
     ofPopMatrix();
 }

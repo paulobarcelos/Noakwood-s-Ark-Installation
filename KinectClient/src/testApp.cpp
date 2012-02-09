@@ -57,6 +57,8 @@ void testApp::setup(){
     game1->setup(box2d.getWorld(), player1);
     game1->position.x = w/2;
     game1->position.y = h*0.65;
+    ofAddListener(box2d.contactStartEvents, game1, &PlayerGame::contactStart);
+    ofAddListener(box2d.contactEndEvents, game1, &PlayerGame::contactEnd);
     
     // Create a lot of particles
     for (int i = 0; i < 500; i++) {
@@ -65,8 +67,17 @@ void testApp::setup(){
         circle.setPhysics(100, 0.3, 0);
         circle.setup(box2d.getWorld(), ofRandom(0, w), h, r);
         circles.push_back(circle);
+        
+        circle.setData(new Data());
+		Data * data = (Data*)circle.getData();
+        data->type = WATER;
+		data->label = i;
+		data->isActive = false;
+		
+		circles[i] = circle;	
     }
-    
+
+
 }
 
 //--------------------------------------------------------------
@@ -97,9 +108,12 @@ void testApp::draw(){
     
     for(int i=0; i<circles.size(); i++) {
         ofFill();
-		ofSetHexColor(0xf6c738);
+        Data * data = (Data*)circles[i].getData();	
+		if(data && data->isActive) ofSetHexColor(0xff0000);
+		else ofSetHexColor(0x4ccae9);
 		circles[i].draw();
 	}
+
 }
 
 //--------------------------------------------------------------
@@ -121,7 +135,7 @@ void testApp::mouseMoved(int x, int y ){
 void testApp::mouseDragged(int x, int y, int button){
     float r = ofRandom(5, 8);		// a random radius 4px - 20px
     ofxBox2dCircle circle;
-    circle.setPhysics(10, 0.3, 0);
+    circle.setPhysics(99999, 0.3, 0);
     circle.setup(box2d.getWorld(), mouseX, mouseY, r);
     circles.push_back(circle);
 }

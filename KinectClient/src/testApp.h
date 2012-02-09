@@ -32,5 +32,4 @@ class testApp : public ofBaseApp{
     
     ofxBox2d box2d;
 	vector <ofxBox2dCircle>	circles;
-
 };

@@ -33,35 +33,12 @@ void PlayerGame::setup(b2World* world, Player* player) {
 		}
 	}
     
-    // boatHoles
-	ifstream fboatHoles;
-	fboatHoles.open(ofToDataPath("boatHoles.txt").c_str());
-	vector <string> strLinesboatHoles;
-	while (!fboatHoles.eof()) {
-		string ptStr;
-		getline(fboatHoles, ptStr);
-		strLinesboatHoles.push_back(ptStr);
-	}
-	fboatHoles.close();
-    vector <string> offsetboatHoles = ofSplitString(strLinesboatHoles[0], ",");
-    
-    for (int i=1; i<strLinesboatHoles.size()-1; i++) {
-		vector <string> pts = ofSplitString(strLinesboatHoles[i], ",");
-		if(pts.size() > 0) {
-			ofxBox2dPolygon poly;
-			for (int j=0; j<pts.size(); j+=2) {
-				if(pts[j].size() > 0) {
-					float x = ofToFloat(pts[j]) * ofToFloat(offsetboatHoles[2]) + ofToFloat(offsetboatHoles[0]);
-					float y = ofToFloat(pts[j+1]) * ofToFloat(offsetboatHoles[2]) + ofToFloat(offsetboatHoles[1]);
-					poly.addVertex(x, y);
-				}				
-			}
-            poly.fixture.isSensor = true;
-            poly.create(world);
-            boatHoles.push_back(poly);			
-		}
-	}
-    
+    insideBoat.fixture.isSensor = true;
+    insideBoat.setup(world, 0, 0, 170, 120);
+
+    insideBoat.setData(new Data());
+    Data * data = (Data*) insideBoat.getData();
+    data->type = SENSOR_IN;
     
 }
 
@@ -76,10 +53,8 @@ void PlayerGame::update(){
     for (int i=0; i<boat.size(); i++) {
 		boat[i].setPosition(position + offset);
 	} 
-    
-    for (int i=0; i<boatHoles.size(); i++) {
-		boatHoles[i].setPosition(position + offset);
-	} 
+    insideBoat.setPosition(position + offset + ofPoint(0,50));
+
 }
 
 void PlayerGame::draw(){
@@ -92,10 +67,53 @@ void PlayerGame::draw(){
 	}
     ofPopStyle();
     
-    ofPushStyle();
-    ofSetColor(255, 0, 0);
-    for (int i=0; i<boatHoles.size(); i++) {
-		boatHoles[i].draw();
+    //insideBoat.draw();
+}
+
+void PlayerGame::contactStart(ofxBox2dContactArgs &e) {
+	if(e.a != NULL && e.b != NULL) {
+        Data * sensorIn = NULL;
+        Data * water = NULL;
+        
+        Data * aData = (Data*)e.a->GetBody()->GetUserData();        
+        if(aData) {
+            if(aData->type == WATER) water =  aData;
+            else if(aData->type == SENSOR_IN) sensorIn = aData;
+        }
+        
+        Data * bData  = (Data*)e.b->GetBody()->GetUserData();        
+        if(bData) {
+            if(bData->type == WATER) water =  bData;
+            else if(bData->type == SENSOR_IN) sensorIn = bData;
+        }
+        
+        
+		if( sensorIn && water ){           
+            water->isActive = true;
+        }
 	}
-    ofPopStyle();
+}
+
+void PlayerGame::contactEnd(ofxBox2dContactArgs &e) {
+	if(e.a != NULL && e.b != NULL) {
+        Data * sensorIn = NULL;
+        Data * water = NULL;
+        
+        Data * aData = (Data*)e.a->GetBody()->GetUserData();        
+        if(aData) {
+            if(aData->type == WATER) water =  aData;
+            else if(aData->type == SENSOR_IN) sensorIn = aData;
+        }
+        
+        Data * bData  = (Data*)e.b->GetBody()->GetUserData();        
+        if(bData) {
+            if(bData->type == WATER) water =  bData;
+            else if(bData->type == SENSOR_IN) sensorIn = bData;
+        }
+        
+        
+		if( sensorIn && water ){           
+            water->isActive = false;
+        }
+	}
 }

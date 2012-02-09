@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxBox2d.h"
+
 #define PLAYER_IDLE_COUNT_MAX 20
 
 

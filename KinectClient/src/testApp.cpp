@@ -6,8 +6,8 @@ void testApp::setup(){
     ofSetVerticalSync(true);
     ofEnableAlphaBlending();
     
-    int w = 400;
-    int h = 728;
+    int w = 612;
+    int h = 768;
     ofSetWindowShape(w, h);
     
     box2d.init();
@@ -48,13 +48,25 @@ void testApp::setup(){
     
     player1 = new Player();
     player1->setup(box2d.getWorld(), bear);
-    player1->position.x = w/2;
-    player1->position.y = h*0.8;
     
     player2 = new Player();
     player2->setup(box2d.getWorld(), bear);
-    player2->position.x = w/4 * 3;
-    player2->position.y = h*0.7;
+    
+    // Setup the game
+    game1 = new PlayerGame();
+    game1->setup(box2d.getWorld(), player1);
+    game1->position.x = w/2;
+    game1->position.y = h*0.65;
+    
+    // Create a lot of particles
+    for (int i = 0; i < 500; i++) {
+        float r = ofRandom(8, 13);
+        ofxBox2dCircle circle;
+        circle.setPhysics(100, 0.3, 0);
+        circle.setup(box2d.getWorld(), ofRandom(0, w), h, r);
+        circles.push_back(circle);
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -65,13 +77,13 @@ void testApp::update(){
 		receiver.getNextMessage( &m );
 		
 		if ( m.getAddress() == "/player/1" ){
-			player1->setData(m);
+			game1->setData(m);
 		}else if ( m.getAddress() == "/player/2" ){
 			player2->setData(m);
 		}
 	}
     
-    player1->update();
+    game1->update();
     player2->update();
     
     box2d.update();
@@ -80,7 +92,7 @@ void testApp::update(){
 
 //--------------------------------------------------------------
 void testApp::draw(){
-    player1->draw();
+    game1->draw();
     player2->draw();
     
     for(int i=0; i<circles.size(); i++) {
@@ -107,9 +119,9 @@ void testApp::mouseMoved(int x, int y ){
 
 //--------------------------------------------------------------
 void testApp::mouseDragged(int x, int y, int button){
-    float r = 6;		// a random radius 4px - 20px
+    float r = ofRandom(5, 8);		// a random radius 4px - 20px
     ofxBox2dCircle circle;
-    circle.setPhysics(6.0, 0.55, 0.1);
+    circle.setPhysics(10, 0.3, 0);
     circle.setup(box2d.getWorld(), mouseX, mouseY, r);
     circles.push_back(circle);
 }

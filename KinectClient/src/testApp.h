@@ -3,7 +3,7 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxBox2d.h"
-#include "Player.h"
+#include "PlayerGame.h"
 
 #define PORT 12345
 
@@ -27,6 +27,8 @@ class testApp : public ofBaseApp{
 		ofxOscReceiver receiver;    
         Player * player1;
         Player * player2;
+    
+        PlayerGame * game1;
     
     ofxBox2d box2d;
 	vector <ofxBox2dCircle>	circles;

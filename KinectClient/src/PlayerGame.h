@@ -13,7 +13,8 @@ class PlayerGame {
     void update();
     void draw();
     
-    vector <ofxBox2dPolygon> polyLines;
+    vector <ofxBox2dPolygon> boat;
+    vector <ofxBox2dPolygon> boatHoles;
     
     ofPoint position;
     ofPoint offset;

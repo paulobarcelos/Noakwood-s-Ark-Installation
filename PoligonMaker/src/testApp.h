@@ -24,5 +24,11 @@ public:
 	ofxBox2d					box2d;
 	vector <ofxBox2dCircle>		circles;
 	vector <ofxBox2dPolygon>	polyLines;
+    
     bool isDrawing;
+    
+    vector <ofPolyline>			linesHole;
+	vector <ofxBox2dPolygon>	polyLinesHole;
+    
+    bool isDrawingHole;
 };

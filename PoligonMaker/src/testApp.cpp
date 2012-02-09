@@ -42,6 +42,36 @@ void testApp::setup() {
 	}
 	
     isDrawing = false;
+    
+    
+    // load the linesHoles we saved...
+	ifstream fHole;
+	fHole.open(ofToDataPath("linesHole.txt").c_str());
+	vector <string> strLinesHole;
+	while (!fHole.eof()) {
+		string ptStr;
+		getline(fHole, ptStr);
+		strLinesHole.push_back(ptStr);
+	}
+	fHole.close();
+	
+	for (int i=0; i<strLinesHole.size(); i++) {
+		vector <string> pts = ofSplitString(strLinesHole[i], ",");
+		if(pts.size() > 0) {
+			ofxBox2dPolygon poly;
+			for (int j=0; j<pts.size(); j+=2) {
+				if(pts[j].size() > 0) {
+					float x = ofToFloat(pts[j]);
+					float y = ofToFloat(pts[j+1]);
+					poly.addVertex(x, y);
+				}				
+			}
+			poly.create(box2d.getWorld());
+			polyLinesHole.push_back(poly);
+		}
+	}
+	
+    isDrawingHole = false;
 }
 
 //--------------------------------------------------------------
@@ -76,7 +106,16 @@ void testApp::draw() {
 	}	
 	for (int i=0; i<polyLines.size(); i++) {
 		polyLines[i].draw();
+	}
+	
+    ofSetHexColor(0xff0000);
+	ofNoFill();
+	for (int i=0; i<linesHole.size(); i++) {
+		linesHole[i].draw();
 	}	
+	for (int i=0; i<polyLinesHole.size(); i++) {
+		polyLinesHole[i].draw();
+	}
 	
 	string info = "Draw a shape with the mouse\n";
 	info += "Press a to add some circles\n";
@@ -154,6 +193,50 @@ void testApp::keyPressed(int key) {
         
        // lines.clear();
 	}
+    
+    // Start drawing polygon
+	if(key == '3') {
+        isDrawingHole = true;
+        linesHole.push_back(ofPolyline());
+	}
+    
+    // Start drawing polygon
+    if(key == '4') {
+        isDrawingHole = false;
+        ofxBox2dPolygon poly;
+        linesHole.back().simplify();
+        
+        for (int i=0; i<linesHole.back().size(); i++) {
+            poly.addVertex(linesHole.back()[i]);
+        }
+        
+        //poly.setPhysics(1, .2, 1);  // uncomment this to see it fall!
+        poly.create(box2d.getWorld());
+        polyLinesHole.push_back(poly);
+        
+        // lines.clear();
+	}
+    if(key == 'e') {
+		linesHole.clear();
+		for (int i=0; i<polyLinesHole.size(); i++) {
+			polyLinesHole[i].destroy();
+		}
+	}
+    // want to save out some line...
+	if(key == 'r') {
+		ofstream f;
+		f.clear();
+		f.open(ofToDataPath("linesHole.txt").c_str());
+		for (int i=0; i<linesHole.size(); i++) {
+			for (int j=0; j<linesHole[i].size(); j++) {
+				float x = linesHole[i][j].x;
+				float y = linesHole[i][j].y;
+				f << x << "," << y << ",";
+			}
+			f << "\n";
+		}
+		f.close();linesHole.clear();
+	}
 }
 
 //--------------------------------------------------------------
@@ -167,6 +250,7 @@ void testApp::mouseDragged(int x, int y, int button) {
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button) {
 	if(isDrawing)lines.back().addVertex(x, y);
+    if(isDrawingHole)linesHole.back().addVertex(x, y);
 }
 
 //--------------------------------------------------------------

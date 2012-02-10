@@ -40,6 +40,7 @@ void PlayerGame::setup(b2World* world, Player* player) {
     Data * data = (Data*) insideBoat.getData();
     data->type = SENSOR_IN;
     
+    waterLevel = 0;    
 }
 
 void PlayerGame::setData(ofxOscMessage &m){
@@ -47,6 +48,9 @@ void PlayerGame::setData(ofxOscMessage &m){
 }
 
 void PlayerGame::update(){
+    
+    offset.y = ofMap(waterLevel, 0, 300, 0, 1) * BOAT_VERTICAL_OFFSET;
+    
     player->position = position + offset;
     player->update();
     
@@ -90,6 +94,7 @@ void PlayerGame::contactStart(ofxBox2dContactArgs &e) {
         
 		if( sensorIn && water ){           
             water->isActive = true;
+            waterLevel++;
         }
 	}
 }
@@ -114,6 +119,7 @@ void PlayerGame::contactEnd(ofxBox2dContactArgs &e) {
         
 		if( sensorIn && water ){           
             water->isActive = false;
+            waterLevel--;
         }
 	}
 }

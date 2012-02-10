@@ -6,7 +6,7 @@ void testApp::setup(){
     ofSetVerticalSync(true);
     ofEnableAlphaBlending();
     
-    int w = 612;
+    int w = 1028;
     int h = 768;
     ofSetWindowShape(w, h);
     
@@ -55,33 +55,48 @@ void testApp::setup(){
     // Setup the game
     game1 = new PlayerGame();
     game1->setup(box2d.getWorld(), player1);
-    game1->position.x = w/2;
-    game1->position.y = h*0.65;
+    game1->position.x = w/4;
+    game1->position.y = h*0.5;
     ofAddListener(box2d.contactStartEvents, game1, &PlayerGame::contactStart);
     ofAddListener(box2d.contactEndEvents, game1, &PlayerGame::contactEnd);
     
-    // Create a lot of particles
-    for (int i = 0; i < 500; i++) {
-        float r = ofRandom(8, 13);
+
+    for(int i = 0; i < 200; i++)  {
+		float r = ofRandom(8, 13);
         ofxBox2dCircle circle;
-        circle.setPhysics(100, 0.3, 0);
+        circle.setPhysics(5, 0.6, 0);
         circle.setup(box2d.getWorld(), ofRandom(0, w), h, r);
         circles.push_back(circle);
         
         circle.setData(new Data());
 		Data * data = (Data*)circle.getData();
         data->type = WATER;
-		data->label = i;
 		data->isActive = false;
-		
-		circles[i] = circle;	
-    }
-
+	}
 
 }
 
 //--------------------------------------------------------------
 void testApp::update(){
+    
+    // add some circles every so often
+	if(ofGetFrameNum()% 3 == 0) {
+		float r = ofRandom(8, 13);
+        ofxBox2dCircle circle;
+        circle.setPhysics(5, 0.3, 0);
+        circle.setup(box2d.getWorld(), ofRandom(0, 1024), 10, r);
+        circles.push_back(circle);
+        
+        circle.setData(new Data());
+		Data * data = (Data*)circle.getData();
+        data->type = WATER;
+		data->isActive = false;
+        
+        if (circles.size() > 800){
+            circles.erase(circles.begin());
+        }
+	}
+    
     while( receiver.hasWaitingMessages() )
 	{
 		ofxOscMessage m;
@@ -96,6 +111,10 @@ void testApp::update(){
     
     game1->update();
     player2->update();
+    
+    for(int i=0; i<circles.size(); i++) {
+		//circles[i].addAttractionPoint(game1->position + game1->offset - ofPoint(0,100), 0.3);
+	}
     
     box2d.update();
 }

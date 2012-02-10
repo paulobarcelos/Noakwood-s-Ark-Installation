@@ -1,9 +1,10 @@
-
 #pragma once
 #include "ofMain.h"
 #include "ofxBox2d.h"
 
-// ------------------------------------------------- App
+
+// -------------------------------------------------
+
 class testApp : public ofBaseApp {
 	
 public:
@@ -13,19 +14,17 @@ public:
 	void draw();
 	
 	void keyPressed(int key);
-	void mouseMoved(int x, int y );
+	void keyReleased(int key);
+	void mouseMoved(int x, int y);
 	void mouseDragged(int x, int y, int button);
 	void mousePressed(int x, int y, int button);
 	void mouseReleased(int x, int y, int button);
-	void windowResized(int w, int h);
-	
-	// little helper function to load
-	// point that we saved
-	vector <ofVec2f> loadPoints(string file);
+	void resized(int w, int h);
 	
 	
-	ofPolyline					shape;
-	ofxBox2d					box2d;
-	vector <ofxBox2dCircle>		circles;
-	vector <ofxBox2dPolygon>	triangles;
+	ofxBox2d						box2d;			  //	the box2d world
+	vector		<ofxBox2dCircle>	circles;		  //	default box2d circles
+	vector		<ofxBox2dRect>		boxes;			  //	defalut box2d rects
+	
 };
+

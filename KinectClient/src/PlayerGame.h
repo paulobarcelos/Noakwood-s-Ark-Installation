@@ -5,6 +5,8 @@
 #include "ofxBox2d.h"
 #include "Player.h"
 
+#define BOAT_VERTICAL_OFFSET 300
+
 enum ShapeType{
     UNDEFINED_SHAPE = 0,
     WATER = 1,
@@ -39,6 +41,7 @@ class PlayerGame {
     
     ofxBox2dRect insideBoat;
     
+    float waterLevel;
     
     ofPoint position;
     ofPoint offset;

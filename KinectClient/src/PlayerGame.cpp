@@ -32,8 +32,6 @@ void PlayerGame::update(){
 
 void PlayerGame::draw(){
     player->draw();
-    
-    insideBoat.draw();
 }
 
 void PlayerGame::contactStart(ofxBox2dContactArgs &e) {

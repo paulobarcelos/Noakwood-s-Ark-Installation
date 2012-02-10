@@ -5,7 +5,6 @@ void testApp::setup(){
 	receiver.setup( PORT );
     ofSetVerticalSync(true);
     ofSetFrameRate(30);
-    ofEnableAlphaBlending();
     
     int w = 1028;
     int h = 500;

@@ -97,7 +97,7 @@ void Game::setup(float width, float height) {
     
     for(int i = 0; i < 600; i ++ ){
         float r = ofRandom(10, 15);
-        ofxBox2dCircle circle;
+        Water circle;
         circle.setPhysics(5, 0.6, 0);
         circle.setup(box2d.getWorld(), i * -100, -100, r);
         circle.dead = true;
@@ -110,6 +110,13 @@ void Game::setup(float width, float height) {
         data->label = i;
 		
 	}
+    
+    ofFbo::Settings s;
+	s.width	= width;
+	s.height = height;
+	s.numColorbuffers = 2;
+    waterFbo.allocate(s);
+    blurShader.load("", "blur_frag.glsl");
 }
 
 void Game::setData(ofxOscMessage &m){
@@ -121,9 +128,9 @@ void Game::setData(ofxOscMessage &m){
 void Game::update(){
     // add some circles every so often
 	if(ofGetFrameNum()% 3 == 0) {
-        ofxBox2dCircle* circlePtr = getNextCircle();
+        Water* circlePtr = getNextCircle();
         if(circlePtr){
-            circlePtr->setPosition(width / 2 + ofRandom(-10,10), height - 50 );
+            circlePtr->setPosition(width / 2 + ofRandom(-370,370), height - 80 );
         }
 	}
     
@@ -137,20 +144,41 @@ void Game::draw(){
     game1->draw();
     game2->draw();
     
-    for(int i=0; i<circles.size(); i++) {
-        ofFill();
-        Data * data = (Data*)circles[i].getData();	
-		if(data && data->isActive) ofSetHexColor(0xff0000);
-		else ofSetHexColor(0x4ccae9);
-		circles[i].draw();
-	}
     
-    ofPushStyle();
-    ofSetColor(0, 0, 0);
     for (int i=0; i<boat.size(); i++) {
-		boat[i].draw();
+        ofPushStyle();
+        ofSetColor(0, 0, 0);
+            boat[i].draw();
+        ofPopStyle();
+	}   
+    
+    waterFbo.begin();
+        ofPushStyle();
+        ofEnableAlphaBlending();
+            ofClear(0,0,0,0);    
+            for(int i=0; i<circles.size(); i++) {	
+                circles[i].draw();
+            }
+        ofPopStyle();
+    waterFbo.end();    
+
+    waterFbo.begin();    
+    blurShader.begin(); 
+    glColor3f(1, 1, 1);    
+	for(int i=0; i<8; i++) {
+		int srcPos = i % 2;				// attachment to write to
+		int dstPos = 1 - srcPos;		// attachment to read from
+		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + dstPos);	// write to this texture
+		ofClear(0, 0, 0, 0);
+        
+		blurShader.setUniform1i("tex0", 0);
+		blurShader.setUniform1f("sampleOffset", i*2+1);
+		waterFbo.getTextureReference(srcPos).draw(0, 0, width, height);
 	}
-    ofPopStyle();
+    blurShader.end();
+    waterFbo.end();
+    
+    waterFbo.draw(0,0, width, height);
 }
 
 void Game::contactStart(ofxBox2dContactArgs &e) {
@@ -176,7 +204,7 @@ void Game::contactStart(ofxBox2dContactArgs &e) {
         }
 	}
 }
-ofxBox2dCircle* Game::getNextCircle() {
+Water* Game::getNextCircle() {
     for(int i=0; i<circles.size(); i++) {
         if(circles[i].dead){
             circles[i].dead = false;
@@ -188,7 +216,7 @@ ofxBox2dCircle* Game::getNextCircle() {
     return NULL;
 }
 void Game::removeCircle(int label) {
-	for(std::vector<ofxBox2dCircle>::iterator it = circles.begin(); it != circles.end(); ++it) {
+	for(std::vector<Water>::iterator it = circles.begin(); it != circles.end(); ++it) {
         Data * data = (Data*)(*it).getData();
         if( data->label == label ){
             (*it).dead = true;

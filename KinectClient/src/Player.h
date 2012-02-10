@@ -55,7 +55,7 @@ struct RawData {
     ofPoint targetOffset;    
 };
 struct LimbSkin {
-    void set(string textureFile, float boneRatio = 1.f, ofPoint textureAnchor = ofPoint(0.5, 0.5), float thickness = 50){
+    void set(string textureFile, float boneRatio = 1.f, ofPoint textureAnchor = ofPoint(0.5, 0.5), float thickness = 65){
         ofImage temp;
         temp.loadImage(textureFile);
         this->textureFile = textureFile;
@@ -71,7 +71,7 @@ struct LimbSkin {
         this->width = 0;
         this->height = 0;
         this->textureAnchor = ofPoint(0.5, 0.5);
-        this->thickness = 50;
+        this->thickness = 65;
         this->length = boneLength;
     };
     float thickness;

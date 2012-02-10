@@ -4,6 +4,19 @@
 #include "ofxBox2d.h"
 #include "PlayerGame.h"
 
+class Water : public ofxBox2dCircle {
+	
+public:
+	void draw() {
+        ofPushStyle();
+            ofFill();
+            ofSetColor(0);
+            ofCircle(getPosition(), getRadius()+35);
+        ofPopStyle();
+    };   
+    
+};
+
 class Game {
 	public:
     
@@ -13,7 +26,7 @@ class Game {
     void draw();
     void contactStart(ofxBox2dContactArgs &e);
     void removeCircle(int label);
-    ofxBox2dCircle* getNextCircle();
+    Water* getNextCircle();
     
     float width;
     float height;
@@ -26,6 +39,9 @@ class Game {
     
     ofxBox2d box2d;
     int circleLabel;
-	vector <ofxBox2dCircle> circles;
+	vector <Water> circles;
     vector <ofxBox2dPolygon> boat;
+    
+    ofFbo waterFbo;
+    ofShader blurShader;
 };

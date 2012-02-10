@@ -12,6 +12,7 @@
 		3865465014E0A36D00CF58A0 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3865464414E0A36D00CF58A0 /* ofxOscMessage.cpp */; };
 		3865465114E0A36D00CF58A0 /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3865464614E0A36D00CF58A0 /* ofxOscReceiver.cpp */; };
 		3865465214E0A36D00CF58A0 /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3865464714E0A36D00CF58A0 /* ofxOscSender.cpp */; };
+		38CDFA0C14E53188004547EB /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38CDFA0A14E53188004547EB /* Game.cpp */; };
 		38E44F0B14E18D750080AE06 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38E44F0914E18D750080AE06 /* Player.cpp */; };
 		38E452A814E1C3FF0080AE06 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38E4520C14E1C3FE0080AE06 /* b2BroadPhase.cpp */; };
 		38E452A914E1C3FF0080AE06 /* b2CollideCircle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38E4520E14E1C3FE0080AE06 /* b2CollideCircle.cpp */; };
@@ -117,6 +118,8 @@
 		3865464614E0A36D00CF58A0 /* ofxOscReceiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxOscReceiver.cpp; path = ../../../addons/ofxOsc/src/ofxOscReceiver.cpp; sourceTree = SOURCE_ROOT; };
 		3865464714E0A36D00CF58A0 /* ofxOscSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxOscSender.cpp; path = ../../../addons/ofxOsc/src/ofxOscSender.cpp; sourceTree = SOURCE_ROOT; };
 		3865464814E0A36D00CF58A0 /* ofxOscSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxOscSender.h; path = ../../../addons/ofxOsc/src/ofxOscSender.h; sourceTree = SOURCE_ROOT; };
+		38CDFA0A14E53188004547EB /* Game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Game.cpp; sourceTree = "<group>"; };
+		38CDFA0B14E53188004547EB /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
 		38E44F0914E18D750080AE06 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
 		38E44F0A14E18D750080AE06 /* Player.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Player.h; sourceTree = "<group>"; };
 		38E4520A14E1C3FE0080AE06 /* Box2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Box2D.h; sourceTree = "<group>"; };
@@ -542,6 +545,8 @@
 				38E44F0A14E18D750080AE06 /* Player.h */,
 				3841CEB014E3BEB600419561 /* PlayerGame.cpp */,
 				3841CEB114E3BEB600419561 /* PlayerGame.h */,
+				38CDFA0A14E53188004547EB /* Game.cpp */,
+				38CDFA0B14E53188004547EB /* Game.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -689,6 +694,7 @@
 				38E452D014E1C3FF0080AE06 /* ofxBox2dPolygon.cpp in Sources */,
 				38E452D114E1C3FF0080AE06 /* ofxBox2dRect.cpp in Sources */,
 				3841CEB214E3BEB600419561 /* PlayerGame.cpp in Sources */,
+				38CDFA0C14E53188004547EB /* Game.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -31,4 +31,5 @@ public:
 	vector <ofxBox2dPolygon>	polyLinesHole;
     
     bool isDrawingHole;
+    ofImage boat;
 };

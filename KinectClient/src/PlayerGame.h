@@ -36,15 +36,15 @@ class PlayerGame {
     void contactStart(ofxBox2dContactArgs &e);
 	void contactEnd(ofxBox2dContactArgs &e);
     
-    vector <ofxBox2dPolygon> boat;
-    vector <ofxBox2dPolygon> boatHoles;
-    
     ofxBox2dRect insideBoat;
     
     float waterLevel;
     
     ofPoint position;
     ofPoint offset;
+    
+    ofPoint insideBoatOffset;
+    
     
     Player* player;        
     b2World* world;	

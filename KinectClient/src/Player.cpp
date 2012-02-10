@@ -4,7 +4,7 @@
 //--------------------------------------------------------------
 void Player::setup(b2World* world, PlayerSkin skin) {
     this->world = world;
-    
+    this->skin = skin;
     active = false;
     idleCount = 0;    
     
@@ -37,13 +37,13 @@ void Player::setup(b2World* world, PlayerSkin skin) {
     movingLimit = skin.movingLimit;
 }
 
-void Player::setupLimb(Limb &limb, LimbSkin skin){
-	limb.texture.loadImage(skin.textureFile);
-	limb.texture.setAnchorPercent(0.5,0.5);
-	limb.thickness = skin.thickness;
-	limb.length = skin.length;
-    limb.width = skin.width;
-	limb.height = skin.height;
+void Player::setupLimb(Limb &limb, LimbSkin limbSkin){
+	limb.texture.loadImage(limbSkin.textureFile);
+	limb.texture.setAnchorPercent(limbSkin.textureAnchor.x, limbSkin.textureAnchor.y);
+	limb.thickness = limbSkin.thickness * skin.globalScale;
+	limb.length = limbSkin.length * skin.globalScale;
+    limb.width = limbSkin.width * skin.globalScale;
+	limb.height = limbSkin.height * skin.globalScale;
     
     limb.body.fixture.filter.groupIndex = -1;
     limb.body.setPhysics(0, 0.3, 0.9);
@@ -100,8 +100,10 @@ void Player::setData(ofxOscMessage &m){
         data.targetOffset.y = m.getArgAsFloat( 42 );
         
         ofPoint center;
+        ofPoint powMovingLimit;
+        
+        center.y = position.y + powf(movingLimit.y, 1) * data.targetOffset.y;
         center.x = position.x + movingLimit.x * data.targetOffset.x;
-        center.y = position.y + movingLimit.y * data.targetOffset.y;
         
         calculateLimb(spineToShoulderCenter, center, data.spine, data.shoulderCenter);
         calculateLimb(spineToHipCenter, center, data.spine, data.hipCenter);
@@ -136,7 +138,13 @@ void Player::setData(ofxOscMessage &m){
 
 void Player::calculateLimb( Limb &limb, ofPoint origin, ofPoint src, ofPoint dst){
 	ofPoint diff = src - dst;
-	limb.origin = origin;
+	/*limb.nextOrigin = origin;
+	limb.nextAngle = atan2(diff.y, diff.x) * RAD_TO_DEG + 90;
+	limb.nextEnd = ofPoint(0, limb.length).getRotated(0,0,limb.nextAngle);
+	limb.nextEnd += origin; 
+	limb.nextCenter = limb.nextOrigin.middle(limb.nextEnd);*/
+    
+    limb.origin = origin;
 	limb.angle = atan2(diff.y, diff.x) * RAD_TO_DEG + 90;
 	limb.end = ofPoint(0, limb.length).getRotated(0,0,limb.angle);
 	limb.end += origin; 
@@ -172,6 +180,19 @@ void Player::update(){
 }
 
 void Player::updateLimb( Limb &limb ){
+    
+    /*limb.origin.x = ofLerp(limb.origin.x, limb.nextOrigin.x, 0.9);
+    limb.origin.y = ofLerp(limb.origin.y, limb.nextOrigin.y, 0.9);
+    limb.end.x = ofLerp(limb.end.x, limb.nextEnd.x, 0.9);
+    limb.end.y = ofLerp(limb.end.y, limb.nextEnd.y, 0.9);
+    limb.center.x = ofLerp(limb.center.x, limb.nextCenter.x, 0.9);
+    limb.center.y = ofLerp(limb.center.y, limb.nextCenter.y, 0.9);*/
+    /*limb.origin = limb.nextOrigin;
+    limb.end = limb.nextEnd;
+    limb.center = limb.nextCenter;
+
+    limb.angle = ofLerpDegrees(limb.angle, limb.nextAngle, 0.9);*/
+    
 	limb.body.setPosition(limb.center);
     limb.body.body->SetTransform(limb.body.body->GetPosition(), (limb.angle - 90) * DEG_TO_RAD);
    // limb.body.body->ApplyForce( limb.body.body->GetMass() * - world->GetGravity(), limb.body.body->GetWorldCenter() );
@@ -226,7 +247,7 @@ void Player::drawLimb (Limb &limb){
     ofPushMatrix();	
     ofPushStyle();
         ofSetColor(255,0,0, 100);
-        //limb.body.draw();
+        limb.body.draw();
     ofPopStyle();
     ofPopMatrix();
 }
@@ -238,6 +259,7 @@ void Player::flagIdle (){
     }    
 }
 void Player::flagActive (){
+    idleCount = 0;
     active = true;    
 }
 

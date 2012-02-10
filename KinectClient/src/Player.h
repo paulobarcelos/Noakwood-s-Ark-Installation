@@ -8,16 +8,27 @@
 
 
 struct Limb {
+    Limb(){
+        nextAngle = 0;
+        angle = 0;
+    }
+    
 	float thickness;
 	float length;
     float width;
 	float height;
-	ofPoint center;
+    ofImage texture;
+    ofxBox2dRect body;
+    
+	ofPoint nextCenter;
+	ofPoint nextOrigin;
+	ofPoint nextEnd;
+	float nextAngle;
+    
+    ofPoint center;
 	ofPoint origin;
 	ofPoint end;
 	float angle;
-	ofImage texture;
-    ofxBox2dRect body;    
 };
 
 struct RawData {
@@ -44,30 +55,40 @@ struct RawData {
     ofPoint targetOffset;    
 };
 struct LimbSkin {
-    void set(string textureFile, float horizontalOffset = 0, float verticalOffset = 0){
+    void set(string textureFile, float boneRatio = 1.f, ofPoint textureAnchor = ofPoint(0.5, 0.5), float thickness = 65){
         ofImage temp;
         temp.loadImage(textureFile);
+        this->textureFile = textureFile;
         this->width = temp.getHeight();
         this->height = temp.getWidth();
-        this->thickness = this->height - verticalOffset;
-        this->length = this->width - horizontalOffset;
-        this->textureFile = textureFile;
+        this->textureAnchor = textureAnchor;
+        this->thickness = thickness;
+        this->length = this->width * boneRatio;
+       
     };
-    void set(string textureFile, float width, float height, float boneWidth, float boneHeight){
-        ofImage temp;
-        this->width = height;
-        this->height = width;
-        this->thickness = boneWidth;
-        this->length = boneHeight;
-        this->textureFile = textureFile;
+    void set(float boneLength){
+        this->textureFile = "blank.png";
+        this->width = 0;
+        this->height = 0;
+        this->textureAnchor = ofPoint(0.5, 0.5);
+        this->thickness = 65;
+        this->length = boneLength;
     };
     float thickness;
 	float length;
     float width;
 	float height;
+    ofPoint textureAnchor;
     string textureFile;
 };
-struct PlayerSkin {    
+struct PlayerSkin {
+    
+    PlayerSkin(){
+        globalScale = 1.0;
+    }
+    
+    float globalScale;
+    
     LimbSkin spineToShoulderCenter;
 	LimbSkin spineToHipCenter;
     
@@ -117,6 +138,7 @@ class Player {
     int idleCount;
     
     RawData data;
+    PlayerSkin skin;
     
     ofPoint movingLimit;
     

@@ -72,6 +72,8 @@ void testApp::setup() {
 	}
 	
     isDrawingHole = false;
+    
+    boat.loadImage("boat.png");
 }
 
 //--------------------------------------------------------------
@@ -90,8 +92,9 @@ void testApp::update() {
 
 //--------------------------------------------------------------
 void testApp::draw() {
-	
-	
+	ofEnableAlphaBlending();
+    ofSetColor(255);
+	boat.draw(0,0);
 	// some circles :)
 	for (int i=0; i<circles.size(); i++) {
 		ofFill();

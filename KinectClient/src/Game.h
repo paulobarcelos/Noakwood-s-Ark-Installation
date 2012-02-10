@@ -11,7 +11,7 @@ public:
         ofPushStyle();
             ofFill();
             ofSetColor(0);
-            ofCircle(getPosition(), getRadius()+35);
+            ofCircle(getPosition(), getRadius()+45);
         ofPopStyle();
     };   
     
@@ -44,4 +44,5 @@ class Game {
     
     ofFbo waterFbo;
     ofShader blurShader;
+    ofShader thresholdShader;
 };

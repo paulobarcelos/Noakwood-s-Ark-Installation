@@ -117,6 +117,7 @@ void Game::setup(float width, float height) {
 	s.numColorbuffers = 2;
     waterFbo.allocate(s);
     blurShader.load("", "blur_frag.glsl");
+    thresholdShader.load("", "threshold_frag.glsl");
 }
 
 void Game::setData(ofxOscMessage &m){
@@ -165,7 +166,7 @@ void Game::draw(){
     waterFbo.begin();    
     blurShader.begin(); 
     glColor3f(1, 1, 1);    
-	for(int i=0; i<8; i++) {
+	for(int i=0; i<6; i++) {
 		int srcPos = i % 2;				// attachment to write to
 		int dstPos = 1 - srcPos;		// attachment to read from
 		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + dstPos);	// write to this texture
@@ -176,9 +177,16 @@ void Game::draw(){
 		waterFbo.getTextureReference(srcPos).draw(0, 0, width, height);
 	}
     blurShader.end();
+    
     waterFbo.end();
     
+    thresholdShader.begin();
+    thresholdShader.setUniform1i("tex0", 0);
+    thresholdShader.setUniform1f("brightPassThreshold", 0.5);
     waterFbo.draw(0,0, width, height);
+    thresholdShader.end();
+    
+    
 }
 
 void Game::contactStart(ofxBox2dContactArgs &e) {

@@ -3,21 +3,11 @@
 #include "ofMain.h"
 #include "ofxBox2d.h"
 #include "SimpleTweener.h"
+#include "Constants.h"
 #include "PlayerGame.h"
 #include "Boat.h"
+#include "Water.h"
 
-class Water : public ofxBox2dCircle {
-	
-public:
-	void draw() {
-        ofPushStyle();
-            ofFill();
-            ofSetColor(0,0,255);
-            ofCircle(getPosition(), getRadius() + 10);
-        ofPopStyle();
-    };   
-    
-};
 /**
  * Custom ofxBox2d that updates it's world accordingly to current FPS and not a fixed one.
  * Also note that as velocityIterations, positionIterations and private members of ofxBox2d
@@ -61,8 +51,7 @@ class Game {
     
     
     void contactStart(ofxBox2dContactArgs &e);
-    void removeCircle(int label);
-    Water* getNextCircle();
+   
     
     CustomOfxBox2d box2d;
     
@@ -85,16 +74,11 @@ class Game {
     Player* player1;
     Player* player2;
     
-    vector <PlayerSkin*> skins;
-    
-    
-	vector <Water> circles;
     Boat boat;
     
-    ofFbo waterFbo;
-    ofShader blurShader;
-    ofShader thresholdShader;
+    Water water;
     
+    vector <PlayerSkin*> skins;    
     int currentSkinID;
     
     // Animation specific tweenrs

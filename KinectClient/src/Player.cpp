@@ -213,7 +213,7 @@ void Player::updateLimb( Limb &limb ){
     ofPoint currentPositon(limb.body.body->GetPosition().x, limb.body.body->GetPosition().y);
     ofPoint distance = limb.center / OFX_BOX2D_SCALE - currentPositon;
     ofPoint velocity = distance / time;
-     limb.body.setVelocity(velocity);
+    limb.body.setVelocity(velocity);
     
     // Apply angle
     float currentAngle = limb.body.body->GetAngle();

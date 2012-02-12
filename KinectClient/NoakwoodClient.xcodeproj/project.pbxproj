@@ -69,6 +69,7 @@
 		38F37CFD14E8385D007756C4 /* Quint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38F37CEB14E8385D007756C4 /* Quint.cpp */; };
 		38F37CFE14E8385D007756C4 /* Sine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38F37CED14E8385D007756C4 /* Sine.cpp */; };
 		38F37CFF14E8385D007756C4 /* SimpleTweener.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38F37CEF14E8385D007756C4 /* SimpleTweener.cpp */; };
+		38F37D0214E85A42007756C4 /* Water.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38F37D0014E85A42007756C4 /* Water.cpp */; };
 		BBAB23CB13894F3D00AA2426 /* GLUT.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = BBAB23BE13894E4700AA2426 /* GLUT.framework */; };
 		E4328149138ABC9F0047C5CB /* openFrameworksDebug.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E4328148138ABC890047C5CB /* openFrameworksDebug.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -256,6 +257,9 @@
 		38F37CEE14E8385D007756C4 /* Sine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sine.h; sourceTree = "<group>"; };
 		38F37CEF14E8385D007756C4 /* SimpleTweener.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SimpleTweener.cpp; sourceTree = "<group>"; };
 		38F37CF014E8385D007756C4 /* SimpleTweener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SimpleTweener.h; sourceTree = "<group>"; };
+		38F37D0014E85A42007756C4 /* Water.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Water.cpp; sourceTree = "<group>"; };
+		38F37D0114E85A42007756C4 /* Water.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Water.h; sourceTree = "<group>"; };
+		38F37D0314E85C4A007756C4 /* Constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
 		E4328143138ABC890047C5CB /* openFrameworksLib.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = openFrameworksLib.xcodeproj; path = ../../../libs/openFrameworksCompiled/project/osx/openFrameworksLib.xcodeproj; sourceTree = SOURCE_ROOT; };
 		E45BE9710E8CC7DD009D7055 /* AGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AGL.framework; path = /System/Library/Frameworks/AGL.framework; sourceTree = "<absolute>"; };
@@ -633,6 +637,7 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
+				38F37D0314E85C4A007756C4 /* Constants.h */,
 				38E44F0914E18D750080AE06 /* Player.cpp */,
 				38E44F0A14E18D750080AE06 /* Player.h */,
 				3841CEB014E3BEB600419561 /* PlayerGame.cpp */,
@@ -641,6 +646,8 @@
 				38CDFA0B14E53188004547EB /* Game.h */,
 				38F37CC714E8262D007756C4 /* Boat.cpp */,
 				38F37CC814E8262D007756C4 /* Boat.h */,
+				38F37D0014E85A42007756C4 /* Water.cpp */,
+				38F37D0114E85A42007756C4 /* Water.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -802,6 +809,7 @@
 				38F37CFD14E8385D007756C4 /* Quint.cpp in Sources */,
 				38F37CFE14E8385D007756C4 /* Sine.cpp in Sources */,
 				38F37CFF14E8385D007756C4 /* SimpleTweener.cpp in Sources */,
+				38F37D0214E85A42007756C4 /* Water.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

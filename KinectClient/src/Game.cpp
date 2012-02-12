@@ -33,7 +33,7 @@ void Game::setup(float width, float height) {
     // State Timers
     startTimer.setup(2);
     transitionToPlayingTimer.setup(2);
-    playingTimer.setup(10);
+    playingTimer.setup(60);
     transitionToEndTimer.setup(2);
     endTimer.setup(2);
     transitionToStartTimer.setup(2);
@@ -77,29 +77,7 @@ void Game::setup(float width, float height) {
     boat.position.set(width / 2, height );
     
     // Water
-    for(int i = 0; i < 800; i ++ ){
-        float r = ofRandom(5, 8);
-        Water circle;
-        circle.setPhysics(10, 0, 0);
-        circle.setup(box2d.getWorld(), i * -100, -100, r);
-        circle.dead = true;
-        circles.push_back(circle);
-        
-        circle.setData(new Data());
-		Data * data = (Data*)circle.getData();
-        data->type = WATER;
-		data->isActive = false;
-        data->label = i;
-		
-	}
-    
-    ofFbo::Settings s;
-	s.width	= width;
-	s.height = height;
-	s.numColorbuffers = 2;
-    waterFbo.allocate(s);
-    blurShader.load("", "blur_frag.glsl");
-    thresholdShader.load("", "threshold_frag.glsl");
+    water.setup(box2d.getWorld(), width, height);
     
     // Start!
     initTransitionToStart();
@@ -119,38 +97,28 @@ void Game::update(){
     
     switch (state) {
         case Game::START:
-            startTimer.update(dt);
-
             player1->update();
             player2->update();
             
+            startTimer.update(dt);
             if(startTimer.isComplete()){
                 initTransitionToPlaying();
             }
             
             break;
         case Game::TRANSITION_TO_PLAYING:
-            transitionToPlayingTimer.update(dt);
-            
             boatPositionTweener.update(dt);
             boat.update();
             
             player1->update();
             player2->update();
             
+            transitionToPlayingTimer.update(dt);
             if(transitionToPlayingTimer.isComplete()){
                 initPlaying();
             }            
             break;
-        case Game::PLAYING:
-            // add some circles every so often
-            if(ofGetFrameNum()% 1 == 0) {
-                Water* circlePtr = getNextCircle();
-                if(circlePtr){
-                    circlePtr->setPosition(width / 2 + ofRandom(-300,300), height - 50 );
-                }
-            }     
-            
+        case Game::PLAYING:           
             boatPositionTweener.update(dt);
             boat.update();
             
@@ -159,39 +127,42 @@ void Game::update(){
             player1->update();
             player2->update();
             
+            water.update();          
             
             playingTimer.update(dt);
-            
             if(playingTimer.isComplete()){
                 initTransitionToEnd();
             } 
             break;
         case Game::TRANSITION_TO_END:
-            transitionToEndTimer.update(dt);
+            
             
             boatPositionTweener.update(dt);
-            boat.draw();
+            boat.update();
             
             player1->update();
             player2->update();
             
+            water.update();
+            
+            transitionToEndTimer.update(dt);
             if(transitionToEndTimer.isComplete()){
                 initEnd();
             } 
             break;
         case Game::END:
-            endTimer.update(dt);
+            
             
             player1->update();
             player2->update();
             
+            endTimer.update(dt);
             if(endTimer.isComplete()){
                 initTransitionToStart();
             } 
             break;
         case Game::TRANSITION_TO_START:
-            transitionToStartTimer.update(dt);
-            
+            transitionToStartTimer.update(dt);            
             if(transitionToStartTimer.isComplete()){             
                 initStart();
             } 
@@ -229,40 +200,8 @@ void Game::draw(){
             game2->draw();
             player1->draw();
             player2->draw();
-            
-            
-            waterFbo.begin();
-            ofPushStyle();
-            ofEnableAlphaBlending();
-            ofClear(0,0,0,0);    
-            for(int i=0; i<circles.size(); i++) {	
-                circles[i].draw();
-            }
-            ofPopStyle();
-            waterFbo.end();    
-            
-            waterFbo.begin();    
-            blurShader.begin(); 
-            glColor3f(1, 1, 1);    
-            for(int i=0; i<4; i++) {
-                int srcPos = i % 2;				// attachment to write to
-                int dstPos = 1 - srcPos;		// attachment to read from
-                glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + dstPos);	// write to this texture
-                ofClear(0, 0, 0, 0);
-                
-                blurShader.setUniform1i("tex0", 0);
-                blurShader.setUniform1f("sampleOffset", i*2+1);
-                waterFbo.getTextureReference(srcPos).draw(0, 0, width, height);
-            }
-            blurShader.end();
-            
-            waterFbo.end();
-            
-            thresholdShader.begin();
-            thresholdShader.setUniform1i("tex0", 0);
-            thresholdShader.setUniform1f("brightPassThreshold", 0.5);
-            waterFbo.draw(0,0, width, height);
-            thresholdShader.end();
+                    
+            water.draw();
            
             ofDrawBitmapString("PLAYING", 20, 30);
             ofDrawBitmapString(ofToString((playingTimer.getDuration() - playingTimer.getDuration() * playingTimer.getProgress())), 20, 40);
@@ -273,6 +212,7 @@ void Game::draw(){
             player1->draw();
             player2->draw();
             
+            water.draw();
             ofDrawBitmapString("TRANSITION_TO_END", 20, 30);
             ofDrawBitmapString(ofToString((transitionToEndTimer.getDuration() - transitionToEndTimer.getDuration() * transitionToEndTimer.getProgress())), 20, 40);
             break;
@@ -358,49 +298,24 @@ PlayerSkin* Game::getRandomSkin(){
 
 void Game::contactStart(ofxBox2dContactArgs &e) {
 	if(e.a != NULL && e.b != NULL) {
-        Data * sensorIn = NULL;
-        Data * water = NULL;
+        Data * sensorInData = NULL;
+        Data * waterData = NULL;
         
         Data * aData = (Data*)e.a->GetBody()->GetUserData();        
         if(aData) {
-            if(aData->type == WATER) water =  aData;
-            else if(aData->type == SENSOR_IN) sensorIn = aData;
+            if(aData->type == WATER) waterData =  aData;
+            else if(aData->type == SENSOR_IN) sensorInData = aData;
         }
         
         Data * bData  = (Data*)e.b->GetBody()->GetUserData();        
         if(bData) {
-            if(bData->type == WATER) water =  bData;
-            else if(bData->type == SENSOR_IN) sensorIn = bData;
+            if(bData->type == WATER) waterData =  bData;
+            else if(bData->type == SENSOR_IN) sensorInData = bData;
         }
         
         
-		if( sensorIn && water ){           
-            removeCircle(water->label);
+		if( sensorInData && waterData ){           
+            water.removeCircle(waterData->label);
         }
 	}
-}
-
-Water* Game::getNextCircle() {
-    for(int i=0; i<circles.size(); i++) {
-        if(circles[i].dead){
-            circles[i].dead = false;
-            circles[i].setVelocity(0,0);
-            circles[i].enableGravity(true);
-            return &(circles[i]);
-        }
-	}
-    return NULL;
-}
-void Game::removeCircle(int label) {
-	for(std::vector<Water>::iterator it = circles.begin(); it != circles.end(); ++it) {
-        Data * data = (Data*)(*it).getData();
-        if( data->label == label ){
-            (*it).dead = true;
-            (*it).setPosition(label * -100, -100);
-            (*it).setVelocity(0,0);
-            (*it).enableGravity(false);
-            break;
-        }
-        
-    }
 }

@@ -3,27 +3,8 @@
 #include "ofMain.h"
 #include "ofxOsc.h"
 #include "ofxBox2d.h"
+#include "Constants.h"
 #include "Player.h"
-
-#define BOAT_VERTICAL_OFFSET 300
-
-enum ShapeType{
-    UNDEFINED_SHAPE = 0,
-    WATER = 1,
-    SENSOR_IN = 2,
-    SENSOR_OUT = 3
-};
-
-class Data {
-public:
-    Data(){
-        type = UNDEFINED_SHAPE;
-        isActive = false;
-    };
-    int	 label;
-    ShapeType type;
-    bool isActive;
-};
 
 class PlayerGame {
 	public:

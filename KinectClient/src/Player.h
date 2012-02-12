@@ -51,7 +51,7 @@ struct RawData {
     ofPoint targetOffset;    
 };
 struct LimbSkin {
-    void set(string textureFile, float boneRatio = 1.f, ofPoint textureAnchor = ofPoint(0.5, 0.5), float thickness = 65){
+    void set(string textureFile, float boneRatio = 1.f, ofPoint textureAnchor = ofPoint(0.5, 0.5), float thickness = 20){
         ofImage temp;
         temp.loadImage(textureFile);
         this->textureFile = textureFile;
@@ -67,7 +67,7 @@ struct LimbSkin {
         this->width = 0;
         this->height = 0;
         this->textureAnchor = ofPoint(0.5, 0.5);
-        this->thickness = 65;
+        this->thickness = 20;
         this->length = boneLength;
     };
     float thickness;
@@ -116,8 +116,11 @@ struct PlayerSkin {
 
 class Player {
 	public:
+    Player(){
+        isReady = false;  
+    };
 	
-	void setup(b2World* world, PlayerSkin skin, ofPoint position = ofPoint(ofGetWidth()/2, ofGetHeight()/2));    
+	void setup(b2World* world, PlayerSkin* skin, ofPoint position = ofPoint(ofGetWidth()/2, ofGetHeight()/2));    
     void setData(ofxOscMessage &m);
     void update();
     void updateLimb(Limb &limb);
@@ -135,7 +138,7 @@ class Player {
     int idleCount;
     
     RawData data;
-    PlayerSkin skin;
+    PlayerSkin* skin;
     
     ofPoint position;
     
@@ -167,5 +170,6 @@ class Player {
     
     b2World* world;
 	
+    bool isReady;
 	
 };

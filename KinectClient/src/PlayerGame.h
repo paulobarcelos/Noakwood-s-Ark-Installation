@@ -28,13 +28,11 @@ public:
 class PlayerGame {
 	public:
     
-	void setup(b2World* world, Player* player);
+	void setup(b2World* world);
+    void setPlayer(Player* player);
     void setData(ofxOscMessage &m);
     void update();
     void draw();
-    
-    void contactStart(ofxBox2dContactArgs &e);
-	void contactEnd(ofxBox2dContactArgs &e);
     
     ofxBox2dRect sensor;
     

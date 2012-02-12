@@ -2,7 +2,7 @@
 #include "Player.h"
 
 //--------------------------------------------------------------
-void Player::setup(b2World* world, PlayerSkin skin, ofPoint position) {
+void Player::setup(b2World* world, PlayerSkin* skin, ofPoint position) {
     this->world = world;
     this->skin = skin;
     active = false;
@@ -11,29 +11,29 @@ void Player::setup(b2World* world, PlayerSkin skin, ofPoint position) {
     this->position = position;
     
     // Setup
-	setupLimb(spineToShoulderCenter, skin.spineToShoulderCenter);
-	setupLimb(spineToHipCenter, skin.spineToHipCenter);
-    setupLimb(shoulderCenterToHead, skin.shoulderCenterToHead);
+	setupLimb(spineToShoulderCenter, skin->spineToShoulderCenter);
+	setupLimb(spineToHipCenter, skin->spineToHipCenter);
+    setupLimb(shoulderCenterToHead, skin->shoulderCenterToHead);
 
-    setupLimb(shoulderCenterToShoulderLeft, skin.shoulderCenterToShoulderLeft);
-	setupLimb(shoulderLeftToElbowLeft, skin.shoulderLeftToElbowLeft);
-	setupLimb(elbowLeftToWristLeft, skin.elbowLeftToWristLeft);
-	setupLimb(wristLeftToHandLeft, skin.wristLeftToHandLeft);
+    setupLimb(shoulderCenterToShoulderLeft, skin->shoulderCenterToShoulderLeft);
+	setupLimb(shoulderLeftToElbowLeft, skin->shoulderLeftToElbowLeft);
+	setupLimb(elbowLeftToWristLeft, skin->elbowLeftToWristLeft);
+	setupLimb(wristLeftToHandLeft, skin->wristLeftToHandLeft);
     
-    setupLimb(hipCenterToHipLeft, skin.hipCenterToHipLeft);
-    setupLimb(hipLeftToKneeLeft, skin.hipLeftToKneeLeft);
-	setupLimb(kneeLeftToAnkleLeft, skin.kneeLeftToAnkleLeft);
-	setupLimb(ankleLeftToFootLeft, skin.ankleLeftToFootLeft);
+    setupLimb(hipCenterToHipLeft, skin->hipCenterToHipLeft);
+    setupLimb(hipLeftToKneeLeft, skin->hipLeftToKneeLeft);
+	setupLimb(kneeLeftToAnkleLeft, skin->kneeLeftToAnkleLeft);
+	setupLimb(ankleLeftToFootLeft, skin->ankleLeftToFootLeft);
 
-    setupLimb(shoulderCenterToShoulderRight, skin.shoulderCenterToShoulderRight);
-	setupLimb(shoulderRightToElbowRight, skin.shoulderRightToElbowRight);
-	setupLimb(elbowRightToWristRight, skin.elbowRightToWristRight);
-	setupLimb(wristRightToHandRight, skin.wristRightToHandRight);
+    setupLimb(shoulderCenterToShoulderRight, skin->shoulderCenterToShoulderRight);
+	setupLimb(shoulderRightToElbowRight, skin->shoulderRightToElbowRight);
+	setupLimb(elbowRightToWristRight, skin->elbowRightToWristRight);
+	setupLimb(wristRightToHandRight, skin->wristRightToHandRight);
 
-    setupLimb(hipCenterToHipRight, skin.hipCenterToHipRight);
-	setupLimb(hipRightToKneeRight, skin.hipRightToKneeRight);
-	setupLimb(kneeRightToAnkleRight, skin.kneeRightToAnkleRight);
-	setupLimb(ankleRightToFootRight, skin.ankleRightToFootRight);
+    setupLimb(hipCenterToHipRight, skin->hipCenterToHipRight);
+	setupLimb(hipRightToKneeRight, skin->hipRightToKneeRight);
+	setupLimb(kneeRightToAnkleRight, skin->kneeRightToAnkleRight);
+	setupLimb(ankleRightToFootRight, skin->ankleRightToFootRight);
     
     // Connect
     connectLimb(spineToShoulderCenter, spineToHipCenter);
@@ -58,18 +58,20 @@ void Player::setup(b2World* world, PlayerSkin skin, ofPoint position) {
     connectLimb(hipCenterToHipRight, hipRightToKneeRight);
     connectLimb(hipRightToKneeRight, kneeRightToAnkleRight);
     connectLimb(kneeRightToAnkleRight, ankleRightToFootRight);
+    
+    isReady = true;
 }
 
 void Player::setupLimb(Limb &limb, LimbSkin limbSkin){
 	limb.texture.loadImage(limbSkin.textureFile);
 	limb.texture.setAnchorPercent(limbSkin.textureAnchor.x, limbSkin.textureAnchor.y);
-	limb.thickness = limbSkin.thickness * skin.globalScale;
-	limb.length = limbSkin.length * skin.globalScale;
-    limb.width = limbSkin.width * skin.globalScale;
-	limb.height = limbSkin.height * skin.globalScale;
+	limb.thickness = limbSkin.thickness * skin->globalScale;
+	limb.length = limbSkin.length * skin->globalScale;
+    limb.width = limbSkin.width * skin->globalScale;
+	limb.height = limbSkin.height * skin->globalScale;
     
     limb.body.fixture.filter.groupIndex = -1;
-    limb.body.setPhysics(1, 0, 0);
+    limb.body.setPhysics(5, 0, 0);
     limb.body.setup(world, position.x, position.y, limb.length/2, limb.thickness/2);    
 }
 
@@ -80,6 +82,7 @@ void Player::connectLimb(Limb &limbA, Limb &limbB){
 }
 
 void Player::setData(ofxOscMessage &m){
+    if(!isReady) return;
     
     if( m.getArgAsInt32( 0 ) == 1 ){
         flagActive();
@@ -131,8 +134,8 @@ void Player::setData(ofxOscMessage &m){
         ofPoint center;
         ofPoint powMovingLimit;
         
-        center.y = position.y + powf(skin.movingLimit.y, 1.15) * data.targetOffset.y - skin.movingLimit.y * 0.3;
-        center.x = position.x + skin.movingLimit.x * data.targetOffset.x;
+        center.y = position.y + powf(skin->movingLimit.y, 1.15) * data.targetOffset.y - skin->movingLimit.y * 0.3;
+        center.x = position.x + skin->movingLimit.x * data.targetOffset.x;
         
         calculateLimb(spineToShoulderCenter, center, data.spine, data.shoulderCenter);
         calculateLimb(spineToHipCenter, center, data.spine, data.hipCenter);

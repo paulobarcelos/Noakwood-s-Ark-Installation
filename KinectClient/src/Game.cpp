@@ -47,7 +47,7 @@ void Game::setup(float width, float height) {
     game1->setup(box2d.getWorld(), player1);
     game1->position.x = (width / 8) * 2;
     game1->position.y = height - 30;
-    game1->insideBoatOffset.x = -450;
+    game1->sensorOffset.x = -2060;
     
     player2 = new Player();
     player2->setup(box2d.getWorld(), bear);
@@ -56,7 +56,7 @@ void Game::setup(float width, float height) {
     game2->setup(box2d.getWorld(), player2);
     game2->position.x = (width / 8) * 6;
     game2->position.y = height - 30;
-    game2->insideBoatOffset.x = 450;
+    game2->sensorOffset.x = 2060;
     
     
     // Boat
@@ -97,7 +97,7 @@ void Game::setup(float width, float height) {
     for(int i = 0; i < 800; i ++ ){
         float r = ofRandom(5, 8);
         Water circle;
-        circle.setPhysics(100, 0, 0);
+        circle.setPhysics(10, 0, 0);
         circle.setup(box2d.getWorld(), i * -100, -100, r);
         circle.dead = true;
         circles.push_back(circle);

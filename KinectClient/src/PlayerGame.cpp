@@ -5,14 +5,13 @@ void PlayerGame::setup(b2World* world, Player* player) {
     this->player = player;    
    
     
-    insideBoat.fixture.isSensor = true;
-    insideBoat.setup(world, 0, 0, 300, 10);
+    sensor.setup(world, 0, 0, 2000, 2);
     
-    insideBoatOffset.set(0, 0);
-
-    insideBoat.setData(new Data());
-    Data * data = (Data*) insideBoat.getData();
+    sensor.setData(new Data());
+    Data * data = (Data*) sensor.getData();
     data->type = SENSOR_IN;
+    
+    sensorOffset.set(0, 0);
     
     
     waterLevel = 0;
@@ -27,13 +26,13 @@ void PlayerGame::update(){
     player->position = position + offset;
     player->update();
     
-    insideBoat.setPosition(position + offset + insideBoatOffset);
+    sensor.setPosition(position + offset + sensorOffset);
 
 }
 
 void PlayerGame::draw(){
     player->draw();
-    insideBoat.draw();
+    sensor.draw();
 }
 
 void PlayerGame::contactStart(ofxBox2dContactArgs &e) {

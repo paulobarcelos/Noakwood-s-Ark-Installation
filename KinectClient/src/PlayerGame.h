@@ -36,14 +36,14 @@ class PlayerGame {
     void contactStart(ofxBox2dContactArgs &e);
 	void contactEnd(ofxBox2dContactArgs &e);
     
-    ofxBox2dRect insideBoat;
+    ofxBox2dRect sensor;
     
     float waterLevel;
     
     ofPoint position;
     ofPoint offset;
     
-    ofPoint insideBoatOffset;
+    ofPoint sensorOffset;
     
     
     Player* player;        

@@ -5,108 +5,67 @@ void testApp::setup() {
 	
 	ofSetVerticalSync(true);
 	ofBackgroundHex(0xfdefc2);
+	ofSetLogLevel(OF_LOG_NOTICE);
 
 	box2d.init();
-	box2d.setGravity(0, 10);
-	box2d.createGround();
+	box2d.setGravity(10, 0);
 	box2d.setFPS(30.0);
 	box2d.registerGrabbing();
 	
-	// register the listener so that we get the events
-	ofAddListener(box2d.contactStartEvents, this, &testApp::contactStart);
-	ofAddListener(box2d.contactEndEvents, this, &testApp::contactEnd);
-
-	// load the 8 sfx soundfile
-	for (int i=0; i<N_SOUNDS; i++) {
-		sound[i].loadSound("sfx/"+ofToString(i)+".mp3");
-		sound[i].setMultiPlay(true);
-		sound[i].setLoop(false);
+	anchor.setup(box2d.getWorld(), 20, ofGetHeight()/2, 4);
+	
+	// first we add just a few circles
+	for (int i=0; i<3; i++) {
+		ofxBox2dCircle circle;
+		circle.setPhysics(3.0, 0.53, 0.1);
+		circle.setup(box2d.getWorld(), ofGetWidth()/2, 100+(i*20), 8);
+		circles.push_back(circle);
 	}
-}
-
-
-//--------------------------------------------------------------
-void testApp::contactStart(ofxBox2dContactArgs &e) {
-	if(e.a != NULL && e.b != NULL) { 
+	
+	// now connect each circle with a joint
+	for (int i=0; i<circles.size(); i++) {
 		
-		// if we collide with the ground we do not
-		// want to play a sound. this is how you do that
-		if(e.a->GetType() == b2Shape::e_circle && e.b->GetType() == b2Shape::e_circle) {
-			
-			SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
-			SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
-			
-			if(aData) {
-				aData->bHit = true;
-				sound[aData->soundID].play();
-			}
-			
-			if(bData) {
-				bData->bHit = true;
-				sound[bData->soundID].play();
-			}
+		ofxBox2dJoint joint;
+		
+		// if this is the first point connect to the top anchor.
+		if(i == 0) {
+			joint.setup(box2d.getWorld(), anchor.body, circles[i].body);		
 		}
-	}
-}
-
-//--------------------------------------------------------------
-void testApp::contactEnd(ofxBox2dContactArgs &e) {
-	if(e.a != NULL && e.b != NULL) { 
-		
-		SoundData * aData = (SoundData*)e.a->GetBody()->GetUserData();
-		SoundData * bData = (SoundData*)e.b->GetBody()->GetUserData();
-		
-		if(aData) {
-			aData->bHit = false;
+		else {
+			joint.setup(box2d.getWorld(), circles[i-1].body, circles[i].body);
 		}
 		
-		if(bData) {
-			bData->bHit = false;
-		}
+		joint.setLength(25);
+		joints.push_back(joint);
 	}
 }
-
-
 
 //--------------------------------------------------------------
 void testApp::update() {
-	
-	box2d.update();
-	
-	// add some circles every so often
-	if((int)ofRandom(0, 50) == 0) {
-		ofxBox2dCircle c;
-		c.setPhysics(1, 0.5, 0.9);
-		c.setup(box2d.getWorld(), (ofGetWidth()/2)+ofRandom(-30, 30), -20, ofRandom(20, 50));
-		
-		c.setData(new SoundData());
-		SoundData * sd = (SoundData*)c.getData();
-		sd->soundID = ofRandom(0, N_SOUNDS);
-		sd->bHit	= false;
-		
-		circles.push_back(c);	
-	}
-
+	box2d.update();	
 }
 
 
 //--------------------------------------------------------------
 void testApp::draw() {
 	
+	ofSetHexColor(0xf2ab01);
+	anchor.draw();
 	
 	for(int i=0; i<circles.size(); i++) {
 		ofFill();
-		SoundData * data = (SoundData*)circles[i].getData();
-		
-		if(data && data->bHit) ofSetHexColor(0xff0000);
-		else ofSetHexColor(0x4ccae9);
-		
-
+		ofSetHexColor(0x01b1f2);
 		circles[i].draw();
 	}
 	
+	for(int i=0; i<joints.size(); i++) {
+		ofSetHexColor(0x444342);
+		joints[i].draw();
+	}
 	
 	string info = "";
+	info += "Press [n] to add a new joint\n";
+	info += "click and pull the chain around\n";
 	info += "FPS: "+ofToString(ofGetFrameRate(), 1)+"\n";
 	ofSetHexColor(0x444342);
 	ofDrawBitmapString(info, 30, 30);
@@ -114,6 +73,26 @@ void testApp::draw() {
 
 //--------------------------------------------------------------
 void testApp::keyPressed(int key) {
+	
+	if(key == 'n') {
+		
+		// add a new circle
+		ofxBox2dCircle circle;
+		circle.setPhysics(3.0, 0.53, 0.1);
+		circle.setup(box2d.getWorld(), circles.back().getPosition().x+ofRandom(-30, 30), circles.back().getPosition().y-30, 8);
+		circles.push_back(circle);
+	
+		// get this cirlce and the prev cirlce
+		int a = (int)circles.size()-2;
+		int b = (int)circles.size()-1; 
+
+		// now connect the new circle with a joint
+		ofxBox2dJoint joint;
+		joint.setup(box2d.getWorld(), circles[a].body, circles[b].body);
+		joint.setLength(25);
+		joints.push_back(joint);
+	}
+	
 	if(key == 't') ofToggleFullscreen();
 }
 

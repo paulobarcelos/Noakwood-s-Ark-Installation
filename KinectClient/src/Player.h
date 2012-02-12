@@ -10,6 +10,7 @@
 struct Limb {
     Limb(){
         angle = 0;
+        isExtremity = true;
     }
     
 	float thickness;
@@ -18,10 +19,12 @@ struct Limb {
 	float height;
     ofImage texture;
     ofxBox2dRect body;
+    ofxBox2dJoint joint;
     ofPoint center;
 	ofPoint origin;
 	ofPoint end;
 	float angle;
+    bool isExtremity;
 };
 
 struct RawData {
@@ -121,6 +124,7 @@ class Player {
     void draw();
     
     void setupLimb(Limb &limb, LimbSkin skin);
+    void connectLimb(Limb &limbA, Limb &limbB);
 	void calculateLimb(Limb &limb, ofPoint origin, ofPoint src, ofPoint dst);
 	void drawLimb(Limb &limb);
     

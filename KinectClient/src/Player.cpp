@@ -10,31 +10,54 @@ void Player::setup(b2World* world, PlayerSkin skin, ofPoint position) {
     
     this->position = position;
     
+    // Setup
 	setupLimb(spineToShoulderCenter, skin.spineToShoulderCenter);
 	setupLimb(spineToHipCenter, skin.spineToHipCenter);
+    setupLimb(shoulderCenterToHead, skin.shoulderCenterToHead);
 
-	setupLimb(hipCenterToHipLeft, skin.hipCenterToHipLeft);
-	setupLimb(hipCenterToHipRight, skin.hipCenterToHipRight);
-
-	setupLimb(shoulderCenterToHead, skin.shoulderCenterToHead);
-	setupLimb(shoulderCenterToShoulderLeft, skin.shoulderCenterToShoulderLeft);
-	setupLimb(shoulderCenterToShoulderRight, skin.shoulderCenterToShoulderRight);
-
+    setupLimb(shoulderCenterToShoulderLeft, skin.shoulderCenterToShoulderLeft);
 	setupLimb(shoulderLeftToElbowLeft, skin.shoulderLeftToElbowLeft);
 	setupLimb(elbowLeftToWristLeft, skin.elbowLeftToWristLeft);
 	setupLimb(wristLeftToHandLeft, skin.wristLeftToHandLeft);
+    
+    setupLimb(hipCenterToHipLeft, skin.hipCenterToHipLeft);
+    setupLimb(hipLeftToKneeLeft, skin.hipLeftToKneeLeft);
+	setupLimb(kneeLeftToAnkleLeft, skin.kneeLeftToAnkleLeft);
+	setupLimb(ankleLeftToFootLeft, skin.ankleLeftToFootLeft);
 
+    setupLimb(shoulderCenterToShoulderRight, skin.shoulderCenterToShoulderRight);
 	setupLimb(shoulderRightToElbowRight, skin.shoulderRightToElbowRight);
 	setupLimb(elbowRightToWristRight, skin.elbowRightToWristRight);
 	setupLimb(wristRightToHandRight, skin.wristRightToHandRight);
 
-	setupLimb(hipLeftToKneeLeft, skin.hipLeftToKneeLeft);
-	setupLimb(kneeLeftToAnkleLeft, skin.kneeLeftToAnkleLeft);
-	setupLimb(ankleLeftToFootLeft, skin.ankleLeftToFootLeft);
-
+    setupLimb(hipCenterToHipRight, skin.hipCenterToHipRight);
 	setupLimb(hipRightToKneeRight, skin.hipRightToKneeRight);
 	setupLimb(kneeRightToAnkleRight, skin.kneeRightToAnkleRight);
 	setupLimb(ankleRightToFootRight, skin.ankleRightToFootRight);
+    
+    // Connect
+    connectLimb(spineToShoulderCenter, spineToHipCenter);
+    connectLimb(spineToShoulderCenter, shoulderCenterToHead);
+    
+    connectLimb(shoulderCenterToHead, shoulderCenterToShoulderLeft);
+    connectLimb(shoulderCenterToShoulderLeft, shoulderLeftToElbowLeft);
+    connectLimb(shoulderLeftToElbowLeft, elbowLeftToWristLeft);
+    connectLimb(elbowLeftToWristLeft, wristLeftToHandLeft);
+    
+    connectLimb(spineToHipCenter, hipCenterToHipLeft);
+    connectLimb(hipCenterToHipLeft, hipLeftToKneeLeft);
+    connectLimb(hipLeftToKneeLeft, kneeLeftToAnkleLeft);
+    connectLimb(kneeLeftToAnkleLeft, ankleLeftToFootLeft);
+    
+    connectLimb(shoulderCenterToHead, shoulderCenterToShoulderRight);
+    connectLimb(shoulderCenterToShoulderRight, shoulderRightToElbowRight);
+    connectLimb(shoulderRightToElbowRight, elbowRightToWristRight);
+    connectLimb(elbowRightToWristRight, wristRightToHandRight);
+    
+    connectLimb(spineToHipCenter, hipCenterToHipRight);
+    connectLimb(hipCenterToHipRight, hipRightToKneeRight);
+    connectLimb(hipRightToKneeRight, kneeRightToAnkleRight);
+    connectLimb(kneeRightToAnkleRight, ankleRightToFootRight);
 }
 
 void Player::setupLimb(Limb &limb, LimbSkin limbSkin){
@@ -46,8 +69,14 @@ void Player::setupLimb(Limb &limb, LimbSkin limbSkin){
 	limb.height = limbSkin.height * skin.globalScale;
     
     limb.body.fixture.filter.groupIndex = -1;
-    limb.body.setPhysics(10, 0, 0);
+    limb.body.setPhysics(1, 0, 0);
     limb.body.setup(world, position.x, position.y, limb.length/2, limb.thickness/2);    
+}
+
+void Player::connectLimb(Limb &limbA, Limb &limbB){
+    limbA.isExtremity = false;
+    limbA.joint.setup(world, limbA.body.body, limbB.body.body, 5.0, 0, false);
+    limbA.joint.setLength(limbA.length / 2);
 }
 
 void Player::setData(ofxOscMessage &m){
@@ -102,7 +131,7 @@ void Player::setData(ofxOscMessage &m){
         ofPoint center;
         ofPoint powMovingLimit;
         
-        center.y = position.y + powf(skin.movingLimit.y, 1.05) * data.targetOffset.y - skin.movingLimit.y * 0.5;
+        center.y = position.y + powf(skin.movingLimit.y, 1.15) * data.targetOffset.y - skin.movingLimit.y * 0.3;
         center.x = position.x + skin.movingLimit.x * data.targetOffset.x;
         
         calculateLimb(spineToShoulderCenter, center, data.spine, data.shoulderCenter);

@@ -9,7 +9,6 @@
 
 struct Limb {
     Limb(){
-        nextAngle = 0;
         angle = 0;
     }
     
@@ -19,12 +18,6 @@ struct Limb {
 	float height;
     ofImage texture;
     ofxBox2dRect body;
-    
-	ofPoint nextCenter;
-	ofPoint nextOrigin;
-	ofPoint nextEnd;
-	float nextAngle;
-    
     ofPoint center;
 	ofPoint origin;
 	ofPoint end;
@@ -121,7 +114,7 @@ struct PlayerSkin {
 class Player {
 	public:
 	
-	void setup(b2World* world, PlayerSkin skin);    
+	void setup(b2World* world, PlayerSkin skin, ofPoint position = ofPoint(ofGetWidth()/2, ofGetHeight()/2));    
     void setData(ofxOscMessage &m);
     void update();
     void updateLimb(Limb &limb);
@@ -139,8 +132,6 @@ class Player {
     
     RawData data;
     PlayerSkin skin;
-    
-    ofPoint movingLimit;
     
     ofPoint position;
     

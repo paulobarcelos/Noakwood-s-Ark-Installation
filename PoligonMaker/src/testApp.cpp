@@ -74,6 +74,7 @@ void testApp::setup() {
     isDrawingHole = false;
     
     boat.loadImage("boat.png");
+    ofSetWindowShape(boat.getWidth(), boat.getHeight());
 }
 
 //--------------------------------------------------------------

@@ -6,15 +6,14 @@ void Game::setup(float width, float height) {
     this->height = height;
     
     box2d.init();
-	box2d.setGravity(0, 10);
-	box2d.setFPS(30.0);
+	box2d.setGravity(0, 15);
     ofAddListener(box2d.contactStartEvents, this, &Game::contactStart);
         
     // Bear skin
     PlayerSkin bear;
-    bear.globalScale = 0.7;
+    bear.globalScale = 0.6;
     bear.spineToShoulderCenter.set("bear/spineToShoulderCenter.png", 0.7, ofPoint(0.5, 0.4));
-    bear.spineToHipCenter.set(0);
+    bear.spineToHipCenter.set(1);
     
     bear.hipCenterToHipLeft.set(30);
     bear.hipCenterToHipRight.set(30);
@@ -39,7 +38,7 @@ void Game::setup(float width, float height) {
     bear.kneeRightToAnkleRight.set("bear/kneeRightToAnkleRight.png");
     bear.ankleRightToFootRight.set("bear/ankleRightToFootRight.png");
     
-    bear.movingLimit.set( width / 2, bear.hipLeftToKneeLeft.length + bear.kneeLeftToAnkleLeft.length );
+    bear.movingLimit.set( width, bear.hipLeftToKneeLeft.length + bear.kneeLeftToAnkleLeft.length + bear.ankleLeftToFootLeft.length );
     
     player1 = new Player();
     player1->setup(box2d.getWorld(), bear);
@@ -47,8 +46,8 @@ void Game::setup(float width, float height) {
     game1 = new PlayerGame();
     game1->setup(box2d.getWorld(), player1);
     game1->position.x = (width / 8) * 2;
-    game1->position.y = height - 220;
-    game1->insideBoatOffset.x = -500;
+    game1->position.y = height - 30;
+    game1->insideBoatOffset.x = -450;
     
     player2 = new Player();
     player2->setup(box2d.getWorld(), bear);
@@ -56,8 +55,8 @@ void Game::setup(float width, float height) {
     game2 = new PlayerGame();
     game2->setup(box2d.getWorld(), player2);
     game2->position.x = (width / 8) * 6;
-    game2->position.y = height - 220;
-    game2->insideBoatOffset.x = 500;
+    game2->position.y = height - 30;
+    game2->insideBoatOffset.x = 450;
     
     
     // Boat
@@ -88,17 +87,17 @@ void Game::setup(float width, float height) {
 		}
 	}
     for (int i=0; i<boat.size(); i++) {
-		boat[i].setPosition(width/2, height);
+		boat[i].setPosition(width/2, height - 128);
 	} 
    
     
     // Water
-    circleLabel = 600;
+    circleLabel = 800;
     
-    for(int i = 0; i < 600; i ++ ){
-        float r = ofRandom(10, 15);
+    for(int i = 0; i < 800; i ++ ){
+        float r = ofRandom(5, 8);
         Water circle;
-        circle.setPhysics(5, 0.6, 0);
+        circle.setPhysics(100, 0, 0);
         circle.setup(box2d.getWorld(), i * -100, -100, r);
         circle.dead = true;
         circles.push_back(circle);
@@ -128,10 +127,10 @@ void Game::setData(ofxOscMessage &m){
 
 void Game::update(){
     // add some circles every so often
-	if(ofGetFrameNum()% 3 == 0) {
+	if(ofGetFrameNum()% 1 == 0) {
         Water* circlePtr = getNextCircle();
         if(circlePtr){
-            circlePtr->setPosition(width / 2 + ofRandom(-370,370), height - 80 );
+            circlePtr->setPosition(width / 2 + ofRandom(-300,300), height - 50 );
         }
 	}
     
@@ -166,7 +165,7 @@ void Game::draw(){
     waterFbo.begin();    
     blurShader.begin(); 
     glColor3f(1, 1, 1);    
-	for(int i=0; i<6; i++) {
+	for(int i=0; i<4; i++) {
 		int srcPos = i % 2;				// attachment to write to
 		int dstPos = 1 - srcPos;		// attachment to read from
 		glDrawBuffer(GL_COLOR_ATTACHMENT0_EXT + dstPos);	// write to this texture

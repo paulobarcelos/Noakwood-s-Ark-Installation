@@ -11,8 +11,22 @@ public:
         ofPushStyle();
             ofFill();
             ofSetColor(0);
-            ofCircle(getPosition(), getRadius()+45);
+            ofCircle(getPosition(), getRadius() + 10);
         ofPopStyle();
+    };   
+    
+};
+/**
+ * Custom ofxBox2d that updates it's world accordingly to current FPS and not a fixed one.
+ * Also note that as velocityIterations, positionIterations and private members of ofxBox2d
+ * setIterations(int velocityTimes, int positionTimes) won't work. Set those isntead via update(int velocityTimes, int positionTimes)
+ */
+class CustomOfxBox2d : public ofxBox2d {
+	
+public:
+	void update(int velocityTimes = 40, int positionTimes = 20) {
+        if(world == NULL) return;
+        world->Step(1.f/ofGetFrameRate(), velocityTimes, positionTimes);
     };   
     
 };
@@ -37,7 +51,7 @@ class Game {
     Player * player1;
     Player * player2;
     
-    ofxBox2d box2d;
+    CustomOfxBox2d box2d;
     int circleLabel;
 	vector <Water> circles;
     vector <ofxBox2dPolygon> boat;

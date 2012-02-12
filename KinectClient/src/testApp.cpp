@@ -7,7 +7,7 @@ void testApp::setup(){
     ofSetFrameRate(30);
     
     int w = 1028;
-    int h = 500;
+    int h = 768;
     
     ofSetWindowShape(w, h);    
     game.setup(w,h);

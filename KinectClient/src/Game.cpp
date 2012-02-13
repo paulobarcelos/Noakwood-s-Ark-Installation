@@ -119,7 +119,7 @@ void Game::update(){
             }            
             break;
         case Game::PLAYING:           
-            boatPositionTweener.update(dt);
+            //boatPositionTweener.update(dt);
             boat.update();
             
             game1->update();
@@ -262,9 +262,9 @@ void Game::initPlaying() {
     
     boat.position.y = height;
     boatPositionTweener.clearTweens();
-    boatPositionTweener.setup(2, 0, Sine::easeInOut, BACK_AND_FORTH);
+    /*boatPositionTweener.setup(2, 0, Sine::easeInOut, BACK_AND_FORTH);
     boatPositionTweener.addTween( &(boat.position.y) , -20);
-    boatPositionTweener.start();
+    boatPositionTweener.start();*/
 }
 void Game::initTransitionToEnd() {
     state = Game::TRANSITION_TO_END;

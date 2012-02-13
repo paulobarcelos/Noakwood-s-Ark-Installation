@@ -26,13 +26,7 @@ void Boat::setup(b2World* world) {
 					poly.addVertex(x, y);
 				}				
 			}
-            poly.setPhysics(9999, 0, 0);
             poly.create(world);
-            b2MassData massData;
-            massData.mass = 999999999;
-            massData.center = b2Vec2(0,0);
-            massData.I = 0;
-            poly.body->SetMassData(&massData);
             boat.push_back(poly);		
 		}
 	}
@@ -43,23 +37,9 @@ void Boat::setup(b2World* world) {
 }
 void Boat::update(){
     float time = 1.f/ofGetFrameRate();
+    
     for (int i=0; i<boat.size(); i++) {
-        //boat[i].setPosition(position.x, position.y - 128);
-		ofPoint nextPosition(position.x, position.y - 128);
-        ofPoint currentPositon(boat[i].body->GetPosition().x, boat[i].body->GetPosition().y);
-        ofPoint distance = nextPosition / OFX_BOX2D_SCALE - currentPositon;
-        ofPoint velocity = distance / time;
-        boat[i].setVelocity(velocity);
-        
-        // Apply angle
-        float nextAngle = 0;
-        float currentAngle = boat[i].body->GetAngle();
-        float deltaAngle = ofWrapRadians(nextAngle * DEG_TO_RAD - currentAngle);
-        float angleVelocity = deltaAngle / time;
-        boat[i].body->SetAngularVelocity(angleVelocity);
-        
-        // Cancel gravity
-        boat[i].body->ApplyForce( boat[i].body->GetMass() * - world->GetGravity(), boat[i].body->GetWorldCenter() );
+        boat[i].setPosition(position.x, position.y - 128);
 	}
 }
 
@@ -69,7 +49,7 @@ void Boat::draw(){
     ofScale(scale, scale);
     texture.draw(0,0);
     ofPopMatrix();
-    
+        
     for (int i=0; i<boat.size(); i++) 
         boat[i].draw();
 }

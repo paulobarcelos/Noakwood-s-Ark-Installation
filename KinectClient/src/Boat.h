@@ -16,5 +16,6 @@ private:
     b2World* world;
     ofImage texture;  
     vector <ofxBox2dPolygon> boat;
+    
     float scale;
 };

@@ -24,7 +24,7 @@ public:
 };
 
 class Game {
-	public:
+public:
     
     enum GameState{
         START,
@@ -47,18 +47,20 @@ class Game {
     void initEnd();
     void initTransitionToStart();
     
-    PlayerSkin* getRandomSkin();
+private:
     
-    
-    void contactStart(ofxBox2dContactArgs &e);
-   
-    
-    CustomOfxBox2d box2d;
-    
+    // Main Objects
+    CustomOfxBox2d box2d;    
     float width;
-    float height;
-    
+    float height;    
     GameState state;
+    PlayerGame game1;
+    PlayerGame game2;    
+    Player player1;
+    Player player2;    
+    Boat boat;    
+    Water water;
+           
     
     // Use as the timer for each state
     SimpleTweener startTimer;
@@ -68,16 +70,8 @@ class Game {
     SimpleTweener endTimer;
     SimpleTweener transitionToStartTimer;
     
-    PlayerGame* game1;
-    PlayerGame* game2;
-    
-    Player* player1;
-    Player* player2;
-    
-    Boat boat;
-    
-    Water water;
-    
+    // Skin control
+    PlayerSkin* getRandomSkin();
     vector <PlayerSkin*> skins;    
     int currentSkinID;
     

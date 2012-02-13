@@ -81,9 +81,12 @@ struct PlayerSkin {
     
     PlayerSkin(){
         globalScale = 1.0;
+        name = "Unnamed Player";
     }
     
     float globalScale;
+    
+    string name;
     
     LimbSkin spineToShoulderCenter;
 	LimbSkin spineToHipCenter;
@@ -114,11 +117,20 @@ struct PlayerSkin {
     ofPoint movingLimit;
 };
 
+struct SkinLimbSettings{
+    float boneRatio;
+    ofPoint anchorPercent;
+    float boneThickness;
+};
+
 class Player {
 	public:
     Player(){
         isReady = false;  
     };
+    
+    static void loadSkin(string name, PlayerSkin* skin);
+    static void loadLimbSkinSettings(string file, SkinLimbSettings* settings);
 	
 	void setup(b2World* world, PlayerSkin* skin, ofPoint position = ofPoint(ofGetWidth()/2, ofGetHeight()/2));    
     void setData(ofxOscMessage &m);
@@ -170,6 +182,5 @@ class Player {
     
     b2World* world;
 	
-    bool isReady;
-	
+    bool isReady;	
 };

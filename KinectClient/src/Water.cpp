@@ -7,18 +7,16 @@ void Water::setup(b2World* world, float width, float height) {
     
     for(int i = 0; i < 800; i ++ ){
         float r = ofRandom(5, 8);
-        WaterParticle circle;
-        circle.setPhysics(10, 0, 0);
-        circle.setup(world, i * -100, -100, r);
-        circle.dead = true;
-        circles.push_back(circle);
-        
-        circle.setData(new Data());
-		Data * data = (Data*)circle.getData();
+        WaterParticle* particle = new WaterParticle();
+        particle->setPhysics(10, 0, 0);
+        particle->setup(world, width/2, 2 * height + i -100, r);
+              
+        particle->setData(new Data());
+		Data * data = (Data*)particle->getData();
         data->type = WATER;
-		data->isActive = false;
         data->label = i;
-		
+        
+        particles.push_back(particle);
 	}
     
     ofFbo::Settings s;
@@ -29,14 +27,21 @@ void Water::setup(b2World* world, float width, float height) {
     blurShader.load("", "blur_frag.glsl");
     thresholdShader.load("", "threshold_frag.glsl");
 	
-    
+    reset();
 }
+void Water::reset(){
+    for(int i=0; i<particles.size(); i++) {
+        inactivateParticle(particles[i]);
+	}
+}
+
 void Water::update(){
-    // add some circles every so often
+    // add some particles every so often
     if(ofGetFrameNum()% 1 == 0) {
-        WaterParticle* circlePtr = getNextCircle();
-        if(circlePtr){
-            circlePtr->setPosition(width / 2 + ofRandom(-300,300), height - 70 );
+        WaterParticle* particle = getNextParticle();
+        if(particle){
+            particle->setPosition(width / 2 + ofRandom(-300,300), height - 50 );
+            particle->setVelocity(0,0);
         }
     }  
 }
@@ -46,8 +51,8 @@ void Water::draw(){
     ofPushStyle();
     ofEnableAlphaBlending();
     ofClear(0,0,0,0);    
-    for(int i=0; i<circles.size(); i++) {	
-        circles[i].draw();
+    for(int i=0; i<particles.size(); i++) {	
+        particles[i]->draw();
     }
     ofPopStyle();
     waterFbo.end();    
@@ -76,27 +81,32 @@ void Water::draw(){
     thresholdShader.end();
 }
 
-WaterParticle* Water::getNextCircle() {
-    for(int i=0; i<circles.size(); i++) {
-        if(circles[i].dead){
-            circles[i].dead = false;
-            circles[i].setVelocity(0,0);
-            circles[i].enableGravity(true);
-            return &(circles[i]);
+WaterParticle* Water::getNextParticle() {
+    for(int i=0; i<particles.size(); i++) {
+        if(particles[i]->dead){
+            particles[i]->dead = false;
+            particles[i]->setVelocity(0,0);
+            particles[i]->enableGravity(true);
+            return particles[i];
         }
 	}
     return NULL;
 }
-void Water::removeCircle(int label) {
-	for(std::vector<WaterParticle>::iterator it = circles.begin(); it != circles.end(); ++it) {
-        Data * data = (Data*)(*it).getData();
+void Water::removeParticle(int label) {
+	for(std::vector<WaterParticle*>::iterator it = particles.begin(); it != particles.end(); ++it) {
+        Data * data = (Data*)(*it)->getData();
         if( data->label == label ){
-            (*it).dead = true;
-            (*it).setPosition(label * -100, -100);
-            (*it).setVelocity(0,0);
-            (*it).enableGravity(false);
+            inactivateParticle(*it);
             break;
         }
         
     }
+}
+
+void Water::inactivateParticle(WaterParticle* particle){
+    Data* data = (Data*)particle->getData();
+    particle->dead = true;
+    particle->setPosition(width/2, 2 * height + data->label * 100);
+    particle->setVelocity(0,0);
+    particle->enableGravity(false);
 }

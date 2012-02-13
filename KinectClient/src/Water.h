@@ -21,16 +21,20 @@ class Water {
 public:
     
     void setup(b2World* world, float width, float height);
+    void reset();
     void update();
     void draw();
     
-    void removeCircle(int label);
-    WaterParticle* getNextCircle();
+    void removeParticle(int label);
+    WaterParticle* getNextParticle();
+private:
+    
+    void inactivateParticle(WaterParticle* particle);
     
     float width;
     float height;
     b2World* world;
-    vector <WaterParticle> circles;
+    vector <WaterParticle*> particles;
 
     ofFbo waterFbo;
     ofShader blurShader;

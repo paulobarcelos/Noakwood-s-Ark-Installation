@@ -2,18 +2,15 @@
 
 enum ShapeType{
     UNDEFINED_SHAPE = 0,
-    WATER = 1,
-    SENSOR_IN = 2,
-    SENSOR_OUT = 3
+    WATER
 };
 
 class Data {
 public:
     Data(){
         type = UNDEFINED_SHAPE;
-        isActive = false;
+        label = -1;
     };
     int	 label;
     ShapeType type;
-    bool isActive;
 };

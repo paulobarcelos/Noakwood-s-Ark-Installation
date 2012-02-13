@@ -5,26 +5,31 @@
 #include "ofxBox2d.h"
 #include "Constants.h"
 #include "Player.h"
+#include "Water.h"
 
-class PlayerGame {
-	public:
-    
-	void setup(b2World* world);
-    void setPlayer(Player* player);
-    void setData(ofxOscMessage &m);
+class PlayerGame : public b2QueryCallback{
+public:
+    enum Layout{
+        LEFT,
+        RIGHT
+    };
+        
+	void setup(b2World* world, Player* player, Water* water, Layout layout, float width, float height);
+    void reset();
     void update();
     void draw();
+
+private:    
+    b2World* world;
+    Player* player;
+    Water* water;    
+    Layout layout;
+    float width;
+    float height;
     
-    ofxBox2dRect sensor;
-    
-    float waterLevel;
-    
-    ofPoint position;
-    ofPoint offset;
-    
-    ofPoint sensorOffset;
-    
-    
-    Player* player;        
-    b2World* world;	
+    int points;
+        
+    // AAQQ
+    bool ReportFixture(b2Fixture* fixture);
+    ofRectangle sensorArea;
 };

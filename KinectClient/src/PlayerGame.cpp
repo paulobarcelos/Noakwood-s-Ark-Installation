@@ -1,36 +1,69 @@
 #include "PlayerGame.h"
 
-void PlayerGame::setup(b2World* world) {
+void PlayerGame::setup(b2World* world, Player* player, Water* water, Layout layout, float width, float height) {
     this->world = world;
-    player = NULL;    
-       
-    sensor.setup(world, 0, 0, 2000, 2);
-    
-    sensor.setData(new Data());
-    Data * data = (Data*) sensor.getData();
-    data->type = SENSOR_IN;
-    
-    sensorOffset.set(0, 0);    
-    
-    waterLevel = 0;
-}
-void PlayerGame::setData(ofxOscMessage &m){
-    if(player)player->setData(m);
-}
-void PlayerGame::setPlayer(Player* player){
+    this->water = water;
     this->player = player;
+    this->layout = layout;
+    this->width = width;
+    this->height = height;
+    
+    
+    sensorArea.set(0, height, 10000, 100);
+    switch (layout) {
+        case PlayerGame::LEFT:
+            sensorArea.x = width/2 - sensorArea.width;
+            break;            
+        case PlayerGame::RIGHT:
+            sensorArea.x = width/2;
+            break;
+    }
 }
-
+void PlayerGame::reset(){
+    points = 0;
+}
 void PlayerGame::update(){
+    ofPoint lower(sensorArea.x, sensorArea.y);
+    lower /= OFX_BOX2D_SCALE;
     
-    if(player){
-        player->position = position + offset;
-    }    
+    ofPoint upper(sensorArea.x + sensorArea.width, sensorArea.y + sensorArea.height);
+    upper /= OFX_BOX2D_SCALE;
     
-    sensor.setPosition(position + offset + sensorOffset);
-
+    b2AABB aabb;
+    aabb.lowerBound.Set(lower.x, lower.y);
+    aabb.upperBound.Set(upper.x, upper.y);
+    world->QueryAABB( this, aabb );
 }
 
 void PlayerGame::draw(){
-    sensor.draw();
+    switch (layout) {
+        case PlayerGame::LEFT:
+            ofPushMatrix();
+                ofTranslate(50, 50);
+                ofScale(2, 2);
+                ofDrawBitmapString(player->skin->name, 0,0);
+                ofDrawBitmapString(ofToString(points), 0,10);
+            ofPopMatrix();
+            
+            break;            
+        case PlayerGame::RIGHT:
+            ofPushMatrix();
+                ofTranslate(width - 50, 50);
+                ofScale(2, 2);
+                ofDrawBitmapString(player->skin->name, 0,0);
+                ofDrawBitmapString(ofToString(points), 0,10);
+            ofPopMatrix();
+            break;
+    }
+}
+
+bool PlayerGame::ReportFixture(b2Fixture* fixture) {
+    Data * data = (Data*)fixture->GetBody()->GetUserData();        
+    if(data) {
+        if(data->type == WATER){
+            water->removeParticle(data->label);
+            points++;
+        }
+    }
+    return true;
 }

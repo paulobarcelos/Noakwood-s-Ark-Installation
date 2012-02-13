@@ -4,10 +4,9 @@
 void testApp::setup(){
 	receiver.setup( PORT );
     ofSetVerticalSync(true);
-    ofSetFrameRate(30);
     
     int w = 1028;
-    int h = 768;
+    int h = 600;
     
     ofSetWindowShape(w, h);    
     game.setup(w,h);

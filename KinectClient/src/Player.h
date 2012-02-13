@@ -88,6 +88,9 @@ struct PlayerSkin {
     
     string name;
     
+    string iconFile;
+    string iconDeadFile;
+    
     LimbSkin spineToShoulderCenter;
 	LimbSkin spineToHipCenter;
     
@@ -158,6 +161,9 @@ class Player {
     PlayerSkin* skin;
     
     ofPoint position;
+    
+    ofImage icon;
+    ofImage iconDead;
     
 	Limb spineToShoulderCenter;
 	Limb spineToHipCenter;

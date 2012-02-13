@@ -60,7 +60,8 @@ void Game::update(){
     switch (state) {
         case Game::START:
             player1.update();
-            player2.update();
+            player2.update();            
+            playersOpacityTweener.update(dt);
             
             startTimer.update(dt);
             if(startTimer.isComplete()){
@@ -94,27 +95,19 @@ void Game::update(){
             gamePlayTweener1.update(dt);
             gamePlayTweener2.update(dt);
             
-            float deltaWaterLevel = water.getLevel() - lastWaterLevel;
-            
-            cout << deltaWaterLevel << endl;
+            float currentWaterLevel = water.getLevel();
+            currentWaterLevel *= currentWaterLevel; 
+    
+            float deltaWaterLevel = currentWaterLevel - lastWaterLevel;
             
             if(deltaWaterLevel > 0){
-                //positiveWaterLevel += deltaWaterLevel;
-                //negativeWaterLevel -= deltaWaterLevel;
                 gamePlayCapacityPositiveTweener.setProgress(deltaWaterLevel);
                 gamePlayCapacityPositiveTweener.update(0);
             }
             else{
-                //negativeWaterLevel += deltaWaterLevel;
-                //positiveWaterLevel -= deltaWaterLevel;
                 gamePlayCapacityNegativeTweener.setProgress(deltaWaterLevel);
                 gamePlayCapacityNegativeTweener.update(0);
-            }
-            
-            
-            
-            
-                        
+            }                      
             
             playingTimer.update(dt);
             if(playingTimer.isComplete()){
@@ -122,16 +115,17 @@ void Game::update(){
             } 
             break;
         }
-        case Game::TRANSITION_TO_END:
-            
+        case Game::TRANSITION_TO_END:       
             
             boatPositionTweener.update(dt);
             boat.update();
             
             player1.update();
             player2.update();
+            playersOpacityTweener.update(dt);
             
-            water.update();
+            water.update();            
+            
             
             transitionToEndTimer.update(dt);
             if(transitionToEndTimer.isComplete()){
@@ -139,11 +133,6 @@ void Game::update(){
             } 
             break;
         case Game::END:
-            
-            
-            player1.update();
-            player2.update();
-            
             endTimer.update(dt);
             if(endTimer.isComplete()){
                 initTransitionToStart();
@@ -166,8 +155,11 @@ void Game::draw(){
     ofEnableAlphaBlending();
     switch (state) {
         case Game::START:
+            ofPushStyle();
+            ofSetColor(255, 255, 255, playersOpacity * (float) 255);
             player1.draw();
             player2.draw();
+            ofPopStyle();
             
             ofDrawBitmapString("START", 20, 30);
             ofDrawBitmapString(ofToString((startTimer.getDuration() - startTimer.getDuration() * startTimer.getProgress())), 20, 40);
@@ -199,9 +191,12 @@ void Game::draw(){
             break;
         case Game::TRANSITION_TO_END:
             beginGamePlayDraw();
-                boat.draw();            
-                player1.draw();
-                player2.draw();
+                boat.draw();
+                ofPushStyle();
+                ofSetColor(255, 255, 255, playersOpacity * (float) 255);
+                    player1.draw();
+                    player2.draw();
+                ofPopStyle();
                 water.draw();
             endGamePlayDraw();
             
@@ -210,9 +205,6 @@ void Game::draw(){
             ofDrawBitmapString(ofToString((transitionToEndTimer.getDuration() - transitionToEndTimer.getDuration() * transitionToEndTimer.getProgress())), 20, 40);
             break;
         case Game::END:
-            player1.draw();
-            player2.draw();
-            
             ofDrawBitmapString("END", 20, 30);
             ofDrawBitmapString(ofToString((endTimer.getDuration() - endTimer.getDuration() * endTimer.getProgress())), 20, 40);
             break;
@@ -227,6 +219,12 @@ void Game::draw(){
 void Game::initStart() {
     state = Game::START;
     startTimer.start();
+    
+    playersOpacity = 0;
+    playersOpacityTweener.clearTweens();
+    playersOpacityTweener.setup(0.5f, 0, Sine::easeOut);
+    playersOpacityTweener.addTween(&playersOpacity, 1);
+    playersOpacityTweener.start();
     
     player1.setup(box2d.getWorld(), getRandomSkin());
     player1.position.set((width / 8) * 3, height * 0.5);
@@ -298,8 +296,11 @@ void Game::initTransitionToEnd() {
     state = Game::TRANSITION_TO_END;
     transitionToEndTimer.start();
     
-    gamePlayPosition.set(width/2, height/2);
-    gamePlayRotation = 0;
+    playersOpacity = 1;
+    playersOpacityTweener.clearTweens();
+    playersOpacityTweener.setup(1.f, 0, Sine::easeOut);
+    playersOpacityTweener.addTween(&playersOpacity, -1);
+    playersOpacityTweener.start();
     
     boat.position.y = height;
     boatPositionTweener.clearTweens();

@@ -40,7 +40,7 @@ void Water::reset(){
 
 void Water::update(){
     // add some particles every so often
-    if(ofGetFrameNum()% 3 == 0) {
+    if(ofGetFrameNum()% 2 == 0) {
         WaterParticle* particle = getNextParticle();
         if(particle){
             particle->setPosition(width / 2 + ofRandom(-300,300), height - 50 );

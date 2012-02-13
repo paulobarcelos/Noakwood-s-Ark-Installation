@@ -94,4 +94,7 @@ private:
     
     // Animation specific tweeners
     SimpleTweener boatPositionTweener;
+    
+    SimpleTweener playersOpacityTweener;
+    float playersOpacity;
 };

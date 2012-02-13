@@ -34,6 +34,9 @@ void Player::setup(b2World* world, PlayerSkin* skin, ofPoint position) {
 	setupLimb(kneeRightToAnkleRight, skin->kneeRightToAnkleRight);
 	setupLimb(ankleRightToFootRight, skin->ankleRightToFootRight);
     
+    icon.loadImage(skin->iconFile);
+    iconDead.loadImage(skin->iconDeadFile);
+    
     // Connect
     /*connectLimb(spineToShoulderCenter, spineToHipCenter);
     connectLimb(spineToShoulderCenter, shoulderCenterToHead);
@@ -251,35 +254,20 @@ void Player::draw(){
         drawLimb(hipRightToKneeRight);
         drawLimb(kneeRightToAnkleRight);
         drawLimb(ankleRightToFootRight);
-    }
-    else{
-        ofPushStyle();
-            ofSetColor(255,0,0);
-            ofDrawBitmapString("Waiting for player", position);
-        ofPopStyle();
-    }
-    
+    }    
 }
 void Player::drawLimb (Limb &limb){
     ofPoint currentPositon(limb.body.body->GetPosition().x, limb.body.body->GetPosition().y);
     currentPositon = currentPositon * OFX_BOX2D_SCALE;
     float currentAngle = limb.body.body->GetAngle() * RAD_TO_DEG - 90;
     
-	ofPushStyle();
-		ofSetColor(255);
 		ofPushMatrix();            
 			ofTranslate(currentPositon);
 			ofRotate(currentAngle);					
-			//limb.texture.draw(0,0, limb.height,limb.width);
+                limb.texture.draw(0,0, limb.height,limb.width);
 		ofPopMatrix();
-	ofPopStyle();
     
-    ofPushMatrix();	
-    ofPushStyle();
-        ofSetColor(255,0,0, 100);
-        limb.body.draw();
-    ofPopStyle();
-    ofPopMatrix();
+    //limb.body.draw();
 }
 
 void Player::flagIdle (){
@@ -294,6 +282,8 @@ void Player::flagActive (){
 }
 
 void Player::loadSkin(string name, PlayerSkin* skin) {
+    skin->name = name;
+    
     stringstream spineToShoulderCenter;
     spineToShoulderCenter << name << "/spineToShoulderCenter";
     stringstream spineToShoulderCenterImage;

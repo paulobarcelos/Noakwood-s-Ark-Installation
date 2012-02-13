@@ -7,6 +7,7 @@
 #include "PlayerGame.h"
 #include "Boat.h"
 #include "Water.h"
+#include "CentralMessage.h"
 
 #define FBO_MARGIN 100
 #define BOAT_LEVEL_OFFSET 256
@@ -38,6 +39,11 @@ public:
         TRANSITION_TO_START
     };
     
+    enum GameFinalState{
+        NORMAL,
+        GAME_OVER
+    };
+    
 	void setup(float width, float height);
     void setData(ofxOscMessage &m);
     void update();
@@ -57,12 +63,14 @@ private:
     float width;
     float height;    
     GameState state;
+    GameFinalState finalState;
     PlayerGame game1;
     PlayerGame game2;    
     Player player1;
     Player player2;    
     Boat boat;    
     Water water;
+    CentralMessage centralMessage;
            
     
     // Use as the timer for each state
@@ -97,4 +105,7 @@ private:
     
     SimpleTweener playersOpacityTweener;
     float playersOpacity;
+    
+    SimpleTweener gamePlayInterfaceTweener;
+    float gamePlayInterfaceOpacity;
 };

@@ -7,6 +7,9 @@
 #include "Player.h"
 #include "Water.h"
 
+#define TOP_ICON_SIZE 128
+#define FINAL_ICON_SIZE 350
+
 class PlayerGame : public b2QueryCallback{
 public:
     enum Layout{

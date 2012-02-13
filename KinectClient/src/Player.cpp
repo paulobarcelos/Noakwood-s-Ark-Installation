@@ -432,6 +432,14 @@ void Player::loadSkin(string name, PlayerSkin* skin) {
     skin->ankleRightToFootRight.set(ankleRightToFootRightImage.str(), ankleRightToFootRightSettings.boneRatio, ankleRightToFootRightSettings.anchorPercent, ankleRightToFootRightSettings.boneThickness);
     
     skin->movingLimit.set( skin->hipLeftToKneeLeft.length * 5, skin->hipLeftToKneeLeft.length + skin->kneeLeftToAnkleLeft.length + skin->ankleLeftToFootLeft.length );
+    
+    stringstream icon;
+    icon << name << "/icon.png";
+    skin->iconFile = icon.str();
+    
+    stringstream iconDead;
+    iconDead << name << "/iconDead.png";
+    skin->iconDeadFile = iconDead.str();
 }
 
 void Player::loadLimbSkinSettings(string file, LimbSkinSettings* settings) {

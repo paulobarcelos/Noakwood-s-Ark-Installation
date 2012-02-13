@@ -16,7 +16,7 @@ void Game::setup(float width, float height) {
     playingTimer.setup(60);
     transitionToEndTimer.setup(2);
     endTimer.setup(2);
-    transitionToStartTimer.setup(0.5);
+    transitionToStartTimer.setup(2);
     
         
     // Bear skin
@@ -36,6 +36,9 @@ void Game::setup(float width, float height) {
     // Players and games
     game1.setup(box2d.getWorld(), &player1, &water, PlayerGame::LEFT, width, height);
     game2.setup(box2d.getWorld(), &player2, &water, PlayerGame::RIGHT, width, height);
+    
+    // Central Message
+    centralMessage.setup(width, height);
     
     // FBO
     gamePlayFbo.allocate(width + FBO_MARGIN, height + FBO_MARGIN);
@@ -76,6 +79,8 @@ void Game::update(){
             player1.update();
             player2.update();
             
+            gamePlayInterfaceTweener.update(dt);
+            
             transitionToPlayingTimer.update(dt);
             if(transitionToPlayingTimer.isComplete()){
                 initPlaying();
@@ -107,11 +112,18 @@ void Game::update(){
             else{
                 gamePlayCapacityNegativeTweener.setProgress(deltaWaterLevel);
                 gamePlayCapacityNegativeTweener.update(0);
-            }                      
+            }
+            
+            
+            if(currentWaterLevel >= 1){
+                initTransitionToEnd();
+                finalState = Game::GAME_OVER;
+            }
             
             playingTimer.update(dt);
             if(playingTimer.isComplete()){
                 initTransitionToEnd();
+                finalState = Game::NORMAL;
             } 
             break;
         }
@@ -124,7 +136,12 @@ void Game::update(){
             player2.update();
             playersOpacityTweener.update(dt);
             
-            water.update();            
+            game1.update();
+            game2.update();
+            
+            water.update();
+            
+            gamePlayInterfaceTweener.update(dt);
             
             
             transitionToEndTimer.update(dt);
@@ -132,13 +149,17 @@ void Game::update(){
                 initEnd();
             } 
             break;
-        case Game::END:
+        case Game::END:            
+            gamePlayInterfaceTweener.update(dt);
+            
             endTimer.update(dt);
             if(endTimer.isComplete()){
                 initTransitionToStart();
             } 
             break;
         case Game::TRANSITION_TO_START:
+            gamePlayInterfaceTweener.update(dt);
+            
             transitionToStartTimer.update(dt);            
             if(transitionToStartTimer.isComplete()){             
                 initStart();
@@ -147,7 +168,7 @@ void Game::update(){
 
     }
     
-    
+    centralMessage.update();
     box2d.update();
 }
 
@@ -170,6 +191,12 @@ void Game::draw(){
                 player1.draw();
                 player2.draw();
             endGamePlayDraw();
+            
+            ofPushStyle();
+            ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
+                game1.draw();
+                game2.draw();
+            ofPopStyle();
             
             
             ofDrawBitmapString("TRANSITION_TO_PLAYING", 20, 30);
@@ -200,20 +227,98 @@ void Game::draw(){
                 water.draw();
             endGamePlayDraw();
             
+            ofPushStyle();
+            ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
+                game1.draw();
+                game2.draw();
+            ofPopStyle();
+            
             
             ofDrawBitmapString("TRANSITION_TO_END", 20, 30);
             ofDrawBitmapString(ofToString((transitionToEndTimer.getDuration() - transitionToEndTimer.getDuration() * transitionToEndTimer.getProgress())), 20, 40);
             break;
         case Game::END:
+            
+            switch (finalState) {
+                case Game::NORMAL:
+                    ofPushStyle();
+                    ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
+           
+                    ofPushMatrix();
+                    ofTranslate(width / 4, height / 2);
+                    player1.icon.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    ofPopMatrix();
+                    ofPushMatrix();
+                    ofTranslate((width / 4) * 3 , height / 2);
+                    player2.icon.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    ofPopMatrix();
+                    
+                    ofPopStyle();
+                    break;
+                    
+                case Game::GAME_OVER:
+                    ofPushStyle();
+                    ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
+                    
+                    ofPushMatrix();
+                    ofTranslate(width / 4, height / 2);
+                    player1.iconDead.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    ofPopMatrix();
+                    ofPushMatrix();
+                    ofTranslate((width / 4) * 3 , height / 2);
+                    player2.iconDead.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    ofPopMatrix();
+                    
+                    ofPopStyle();
+                    break;
+            }
+
+            
             ofDrawBitmapString("END", 20, 30);
             ofDrawBitmapString(ofToString((endTimer.getDuration() - endTimer.getDuration() * endTimer.getProgress())), 20, 40);
             break;
         case Game::TRANSITION_TO_START:
+            switch (finalState) {
+                case Game::NORMAL:
+                    ofPushStyle();
+                    ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
+                    
+                    ofPushMatrix();
+                    ofTranslate(width / 4, height / 2);
+                    player1.icon.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    ofPopMatrix();
+                    ofPushMatrix();
+                    ofTranslate((width / 4) * 3 , height / 2);
+                    player2.icon.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    ofPopMatrix();
+                    
+                    ofPopStyle();
+                    break;
+                    
+                case Game::GAME_OVER:
+                    ofPushStyle();
+                    ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
+                    
+                    ofPushMatrix();
+                    ofTranslate(width / 4, height / 2);
+                    player1.iconDead.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    ofPopMatrix();
+                    ofPushMatrix();
+                    ofTranslate((width / 4) * 3 , height / 2);
+                    player2.iconDead.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    ofPopMatrix();
+                    
+                    ofPopStyle();
+                    break;
+            }
+            
             ofDrawBitmapString("TRANSITION_TO_START", 20, 30);
             ofDrawBitmapString(ofToString((transitionToStartTimer.getDuration() - transitionToStartTimer.getDuration() * transitionToStartTimer.getProgress())), 20, 40);
             break;        
             
     }
+    
+    centralMessage.draw();
 }
 
 void Game::initStart() {
@@ -244,6 +349,19 @@ void Game::initTransitionToPlaying() {
     boatPositionTweener.setup(transitionToPlayingTimer.getDuration(), 0, Elastic::easeOut);
     boatPositionTweener.addTween( &(boat.position.y) , - 256);
     boatPositionTweener.start();
+    
+    gamePlayInterfaceOpacity = 0;
+    gamePlayInterfaceTweener.clearTweens();
+    gamePlayInterfaceTweener.setup(1.f, 0, Sine::easeOut);
+    gamePlayInterfaceTweener.addTween(&gamePlayInterfaceOpacity, 1);
+    gamePlayInterfaceTweener.start();
+    
+    game1.reset();
+    game2.reset();
+    
+    centralMessage.queueMessage(CentralMessage::READY);
+    centralMessage.queueMessage(CentralMessage::SET);
+    centralMessage.queueMessage(CentralMessage::GO);
 }
 void Game::initPlaying() {
     state = Game::PLAYING;
@@ -308,15 +426,43 @@ void Game::initTransitionToEnd() {
     boatPositionTweener.addTween( &(boat.position.y) , 300);
     boatPositionTweener.start();
     
+    gamePlayInterfaceOpacity = 1;
+    gamePlayInterfaceTweener.clearTweens();
+    gamePlayInterfaceTweener.setup(1.f, 0, Sine::easeOut);
+    gamePlayInterfaceTweener.addTween(&gamePlayInterfaceOpacity, -1);
+    gamePlayInterfaceTweener.start();
+    
+    switch (finalState) {
+        case Game::NORMAL:
+            centralMessage.queueMessage(CentralMessage::TIME_UP);
+            break;
+        case Game::GAME_OVER:
+            centralMessage.queueMessage(CentralMessage::GAME_OVER);
+            break;
+    }
+            
+    
     
 }
 void Game::initEnd() {
     state = Game::END;
     endTimer.start();
+    
+    gamePlayInterfaceOpacity = 0;
+    gamePlayInterfaceTweener.clearTweens();
+    gamePlayInterfaceTweener.setup(1.f, 0, Sine::easeOut);
+    gamePlayInterfaceTweener.addTween(&gamePlayInterfaceOpacity, 1);
+    gamePlayInterfaceTweener.start();
 }
 void Game::initTransitionToStart() {
     state = Game::TRANSITION_TO_START;
     transitionToStartTimer.start();
+    
+    gamePlayInterfaceOpacity = 1;
+    gamePlayInterfaceTweener.clearTweens();
+    gamePlayInterfaceTweener.setup(1.f, 0, Sine::easeOut);
+    gamePlayInterfaceTweener.addTween(&gamePlayInterfaceOpacity, -1);
+    gamePlayInterfaceTweener.start();
 }
 
 PlayerSkin* Game::getRandomSkin(){

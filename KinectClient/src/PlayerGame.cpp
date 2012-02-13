@@ -40,18 +40,16 @@ void PlayerGame::draw(){
         case PlayerGame::LEFT:
             ofPushMatrix();
                 ofTranslate(50, 50);
-                ofScale(2, 2);
-                ofDrawBitmapString(player->skin->name, 0,0);
-                ofDrawBitmapString(ofToString(points), 0,10);
+                player->icon.draw(0,0, TOP_ICON_SIZE, TOP_ICON_SIZE);
+                ofDrawBitmapString(ofToString(points), 0,TOP_ICON_SIZE);
             ofPopMatrix();
             
             break;            
         case PlayerGame::RIGHT:
             ofPushMatrix();
-                ofTranslate(width - 50, 50);
-                ofScale(2, 2);
-                ofDrawBitmapString(player->skin->name, 0,0);
-                ofDrawBitmapString(ofToString(points), 0,10);
+                ofTranslate(width - 50 - TOP_ICON_SIZE, 50);
+                player->icon.draw(0,0, TOP_ICON_SIZE, TOP_ICON_SIZE);
+                ofDrawBitmapString(ofToString(points), 0,TOP_ICON_SIZE);
             ofPopMatrix();
             break;
     }

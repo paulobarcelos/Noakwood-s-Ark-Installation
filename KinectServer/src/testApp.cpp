@@ -19,7 +19,7 @@ void testApp::setup() {
 	ofSetVerticalSync(true);
 
 	
-	kinect.init(false, true, true, true); // enable all captures
+	kinect.init(false, false, false, true); // enable all captures
 	kinect.open();
 
 	player1Target = ofRectangle(0.125f, 0.25f, 0.25f, 0.5f);
@@ -29,7 +29,7 @@ void testApp::setup() {
 	
 	kinectSource = &kinect;
 	angle = kinect.getCurrentAngle();
-	kinect.setAngle(5);
+	kinect.setAngle(17);
 	bPlugged = kinect.isConnected();
 	nearClipping = kinect.getNearClippingDistance();
 	farClipping = kinect.getFarClippingDistance();
@@ -46,24 +46,6 @@ void testApp::update() {
 	if(kinect.isConnected()){
 		kinectSource->update();
 	}
-}
-
-//--------------------------------------------------------------
-void testApp::draw() {
-	if(kinect.isInited()){
-		ofEnableAlphaBlending();
-			kinect.drawDepth(0, 0, kinect.getDepthResolutionWidth(), kinect.getDepthResolutionHeight());
-			kinect.drawLabel(0, 0, kinect.getDepthResolutionWidth(), kinect.getDepthResolutionHeight());	
-
-		ofDisableAlphaBlending();
-	
-		ofPushStyle();
-			ofSetColor(255,0,0);
-			ofNoFill();
-			ofRect(player1Target.x * kinect.getDepthResolutionWidth(), player1Target.y * kinect.getDepthResolutionHeight(), player1Target.width * kinect.getDepthResolutionWidth(), player1Target.height * kinect.getDepthResolutionHeight() );
-			ofRect(player2Target.x * kinect.getDepthResolutionWidth(), player2Target.y * kinect.getDepthResolutionHeight(), player2Target.width * kinect.getDepthResolutionWidth(), player2Target.height * kinect.getDepthResolutionHeight() );
-		ofPopStyle();
-	}	
 
 	if(kinect.isInited() && kinect.grabsSkeleton()){
 		ofPoint** skeletonPoints = kinect.getSkeletonPoints();
@@ -88,9 +70,8 @@ void testApp::draw() {
 						player1SkeletonIndex = i;
 					}
 
-					if( player2Target.inside( playerPoints[NUI_SKELETON_POSITION_SPINE] ) ){
+					if( i != player1SkeletonIndex && player2Target.inside( playerPoints[NUI_SKELETON_POSITION_SPINE] ) ){
 						player2SkeletonIndex = i;
-						break;
 					}
 
 				}
@@ -180,7 +161,7 @@ void testApp::draw() {
 		// Player 2
         index = player2SkeletonIndex;
 		ofxOscMessage p2Message;
-		p1Message.setAddress( "/player/2" );
+		p2Message.setAddress( "/player/2" );
 		if( index != -1 && skeleton[index].TrackingState() == NUI_SKELETON_TRACKED){
 			
 			p2Message.addIntArg( 1 );
@@ -253,8 +234,35 @@ void testApp::draw() {
 		}
         
         sender.sendMessage(p2Message);
-	
 	}
+}
+
+//--------------------------------------------------------------
+void testApp::draw() {
+	if(kinect.isInited()){
+		ofEnableAlphaBlending();
+		ofSetColor(255);
+			//kinect.drawDepth(0, 0, kinect.getDepthResolutionWidth(), kinect.getDepthResolutionHeight());
+			//kinect.drawLabel(0, 0, kinect.getDepthResolutionWidth(), kinect.getDepthResolutionHeight());	
+
+		ofDisableAlphaBlending();
+	
+		ofPushStyle();
+			ofSetColor(255,0,0);
+			ofNoFill();
+			ofRect(player1Target.x * kinect.getDepthResolutionWidth(), player1Target.y * kinect.getDepthResolutionHeight(), player1Target.width * kinect.getDepthResolutionWidth(), player1Target.height * kinect.getDepthResolutionHeight() );
+			ofRect(player2Target.x * kinect.getDepthResolutionWidth(), player2Target.y * kinect.getDepthResolutionHeight(), player2Target.width * kinect.getDepthResolutionWidth(), player2Target.height * kinect.getDepthResolutionHeight() );
+		ofPopStyle();
+	}	
+
+	ofSetColor(0);
+	stringstream reportStream;
+	reportStream << " (press: < >), fps: " << ofGetFrameRate() << endl
+				 << "press 'c' to close the stream and 'o' to open it again, stream is: " << kinect.isOpened() << endl
+				 << "press UP and DOWN to change the tilt angle: " << angle << " degrees" << endl
+				 << "press LEFT and RIGHT to change the far clipping distance: " << farClipping << " mm" << endl
+				 << "press '+' and '-' to change the near clipping distance: " << nearClipping << " mm" << endl;
+	ofDrawBitmapString(reportStream.str(), 20, 652);
 	
 }
 

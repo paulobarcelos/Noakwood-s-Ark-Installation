@@ -9,12 +9,26 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "src/Game.cpp"
-         timestampString = "350829609.333688"
+         timestampString = "350847264.889573"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "154"
-         endingLineNumber = "154"
+         startingLineNumber = "186"
+         endingLineNumber = "186"
          landmarkName = "Game::draw()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "Yes"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "src/Player.cpp"
+         timestampString = "350833841.83797"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "422"
+         endingLineNumber = "422"
+         landmarkName = "Player::loadSkin(string name, PlayerSkin* skin)"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

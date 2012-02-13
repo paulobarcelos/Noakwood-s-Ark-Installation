@@ -4,6 +4,7 @@
 #include "ofxBox2d.h"
 #include "Constants.h"
 
+
 class WaterParticle : public ofxBox2dCircle {
 	
 public:
@@ -19,17 +20,20 @@ public:
 
 class Water {
 public:
-    
     void setup(b2World* world, float width, float height);
     void reset();
     void update();
     void draw();
+    float getLevel();
     
     void removeParticle(int label);
     WaterParticle* getNextParticle();
 private:
     
     void inactivateParticle(WaterParticle* particle);
+    
+    int capacity;
+    int levelCount;
     
     float width;
     float height;

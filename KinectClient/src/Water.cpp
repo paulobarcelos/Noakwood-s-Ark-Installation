@@ -5,7 +5,9 @@ void Water::setup(b2World* world, float width, float height) {
     this->width = width;
     this->height = height;
     
-    for(int i = 0; i < 800; i ++ ){
+    capacity = 800;
+    
+    for(int i = 0; i < capacity; i ++ ){
         float r = ofRandom(5, 8);
         WaterParticle* particle = new WaterParticle();
         particle->setPhysics(10, 0, 0);
@@ -33,11 +35,12 @@ void Water::reset(){
     for(int i=0; i<particles.size(); i++) {
         inactivateParticle(particles[i]);
 	}
+    levelCount = 0;
 }
 
 void Water::update(){
     // add some particles every so often
-    if(ofGetFrameNum()% 1 == 0) {
+    if(ofGetFrameNum()% 3 == 0) {
         WaterParticle* particle = getNextParticle();
         if(particle){
             particle->setPosition(width / 2 + ofRandom(-300,300), height - 50 );
@@ -87,16 +90,22 @@ WaterParticle* Water::getNextParticle() {
             particles[i]->dead = false;
             particles[i]->setVelocity(0,0);
             particles[i]->enableGravity(true);
+            levelCount++;
             return particles[i];
         }
 	}
     return NULL;
+}
+
+float Water::getLevel(){
+    return (float)levelCount / (float) capacity;
 }
 void Water::removeParticle(int label) {
 	for(std::vector<WaterParticle*>::iterator it = particles.begin(); it != particles.end(); ++it) {
         Data * data = (Data*)(*it)->getData();
         if( data->label == label ){
             inactivateParticle(*it);
+            levelCount--;
             break;
         }
         

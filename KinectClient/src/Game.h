@@ -8,6 +8,9 @@
 #include "Boat.h"
 #include "Water.h"
 
+#define FBO_MARGIN 100
+#define BOAT_LEVEL_OFFSET 256
+
 /**
  * Custom ofxBox2d that updates it's world accordingly to current FPS and not a fixed one.
  * Also note that as velocityIterations, positionIterations and private members of ofxBox2d
@@ -75,6 +78,20 @@ private:
     vector <PlayerSkin*> skins;    
     int currentSkinID;
     
-    // Animation specific tweenrs
+    // Gameplay global animation
+    void beginGamePlayDraw();
+    void endGamePlayDraw();
+    ofFbo gamePlayFbo;
+    ofPoint gamePlayPosition;
+    float gamePlayRotation;
+    SimpleTweener gamePlayTweener1;
+    SimpleTweener gamePlayTweener2;
+    SimpleTweener gamePlayCapacityPositiveTweener;
+    SimpleTweener gamePlayCapacityNegativeTweener;
+    float lastWaterLevel;
+    float positiveWaterLevel;
+    float negativeWaterLevel;
+    
+    // Animation specific tweeners
     SimpleTweener boatPositionTweener;
 };

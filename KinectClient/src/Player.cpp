@@ -35,7 +35,7 @@ void Player::setup(b2World* world, PlayerSkin* skin, ofPoint position) {
 	setupLimb(ankleRightToFootRight, skin->ankleRightToFootRight);
     
     // Connect
-    connectLimb(spineToShoulderCenter, spineToHipCenter);
+    /*connectLimb(spineToShoulderCenter, spineToHipCenter);
     connectLimb(spineToShoulderCenter, shoulderCenterToHead);
     
     connectLimb(shoulderCenterToHead, shoulderCenterToShoulderLeft);
@@ -56,7 +56,7 @@ void Player::setup(b2World* world, PlayerSkin* skin, ofPoint position) {
     connectLimb(spineToHipCenter, hipCenterToHipRight);
     connectLimb(hipCenterToHipRight, hipRightToKneeRight);
     connectLimb(hipRightToKneeRight, kneeRightToAnkleRight);
-    connectLimb(kneeRightToAnkleRight, ankleRightToFootRight);
+    connectLimb(kneeRightToAnkleRight, ankleRightToFootRight);*/
     
     isReady = true;
 }
@@ -133,7 +133,7 @@ void Player::setData(ofxOscMessage &m){
         ofPoint center;
         ofPoint powMovingLimit;
         
-        center.y = position.y + powf(skin->movingLimit.y, 1.15) * data.targetOffset.y - skin->movingLimit.y * 0.3;
+        center.y = position.y + powf(skin->movingLimit.y, 1.15) * data.targetOffset.y - skin->movingLimit.y * 0.7;
         center.x = position.x + skin->movingLimit.x * data.targetOffset.x;
         
         calculateLimb(spineToShoulderCenter, center, data.spine, data.shoulderCenter);
@@ -270,7 +270,7 @@ void Player::drawLimb (Limb &limb){
 		ofPushMatrix();            
 			ofTranslate(currentPositon);
 			ofRotate(currentAngle);					
-			limb.texture.draw(0,0, limb.height,limb.width);
+			//limb.texture.draw(0,0, limb.height,limb.width);
 		ofPopMatrix();
 	ofPopStyle();
     
@@ -298,107 +298,153 @@ void Player::loadSkin(string name, PlayerSkin* skin) {
     spineToShoulderCenter << name << "/spineToShoulderCenter";
     stringstream spineToShoulderCenterImage;
     spineToShoulderCenterImage << spineToShoulderCenter.str() << ".png";
-    SkinLimbSettings spineToShoulderCenterSettings;
+    LimbSkinSettings spineToShoulderCenterSettings;
     loadLimbSkinSettings(spineToShoulderCenter.str(), &spineToShoulderCenterSettings);
     
     stringstream shoulderCenterToHead;
     shoulderCenterToHead << name << "/shoulderCenterToHead";
     stringstream shoulderCenterToHeadImage;
     shoulderCenterToHeadImage << shoulderCenterToHead.str() << ".png";
+    LimbSkinSettings shoulderCenterToHeadSettings;
+    loadLimbSkinSettings(shoulderCenterToHead.str(), &shoulderCenterToHeadSettings);
     
+    
+    stringstream shoulderCenterToShoulderLeft;
+    shoulderCenterToShoulderLeft << name << "/shoulderCenterToShoulderLeft";
+    InvisibleLimbSkinSettings shoulderCenterToShoulderLeftSettings;
+    loadInvisibleLimbSkinSettings(shoulderCenterToShoulderLeft.str(), &shoulderCenterToShoulderLeftSettings);
     
     stringstream shoulderLeftToElbowLeft;
     shoulderLeftToElbowLeft << name << "/shoulderLeftToElbowLeft";
     stringstream shoulderLeftToElbowLeftImage;
     shoulderLeftToElbowLeftImage << shoulderLeftToElbowLeft.str() << ".png";
+    LimbSkinSettings shoulderLeftToElbowLeftSettings;
+    loadLimbSkinSettings(shoulderLeftToElbowLeft.str(), &shoulderLeftToElbowLeftSettings);
     
     stringstream elbowLeftToWristLeft;
     elbowLeftToWristLeft << name << "/elbowLeftToWristLeft";
     stringstream elbowLeftToWristLeftImage;
     elbowLeftToWristLeftImage << elbowLeftToWristLeft.str() << ".png";
+    LimbSkinSettings elbowLeftToWristLeftSettings;
+    loadLimbSkinSettings(elbowLeftToWristLeft.str(), &elbowLeftToWristLeftSettings);
     
     stringstream wristLeftToHandLeft;
     wristLeftToHandLeft << name << "/wristLeftToHandLeft";
     stringstream wristLeftToHandLeftImage;
     wristLeftToHandLeftImage << wristLeftToHandLeft.str() << ".png";
+    LimbSkinSettings wristLeftToHandLeftSettings;
+    loadLimbSkinSettings(wristLeftToHandLeft.str(), &wristLeftToHandLeftSettings);
+    
+    stringstream hipCenterToHipLeft;
+    hipCenterToHipLeft << name << "/hipCenterToHipLeft";
+    InvisibleLimbSkinSettings hipCenterToHipLeftSettings;
+    loadInvisibleLimbSkinSettings(hipCenterToHipLeft.str(), &hipCenterToHipLeftSettings);
     
     stringstream hipLeftToKneeLeft;
     hipLeftToKneeLeft << name << "/hipLeftToKneeLeft";
     stringstream hipLeftToKneeLeftImage;
     hipLeftToKneeLeftImage << hipLeftToKneeLeft.str() << ".png";
+    LimbSkinSettings hipLeftToKneeLeftSettings;
+    loadLimbSkinSettings(hipLeftToKneeLeft.str(), &hipLeftToKneeLeftSettings);
     
     stringstream kneeLeftToAnkleLeft;
     kneeLeftToAnkleLeft << name << "/kneeLeftToAnkleLeft";
     stringstream kneeLeftToAnkleLeftImage;
     kneeLeftToAnkleLeftImage << kneeLeftToAnkleLeft.str() << ".png";
+    LimbSkinSettings kneeLeftToAnkleLeftSettings;
+    loadLimbSkinSettings(kneeLeftToAnkleLeft.str(), &kneeLeftToAnkleLeftSettings);
     
     stringstream ankleLeftToFootLeft;
     ankleLeftToFootLeft << name << "/ankleLeftToFootLeft";
     stringstream ankleLeftToFootLeftImage;
     ankleLeftToFootLeftImage << ankleLeftToFootLeft.str() << ".png";
+    LimbSkinSettings ankleLeftToFootLeftSettings;
+    loadLimbSkinSettings(ankleLeftToFootLeft.str(), &ankleLeftToFootLeftSettings);
     
+        
+    stringstream shoulderCenterToShoulderRight;
+    shoulderCenterToShoulderRight << name << "/shoulderCenterToShoulderRight";
+    InvisibleLimbSkinSettings shoulderCenterToShoulderRightSettings;
+    loadInvisibleLimbSkinSettings(shoulderCenterToShoulderRight.str(), &shoulderCenterToShoulderRightSettings);
     
     stringstream shoulderRightToElbowRight;
     shoulderRightToElbowRight << name << "/shoulderRightToElbowRight";
     stringstream shoulderRightToElbowRightImage;
     shoulderRightToElbowRightImage << shoulderRightToElbowRight.str() << ".png";
+    LimbSkinSettings shoulderRightToElbowRightSettings;
+    loadLimbSkinSettings(shoulderRightToElbowRight.str(), &shoulderRightToElbowRightSettings);
     
     stringstream elbowRightToWristRight;
     elbowRightToWristRight << name << "/elbowRightToWristRight";
     stringstream elbowRightToWristRightImage;
     elbowRightToWristRightImage << elbowRightToWristRight.str() << ".png";
+    LimbSkinSettings elbowRightToWristRightSettings;
+    loadLimbSkinSettings(elbowRightToWristRight.str(), &elbowRightToWristRightSettings);
     
     stringstream wristRightToHandRight;
     wristRightToHandRight << name << "/wristRightToHandRight";
     stringstream wristRightToHandRightImage;
     wristRightToHandRightImage << wristRightToHandRight.str() << ".png";
+    LimbSkinSettings wristRightToHandRightSettings;
+    loadLimbSkinSettings(wristRightToHandRight.str(), &wristRightToHandRightSettings);
+    
+    stringstream hipCenterToHipRight;
+    hipCenterToHipRight << name << "/hipCenterToHipRight";
+    InvisibleLimbSkinSettings hipCenterToHipRighttSettings;
+    loadInvisibleLimbSkinSettings(hipCenterToHipRight.str(), &hipCenterToHipRighttSettings);
     
     stringstream hipRightToKneeRight;
     hipRightToKneeRight << name << "/hipRightToKneeRight";
     stringstream hipRightToKneeRightImage;
     hipRightToKneeRightImage << hipRightToKneeRight.str() << ".png";
+    LimbSkinSettings hipRightToKneeRightSettings;
+    loadLimbSkinSettings(hipRightToKneeRight.str(), &hipRightToKneeRightSettings);
     
     stringstream kneeRightToAnkleRight;
     kneeRightToAnkleRight << name << "/kneeRightToAnkleRight";
     stringstream kneeRightToAnkleRightImage;
     kneeRightToAnkleRightImage << kneeRightToAnkleRight.str() << ".png";
+    LimbSkinSettings kneeRightToAnkleRightSettings;
+    loadLimbSkinSettings(kneeRightToAnkleRight.str(), &kneeRightToAnkleRightSettings);
     
     stringstream ankleRightToFootRight;
     ankleRightToFootRight << name << "/ankleRightToFootRight";
     stringstream ankleRightToFootRightImage;
     ankleRightToFootRightImage << ankleRightToFootRight.str() << ".png";
+    LimbSkinSettings ankleRightToFootRightSettings;
+    loadLimbSkinSettings(ankleRightToFootRight.str(), &ankleRightToFootRightSettings);
     
     
     skin->spineToShoulderCenter.set(spineToShoulderCenterImage.str(), spineToShoulderCenterSettings.boneRatio, spineToShoulderCenterSettings.anchorPercent, spineToShoulderCenterSettings.boneThickness);
     skin->spineToHipCenter.set(1);
     
-    skin->hipCenterToHipLeft.set(30);
-    skin->hipCenterToHipRight.set(30);
+    skin->hipCenterToHipLeft.set(hipCenterToHipLeftSettings.length, hipCenterToHipLeftSettings.boneThickness);
+    skin->hipCenterToHipRight.set(hipCenterToHipRighttSettings.length, hipCenterToHipRighttSettings.boneThickness);
     
-    skin->shoulderCenterToHead.set(shoulderCenterToHeadImage.str());
-    skin->shoulderCenterToShoulderLeft.set(60);
-    skin->shoulderCenterToShoulderRight.set(60);
+    skin->shoulderCenterToHead.set(shoulderCenterToHeadImage.str(), shoulderCenterToHeadSettings.boneRatio, shoulderCenterToHeadSettings.anchorPercent, shoulderCenterToHeadSettings.boneThickness);
+    skin->shoulderCenterToShoulderLeft.set(shoulderCenterToShoulderLeftSettings.length, shoulderCenterToShoulderLeftSettings.boneThickness);
+    skin->shoulderCenterToShoulderRight.set(shoulderCenterToShoulderRightSettings.length, shoulderCenterToShoulderRightSettings.boneThickness);
     
-    skin->shoulderLeftToElbowLeft.set(shoulderLeftToElbowLeftImage.str());
-    skin->elbowLeftToWristLeft.set(elbowLeftToWristLeftImage.str());
-    skin->wristLeftToHandLeft.set(wristLeftToHandLeftImage.str());
+    skin->shoulderLeftToElbowLeft.set(shoulderLeftToElbowLeftImage.str(), shoulderLeftToElbowLeftSettings.boneRatio, shoulderLeftToElbowLeftSettings.anchorPercent, shoulderLeftToElbowLeftSettings.boneThickness);
+    skin->elbowLeftToWristLeft.set(elbowLeftToWristLeftImage.str(), elbowLeftToWristLeftSettings.boneRatio, elbowLeftToWristLeftSettings.anchorPercent, elbowLeftToWristLeftSettings.boneThickness);
+    skin->wristLeftToHandLeft.set(wristLeftToHandLeftImage.str(), wristLeftToHandLeftSettings.boneRatio, wristLeftToHandLeftSettings.anchorPercent, wristLeftToHandLeftSettings.boneThickness);
     
-    skin->hipLeftToKneeLeft.set(hipLeftToKneeLeftImage.str());
-    skin->kneeLeftToAnkleLeft.set(kneeLeftToAnkleLeftImage.str());
-    skin->ankleLeftToFootLeft.set(ankleLeftToFootLeftImage.str());
+    skin->hipLeftToKneeLeft.set(hipLeftToKneeLeftImage.str(), hipLeftToKneeLeftSettings.boneRatio, hipLeftToKneeLeftSettings.anchorPercent, hipLeftToKneeLeftSettings.boneThickness);
+    skin->kneeLeftToAnkleLeft.set(kneeLeftToAnkleLeftImage.str(), kneeLeftToAnkleLeftSettings.boneRatio, kneeLeftToAnkleLeftSettings.anchorPercent, kneeLeftToAnkleLeftSettings.boneThickness);
+    skin->ankleLeftToFootLeft.set(ankleLeftToFootLeftImage.str(), ankleLeftToFootLeftSettings.boneRatio, ankleLeftToFootLeftSettings.anchorPercent, ankleLeftToFootLeftSettings.boneThickness);
     
-    skin->shoulderRightToElbowRight.set(shoulderRightToElbowRightImage.str());
-    skin->elbowRightToWristRight.set(elbowRightToWristRightImage.str());
-    skin->wristRightToHandRight.set(wristRightToHandRightImage.str());
+    skin->shoulderRightToElbowRight.set(shoulderRightToElbowRightImage.str(), shoulderRightToElbowRightSettings.boneRatio, shoulderRightToElbowRightSettings.anchorPercent, shoulderRightToElbowRightSettings.boneThickness);
+    skin->elbowRightToWristRight.set(elbowRightToWristRightImage.str(), elbowRightToWristRightSettings.boneRatio, elbowRightToWristRightSettings.anchorPercent, elbowRightToWristRightSettings.boneThickness);
+    skin->wristRightToHandRight.set(wristRightToHandRightImage.str(), wristRightToHandRightSettings.boneRatio, wristRightToHandRightSettings.anchorPercent, wristRightToHandRightSettings.boneThickness);
     
-    skin->hipRightToKneeRight.set(hipRightToKneeRightImage.str());
-    skin->kneeRightToAnkleRight.set(kneeRightToAnkleRightImage.str());
-    skin->ankleRightToFootRight.set(ankleRightToFootRightImage.str());
+    skin->hipRightToKneeRight.set(hipRightToKneeRightImage.str(), hipRightToKneeRightSettings.boneRatio, hipRightToKneeRightSettings.anchorPercent, hipRightToKneeRightSettings.boneThickness);
+    skin->kneeRightToAnkleRight.set(kneeRightToAnkleRightImage.str(), kneeRightToAnkleRightSettings.boneRatio, kneeRightToAnkleRightSettings.anchorPercent, kneeRightToAnkleRightSettings.boneThickness);
+    skin->ankleRightToFootRight.set(ankleRightToFootRightImage.str(), ankleRightToFootRightSettings.boneRatio, ankleRightToFootRightSettings.anchorPercent, ankleRightToFootRightSettings.boneThickness);
     
     skin->movingLimit.set( skin->hipLeftToKneeLeft.length * 5, skin->hipLeftToKneeLeft.length + skin->kneeLeftToAnkleLeft.length + skin->ankleLeftToFootLeft.length );
 }
 
-void Player::loadLimbSkinSettings(string file, SkinLimbSettings* settings) {
+void Player::loadLimbSkinSettings(string file, LimbSkinSettings* settings) {
     ifstream f;
 	f.open(ofToDataPath(file).c_str());
 	vector <string> strLines;
@@ -412,4 +458,18 @@ void Player::loadLimbSkinSettings(string file, SkinLimbSettings* settings) {
     settings->boneRatio = ofToFloat(strLines[0]);
     settings->anchorPercent = ofPoint(ofToFloat(strLines[1]),ofToFloat(strLines[2]));
     settings->boneThickness = ofToFloat(strLines[3]);
+}
+void Player::loadInvisibleLimbSkinSettings(string file, InvisibleLimbSkinSettings* settings) {
+    ifstream f;
+	f.open(ofToDataPath(file).c_str());
+	vector <string> strLines;
+	while (!f.eof()) {
+		string ptStr;
+		getline(f, ptStr);
+		strLines.push_back(ptStr);
+	}
+	f.close();
+    
+    settings->length = ofToFloat(strLines[0]);
+    settings->boneThickness = ofToFloat(strLines[1]);
 }

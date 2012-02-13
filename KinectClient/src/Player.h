@@ -62,12 +62,12 @@ struct LimbSkin {
         this->length = this->width * boneRatio;
        
     };
-    void set(float boneLength){
+    void set(float boneLength, float thickness = 20){
         this->textureFile = "blank.png";
         this->width = 0;
         this->height = 0;
         this->textureAnchor = ofPoint(0.5, 0.5);
-        this->thickness = 20;
+        this->thickness = thickness;
         this->length = boneLength;
     };
     float thickness;
@@ -117,9 +117,13 @@ struct PlayerSkin {
     ofPoint movingLimit;
 };
 
-struct SkinLimbSettings{
+struct LimbSkinSettings{
     float boneRatio;
     ofPoint anchorPercent;
+    float boneThickness;
+};
+struct InvisibleLimbSkinSettings{
+    float length;
     float boneThickness;
 };
 
@@ -130,7 +134,8 @@ class Player {
     };
     
     static void loadSkin(string name, PlayerSkin* skin);
-    static void loadLimbSkinSettings(string file, SkinLimbSettings* settings);
+    static void loadLimbSkinSettings(string file, LimbSkinSettings* settings);
+    static void loadInvisibleLimbSkinSettings(string file, InvisibleLimbSkinSettings* settings);
 	
 	void setup(b2World* world, PlayerSkin* skin, ofPoint position = ofPoint(ofGetWidth()/2, ofGetHeight()/2));    
     void setData(ofxOscMessage &m);

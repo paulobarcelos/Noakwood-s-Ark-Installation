@@ -12,7 +12,7 @@ void Game::setup(float width, float height) {
     
     // State Timers
     startTimer.setup(0.5);
-    transitionToPlayingTimer.setup(0.5);
+    transitionToPlayingTimer.setup(2);
     playingTimer.setup(60);
     transitionToEndTimer.setup(2);
     endTimer.setup(2);
@@ -36,6 +36,10 @@ void Game::setup(float width, float height) {
     // Players and games
     game1.setup(box2d.getWorld(), &player1, &water, PlayerGame::LEFT, width, height);
     game2.setup(box2d.getWorld(), &player2, &water, PlayerGame::RIGHT, width, height);
+    
+    // FBO
+    gamePlayFbo.allocate(width + FBO_MARGIN, height + FBO_MARGIN);
+    gamePlayFbo.getTextureReference().setAnchorPercent(0.5, 0.5);
     
     // Start!
     initTransitionToStart();
@@ -76,7 +80,7 @@ void Game::update(){
                 initPlaying();
             }            
             break;
-        case Game::PLAYING:           
+        case Game::PLAYING:{
             //boatPositionTweener.update(dt);
             boat.update();
             
@@ -85,13 +89,39 @@ void Game::update(){
             player1.update();
             player2.update();
             
-            water.update();          
+            water.update();
+            
+            gamePlayTweener1.update(dt);
+            gamePlayTweener2.update(dt);
+            
+            float deltaWaterLevel = water.getLevel() - lastWaterLevel;
+            
+            cout << deltaWaterLevel << endl;
+            
+            if(deltaWaterLevel > 0){
+                //positiveWaterLevel += deltaWaterLevel;
+                //negativeWaterLevel -= deltaWaterLevel;
+                gamePlayCapacityPositiveTweener.setProgress(deltaWaterLevel);
+                gamePlayCapacityPositiveTweener.update(0);
+            }
+            else{
+                //negativeWaterLevel += deltaWaterLevel;
+                //positiveWaterLevel -= deltaWaterLevel;
+                gamePlayCapacityNegativeTweener.setProgress(deltaWaterLevel);
+                gamePlayCapacityNegativeTweener.update(0);
+            }
+            
+            
+            
+            
+                        
             
             playingTimer.update(dt);
             if(playingTimer.isComplete()){
                 initTransitionToEnd();
             } 
             break;
+        }
         case Game::TRANSITION_TO_END:
             
             
@@ -143,34 +173,39 @@ void Game::draw(){
             ofDrawBitmapString(ofToString((startTimer.getDuration() - startTimer.getDuration() * startTimer.getProgress())), 20, 40);
             break;
         case Game::TRANSITION_TO_PLAYING:
-            boat.draw();
+            beginGamePlayDraw();
+                boat.draw();            
+                player1.draw();
+                player2.draw();
+            endGamePlayDraw();
             
-            player1.draw();
-            player2.draw();
             
             ofDrawBitmapString("TRANSITION_TO_PLAYING", 20, 30);
             ofDrawBitmapString(ofToString((transitionToPlayingTimer.getDuration() - transitionToPlayingTimer.getDuration() * transitionToPlayingTimer.getProgress())), 20, 40);
             break;
         case Game::PLAYING:
-            boat.draw();
+            beginGamePlayDraw();
+                boat.draw();            
+                player1.draw();
+                player2.draw();
+                water.draw();
+            endGamePlayDraw();
             
             game1.draw();
             game2.draw();
-            player1.draw();
-            player2.draw();
-                    
-            water.draw();
            
             ofDrawBitmapString("PLAYING", 20, 30);
             ofDrawBitmapString(ofToString((playingTimer.getDuration() - playingTimer.getDuration() * playingTimer.getProgress())), 20, 40);
             break;
         case Game::TRANSITION_TO_END:
-            boat.draw();
+            beginGamePlayDraw();
+                boat.draw();            
+                player1.draw();
+                player2.draw();
+                water.draw();
+            endGamePlayDraw();
             
-            player1.draw();
-            player2.draw();
             
-            water.draw();
             ofDrawBitmapString("TRANSITION_TO_END", 20, 30);
             ofDrawBitmapString(ofToString((transitionToEndTimer.getDuration() - transitionToEndTimer.getDuration() * transitionToEndTimer.getProgress())), 20, 40);
             break;
@@ -203,6 +238,9 @@ void Game::initTransitionToPlaying() {
     state = Game::TRANSITION_TO_PLAYING;
     transitionToPlayingTimer.start();
     
+    gamePlayPosition.set(width/2, height/2);
+    gamePlayRotation = 0;
+    
     boat.position.y = height + 256;
     boatPositionTweener.clearTweens();
     boatPositionTweener.setup(transitionToPlayingTimer.getDuration(), 0, Elastic::easeOut);
@@ -213,6 +251,32 @@ void Game::initPlaying() {
     state = Game::PLAYING;
     playingTimer.start();
     
+    gamePlayPosition.set(width/2 - 10, height/2 - 10);
+    gamePlayRotation = -3;
+    gamePlayTweener1.clearTweens();
+    gamePlayTweener1.setup(1.5, 0, Sine::easeInOut, BACK_AND_FORTH);
+    gamePlayTweener1.addTween( &(gamePlayPosition.y) , + 20);
+    gamePlayTweener1.start();
+    gamePlayTweener1.setProgress(0.5f);
+    gamePlayTweener1.update(0);
+    gamePlayTweener2.clearTweens();
+    gamePlayTweener2.setup(3, 0, Sine::easeInOut, BACK_AND_FORTH);
+    gamePlayTweener2.addTween( &(gamePlayPosition.x) , + 20);
+    gamePlayTweener2.addTween( &(gamePlayRotation) , + 6);
+    gamePlayTweener2.start();
+    gamePlayTweener2.setProgress(0.5f);
+    gamePlayTweener2.update(0);
+    
+    gamePlayCapacityPositiveTweener.clearTweens();
+    gamePlayCapacityPositiveTweener.setup(1.f);
+    gamePlayCapacityPositiveTweener.addTween( &(gamePlayPosition.y) , BOAT_LEVEL_OFFSET);
+    gamePlayCapacityPositiveTweener.start();
+    
+    gamePlayCapacityNegativeTweener.clearTweens();
+    gamePlayCapacityNegativeTweener.setup(1.f);
+    gamePlayCapacityNegativeTweener.addTween( &(gamePlayPosition.y) , -BOAT_LEVEL_OFFSET);
+    gamePlayCapacityNegativeTweener.start();
+    
     player1.position.set((width / 8) * 2, height - 30);
     player2.position.set((width / 8) * 6, height - 30);
     
@@ -220,6 +284,9 @@ void Game::initPlaying() {
     game2.reset();
     
     water.reset();
+    lastWaterLevel = water.getLevel();
+    positiveWaterLevel = 0;
+    negativeWaterLevel = 0;
     
     boat.position.y = height;
     boatPositionTweener.clearTweens();
@@ -231,9 +298,12 @@ void Game::initTransitionToEnd() {
     state = Game::TRANSITION_TO_END;
     transitionToEndTimer.start();
     
+    gamePlayPosition.set(width/2, height/2);
+    gamePlayRotation = 0;
+    
     boat.position.y = height;
     boatPositionTweener.clearTweens();
-    boatPositionTweener.setup(0.5, 0, Back::easeIn);
+    boatPositionTweener.setup(1, 0, Back::easeIn);
     boatPositionTweener.addTween( &(boat.position.y) , 300);
     boatPositionTweener.start();
     
@@ -255,4 +325,23 @@ PlayerSkin* Game::getRandomSkin(){
         currentSkinID = 0;
     }
     return skins[id];
+}
+void Game::beginGamePlayDraw() {
+    gamePlayFbo.begin();
+    ofPushStyle();
+    ofEnableAlphaBlending();
+    ofClear(0,0,0,0);
+    ofPushMatrix();
+    ofTranslate(FBO_MARGIN/2, FBO_MARGIN/2);
+}
+void Game::endGamePlayDraw() {
+    ofPopMatrix();
+    ofPopStyle();
+    gamePlayFbo.end();
+    
+    ofPushMatrix();
+    ofTranslate(gamePlayPosition);
+    ofRotateZ(gamePlayRotation);
+    gamePlayFbo.draw(0,0);
+    ofPopMatrix();
 }

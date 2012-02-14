@@ -34,8 +34,8 @@ void Game::setup(float width, float height) {
     water.setup(box2d.getWorld(), width, height);
     
     // Players and games
-    game1.setup(box2d.getWorld(), &player1, &water, PlayerGame::LEFT, width, height);
-    game2.setup(box2d.getWorld(), &player2, &water, PlayerGame::RIGHT, width, height);
+    game1.setup(box2d.getWorld(), &player1, &water, PlayerGame::LEFT, width, height, playingTimer.getDuration());
+    game2.setup(box2d.getWorld(), &player2, &water, PlayerGame::RIGHT, width, height, playingTimer.getDuration());
     
     // Central Message
     centralMessage.setup(0, 0, width, height);

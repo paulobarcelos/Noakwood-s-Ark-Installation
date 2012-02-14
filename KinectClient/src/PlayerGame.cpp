@@ -1,28 +1,43 @@
 #include "PlayerGame.h"
 
-void PlayerGame::setup(b2World* world, Player* player, Water* water, Layout layout, float width, float height) {
+void PlayerGame::setup(b2World* world, Player* player, Water* water, Layout layout, float width, float height, float gameDuration) {
     this->world = world;
     this->water = water;
     this->player = player;
     this->layout = layout;
     this->width = width;
     this->height = height;
+    this->gameDuration = gameDuration;
     
     
     sensorArea.set(0, height, 10000, 100);
     switch (layout) {
         case PlayerGame::LEFT:
             sensorArea.x = width/2 - sensorArea.width;
+            playerMessage.setup(0,0, width/2, height);
             break;            
         case PlayerGame::RIGHT:
             sensorArea.x = width/2;
+            playerMessage.setup(width/2,0, width/2, height);
             break;
     }
 }
 void PlayerGame::reset(){
     points = 0;
+    currentTime = 0;
 }
 void PlayerGame::update(){
+    float dt = 1./ ofGetFrameRate();
+    currentTime += dt;
+    currentTimeNormalized = currentTime / gameDuration;
+    
+    if(currentTimeNormalized < 0.01){
+        playerMessage.queueMessageOnce(PlayerMessage::GREETING);
+    }
+    
+    playerMessage.update();
+    
+    
     ofPoint lower(sensorArea.x, sensorArea.y);
     lower /= OFX_BOX2D_SCALE;
     
@@ -53,6 +68,7 @@ void PlayerGame::draw(){
             ofPopMatrix();
             break;
     }
+    playerMessage.draw();
 }
 
 bool PlayerGame::ReportFixture(b2Fixture* fixture) {

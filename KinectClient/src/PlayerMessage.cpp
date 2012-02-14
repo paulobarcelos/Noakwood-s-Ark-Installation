@@ -1,6 +1,6 @@
-#include "CentralMessage.h"
+#include "PlayerMessage.h"
 
-void CentralMessage::setup(float x, float y, float width, float height, float duration) {
+void PlayerMessage::setup(float x, float y, float width, float height, float duration) {
     this->x = x;
     this->y = y;
     this->width = width;
@@ -11,27 +11,28 @@ void CentralMessage::setup(float x, float y, float width, float height, float du
     tweenerOpacity.setup(duration/2, 0, Sine::easeIn, BACK_AND_FORTH);
     
     
-    ready.loadImage("messages/ready.png");
-    messages.push_back(ready);
+    greeting.loadImage("messages/greeting.png");
+    messages.push_back(greeting);
     
-    set.loadImage("messages/set.png");
-    messages.push_back(set);
+    incentive1.loadImage("messages/incentive1.png");
+    messages.push_back(incentive1);
     
-    go.loadImage("messages/go.png");
-    messages.push_back(go);
+    incentive2.loadImage("messages/incentive2.png");
+    messages.push_back(incentive2);
     
-    sinkWarning.loadImage("messages/sinkWarning.png");
-    messages.push_back(sinkWarning);
+    incentive3.loadImage("messages/incentive3.png");
+    messages.push_back(incentive3);
     
-    timeUp.loadImage("messages/timeUp.png");
-    messages.push_back(timeUp);
+    youWillWin.loadImage("messages/youWillWin.png");
+    messages.push_back(youWillWin);
     
-    gameOver.loadImage("messages/gameOver.png");
-    messages.push_back(gameOver);
+    youWillLose.loadImage("messages/youWillLose.png");
+    messages.push_back(youWillLose);
+    
 
 }
 
-void CentralMessage::update(){
+void PlayerMessage::update(){
     float dt = 1.f / ofGetFrameRate();
     if(texture){
         tweenerMovement.update(dt);
@@ -43,7 +44,7 @@ void CentralMessage::update(){
     }
 }
 
-void CentralMessage::draw(){
+void PlayerMessage::draw(){
     if(texture){
         ofPushMatrix();
             ofTranslate(x + width / 2, y + height / 2);
@@ -55,13 +56,13 @@ void CentralMessage::draw(){
         ofPopMatrix();
     }    
 }
-void CentralMessage::queueMessage(Message message){
+void PlayerMessage::queueMessage(Message message){
     queue.push_back(message);
     if(!texture){
         prepareNextMessage();
     }
 }
-void CentralMessage::queueMessageOnce(Message message){
+void PlayerMessage::queueMessageOnce(Message message){
     bool shouldQueue = false;
     if(queue.size() > 0){
         if(queue[queue.size() - 1] != message){
@@ -69,10 +70,10 @@ void CentralMessage::queueMessageOnce(Message message){
         }
     }
     else shouldQueue = true;
-    
+   
     if(shouldQueue) queueMessage(message);
 }
-void CentralMessage::prepareNextMessage(){
+void PlayerMessage::prepareNextMessage(){
     ofImage * nextMessage = NULL;
     if( queue.size() > 0 ){
         nextMessage = getMessageTexture(queue[0]);
@@ -95,25 +96,25 @@ void CentralMessage::prepareNextMessage(){
     texture = nextMessage;
 }
 
-ofImage * CentralMessage::getMessageTexture(Message message){
+ofImage * PlayerMessage::getMessageTexture(Message message){
     switch (message) {
-        case CentralMessage::READY:
-            return &ready;
+        case PlayerMessage::GREETING:
+            return &greeting;
             break;
-        case CentralMessage::SET:
-            return &set;
+        case PlayerMessage::INCENTIVE_1:
+            return &incentive1;
             break;
-        case CentralMessage::GO:
-            return &go;
+        case PlayerMessage::INCENTIVE_2:
+            return &incentive2;
             break;
-        case CentralMessage::SINK_WARNING:
-            return &sinkWarning;
+        case PlayerMessage::INCENTIVE_3:
+            return &incentive3;
             break;
-        case CentralMessage::TIME_UP:
-            return &timeUp;
+        case PlayerMessage::YOU_WILL_WIN:
+            return &youWillWin;
             break;
-        case CentralMessage::GAME_OVER:
-            return &gameOver;
+        case PlayerMessage::YOU_WILL_LOSE:
+            return &youWillLose;
             break;
     }
     return NULL;

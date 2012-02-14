@@ -6,6 +6,7 @@
 #include "Constants.h"
 #include "Player.h"
 #include "Water.h"
+#include "PlayerMessage.h"
 
 #define TOP_ICON_SIZE 128
 #define FINAL_ICON_SIZE 350
@@ -17,7 +18,7 @@ public:
         RIGHT
     };
         
-	void setup(b2World* world, Player* player, Water* water, Layout layout, float width, float height);
+	void setup(b2World* world, Player* player, Water* water, Layout layout, float width, float height, float gameDuration);
     void reset();
     void update();
     void draw();
@@ -29,8 +30,13 @@ private:
     Layout layout;
     float width;
     float height;
+    float gameDuration;
+
+    PlayerMessage playerMessage;
     
     int points;
+    float currentTime;
+    float currentTimeNormalized;
         
     // AAQQ
     bool ReportFixture(b2Fixture* fixture);

@@ -5,18 +5,18 @@
 
 
 
-class CentralMessage {
+class PlayerMessage {
 public:
     enum Message{
-        READY = 0,
-        SET,
-        GO,
-        SINK_WARNING,
-        TIME_UP,
-        GAME_OVER
+        GREETING = 0,
+        INCENTIVE_1,
+        INCENTIVE_2,
+        INCENTIVE_3,
+        YOU_WILL_WIN,
+        YOU_WILL_LOSE
     };
-        
-	void setup(float x, float y, float width, float height, float duration = 0.5);
+    
+	void setup(float x, float y, float width, float height, float duration = 1.f);
     void update();
     void draw();
     
@@ -40,12 +40,12 @@ private:
     
     vector<ofImage> messages;
     
-    ofImage ready;
-    ofImage set;
-    ofImage go;
-    ofImage sinkWarning;
-    ofImage timeUp;
-    ofImage gameOver;
+    ofImage greeting;
+    ofImage incentive1;
+    ofImage incentive2;
+    ofImage incentive3;
+    ofImage youWillWin;
+    ofImage youWillLose;
     
     ofImage* texture;
     

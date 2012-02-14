@@ -16,7 +16,7 @@ public:
         GAME_OVER
     };
         
-	void setup(float width, float height, float duration = 0.5);
+	void setup(float x, float y, float width, float height, float duration = 0.5);
     void update();
     void draw();
     
@@ -25,8 +25,11 @@ public:
 private:
     
     void prepareNextMessage();
+    ofImage* getMessageTexture(Message message);
     
     
+    float x;
+    float y;
     float width;
     float height;
     float duration;

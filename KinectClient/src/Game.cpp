@@ -38,7 +38,7 @@ void Game::setup(float width, float height) {
     game2.setup(box2d.getWorld(), &player2, &water, PlayerGame::RIGHT, width, height);
     
     // Central Message
-    centralMessage.setup(width, height);
+    centralMessage.setup(0, 0, width, height);
     
     // FBO
     gamePlayFbo.allocate(width + FBO_MARGIN, height + FBO_MARGIN);

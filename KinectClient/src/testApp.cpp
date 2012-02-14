@@ -5,7 +5,7 @@ void testApp::setup(){
 	receiver.setup( PORT );
     ofSetVerticalSync(true);
     
-    int w = 1028;
+    int w = 1024;
     int h = 600;
     
     ofSetWindowShape(w, h);    

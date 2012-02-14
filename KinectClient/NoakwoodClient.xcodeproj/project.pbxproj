@@ -14,6 +14,7 @@
 		3865465214E0A36D00CF58A0 /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3865464714E0A36D00CF58A0 /* ofxOscSender.cpp */; };
 		38CDFA0C14E53188004547EB /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38CDFA0A14E53188004547EB /* Game.cpp */; };
 		38CFDCE914EA6D3F004CF678 /* PlayerMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38CFDCE714EA6D3F004CF678 /* PlayerMessage.cpp */; };
+		38CFDCEC14EA8FFD004CF678 /* Scenario.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38CFDCEA14EA8FFD004CF678 /* Scenario.cpp */; };
 		38D02CA814E9B5BF00AEA2E3 /* CentralMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38D02CA614E9B5BE00AEA2E3 /* CentralMessage.cpp */; };
 		38E44F0B14E18D750080AE06 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38E44F0914E18D750080AE06 /* Player.cpp */; };
 		38E452A814E1C3FF0080AE06 /* b2BroadPhase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38E4520C14E1C3FE0080AE06 /* b2BroadPhase.cpp */; };
@@ -138,6 +139,8 @@
 		38CDFA0B14E53188004547EB /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
 		38CFDCE714EA6D3F004CF678 /* PlayerMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerMessage.cpp; sourceTree = "<group>"; };
 		38CFDCE814EA6D3F004CF678 /* PlayerMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlayerMessage.h; sourceTree = "<group>"; };
+		38CFDCEA14EA8FFD004CF678 /* Scenario.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Scenario.cpp; sourceTree = "<group>"; };
+		38CFDCEB14EA8FFD004CF678 /* Scenario.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Scenario.h; sourceTree = "<group>"; };
 		38D02CA614E9B5BE00AEA2E3 /* CentralMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CentralMessage.cpp; sourceTree = "<group>"; };
 		38D02CA714E9B5BE00AEA2E3 /* CentralMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CentralMessage.h; sourceTree = "<group>"; };
 		38E44F0914E18D750080AE06 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
@@ -658,6 +661,8 @@
 				38D02CA714E9B5BE00AEA2E3 /* CentralMessage.h */,
 				38CFDCE714EA6D3F004CF678 /* PlayerMessage.cpp */,
 				38CFDCE814EA6D3F004CF678 /* PlayerMessage.h */,
+				38CFDCEA14EA8FFD004CF678 /* Scenario.cpp */,
+				38CFDCEB14EA8FFD004CF678 /* Scenario.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -825,6 +830,7 @@
 				38F37D0214E85A42007756C4 /* Water.cpp in Sources */,
 				38D02CA814E9B5BF00AEA2E3 /* CentralMessage.cpp in Sources */,
 				38CFDCE914EA6D3F004CF678 /* PlayerMessage.cpp in Sources */,
+				38CFDCEC14EA8FFD004CF678 /* Scenario.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

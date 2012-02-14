@@ -9,11 +9,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "src/Game.cpp"
-         timestampString = "350863563.018088"
+         timestampString = "350955178.554464"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "205"
-         endingLineNumber = "205"
+         startingLineNumber = "268"
+         endingLineNumber = "268"
          landmarkName = "Game::draw()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -23,12 +23,26 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "src/Player.cpp"
-         timestampString = "350855133.814208"
+         timestampString = "350942088.55857"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "412"
-         endingLineNumber = "412"
+         startingLineNumber = "416"
+         endingLineNumber = "416"
          landmarkName = "Player::loadSkin(string name, PlayerSkin* skin)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "src/CentralMessage.cpp"
+         timestampString = "350954755.211256"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "121"
+         endingLineNumber = "121"
+         landmarkName = "CentralMessage::getMessageTexture(Message message)"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

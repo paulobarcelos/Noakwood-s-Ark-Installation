@@ -37,6 +37,9 @@ void Player::setup(b2World* world, PlayerSkin* skin, ofPoint position) {
     icon.loadImage(skin->iconFile);
     iconDead.loadImage(skin->iconDeadFile);
     
+    placeholder.loadImage("playerPlaceholder.png");
+    placeholder.setAnchorPercent(0.5, 0.5);
+    
     // Connect
     /*connectLimb(spineToShoulderCenter, spineToHipCenter);
     connectLimb(spineToShoulderCenter, shoulderCenterToHead);
@@ -254,7 +257,8 @@ void Player::draw(){
         drawLimb(hipRightToKneeRight);
         drawLimb(kneeRightToAnkleRight);
         drawLimb(ankleRightToFootRight);
-    }    
+    }
+    else placeholder.draw(position - ofPoint(0, 200));
 }
 void Player::drawLimb (Limb &limb){
     ofPoint currentPositon(limb.body.body->GetPosition().x, limb.body.body->GetPosition().y);

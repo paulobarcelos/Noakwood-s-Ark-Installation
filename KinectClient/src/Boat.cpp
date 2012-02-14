@@ -50,6 +50,7 @@ void Boat::draw(){
     texture.draw(0,0);
     ofPopMatrix();
         
-    for (int i=0; i<boat.size(); i++) 
+    /*for (int i=0; i<boat.size(); i++) 
         boat[i].draw();
+     */
 }

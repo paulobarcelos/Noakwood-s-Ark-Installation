@@ -7,6 +7,8 @@ void PlayerMessage::setup(float x, float y, float width, float height, float dur
     this->height = height;
     this->duration = duration;
     
+    texture = NULL;
+    
     tweenerMovement.setup(duration, 0, Sine::easeIn);
     tweenerOpacity.setup(duration/2, 0, Sine::easeIn, BACK_AND_FORTH);
     
@@ -46,14 +48,17 @@ void PlayerMessage::update(){
 
 void PlayerMessage::draw(){
     if(texture){
-        ofPushMatrix();
+        if(texture->isAllocated()){
+            ofPushMatrix();
             ofTranslate(x + width / 2, y + height / 2);
             ofScale(scale, scale);
             ofPushStyle();
-                ofSetColor(255, 255, 255, opacity * (float) 255);
-                texture->draw(0,0);
+            ofSetColor(255, 255, 255, opacity * (float) 255);
+            texture->draw(0,0);
             ofPopStyle();
-        ofPopMatrix();
+            ofPopMatrix(); 
+        }
+        
     }    
 }
 void PlayerMessage::queueMessage(Message message){

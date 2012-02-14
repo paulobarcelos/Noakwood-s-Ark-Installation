@@ -5,14 +5,25 @@ void CentralMessage::setup(float x, float y, float width, float height, float du
     this->y = y;
     this->width = width;
     this->height = height;
-    this->duration = duration;
+    setDuration(duration);
     
-    tweenerMovement.setup(duration, 0, Sine::easeIn);
-    tweenerOpacity.setup(duration/2, 0, Sine::easeIn, BACK_AND_FORTH);
+    texture = NULL;
+    lastMessage = CentralMessage::NO_MESSAGE;
     
+    noMessage.loadImage("blank.png");
+    messages.push_back(noMessage);
+    
+    eye.loadImage("messages/eye.png");
+    messages.push_back(eye);
     
     ready.loadImage("messages/ready.png");
     messages.push_back(ready);
+    
+    intro1.loadImage("messages/intro1.png");
+    messages.push_back(intro1);
+    
+    intro2.loadImage("messages/intro2.png");
+    messages.push_back(intro2);
     
     set.loadImage("messages/set.png");
     messages.push_back(set);
@@ -23,14 +34,30 @@ void CentralMessage::setup(float x, float y, float width, float height, float du
     sinkWarning.loadImage("messages/sinkWarning.png");
     messages.push_back(sinkWarning);
     
+    iDontWannaDie.loadImage("messages/iDontWannaDie.png");
+    messages.push_back(iDontWannaDie);
+    
     timeUp.loadImage("messages/timeUp.png");
     messages.push_back(timeUp);
     
     gameOver.loadImage("messages/gameOver.png");
     messages.push_back(gameOver);
+    
+    one.loadImage("messages/one.png");
+    messages.push_back(one);
+    
+    two.loadImage("messages/two.png");
+    messages.push_back(two);
+    
+    three.loadImage("messages/three.png");
+    messages.push_back(three);
 
 }
-
+void CentralMessage::setDuration(float duration){
+    this->duration = duration;
+    tweenerMovement.setup(duration, 0, Sine::easeIn);
+    tweenerOpacity.setup(duration/2, 0, Sine::easeIn, BACK_AND_FORTH);
+}
 void CentralMessage::update(){
     float dt = 1.f / ofGetFrameRate();
     if(texture){
@@ -45,32 +72,27 @@ void CentralMessage::update(){
 
 void CentralMessage::draw(){
     if(texture){
-        ofPushMatrix();
+        if(texture->isAllocated()){
+            ofPushMatrix();
             ofTranslate(x + width / 2, y + height / 2);
             ofScale(scale, scale);
             ofPushStyle();
-                ofSetColor(255, 255, 255, opacity * (float) 255);
-                texture->draw(0,0);
+            ofSetColor(255, 255, 255, opacity * (float) 255);
+            texture->draw(0,0);
             ofPopStyle();
-        ofPopMatrix();
+            ofPopMatrix(); 
+        }
     }    
 }
 void CentralMessage::queueMessage(Message message){
-    queue.push_back(message);
-    if(!texture){
-        prepareNextMessage();
-    }
+    lastMessage = message;
+        queue.push_back(message);
+        if(!texture){
+            prepareNextMessage();
+        } 
 }
 void CentralMessage::queueMessageOnce(Message message){
-    bool shouldQueue = false;
-    if(queue.size() > 0){
-        if(queue[queue.size() - 1] != message){
-            shouldQueue = true;
-        }
-    }
-    else shouldQueue = true;
-    
-    if(shouldQueue) queueMessage(message);
+    if(message != lastMessage) queueMessage(message);
 }
 void CentralMessage::prepareNextMessage(){
     ofImage * nextMessage = NULL;
@@ -97,8 +119,20 @@ void CentralMessage::prepareNextMessage(){
 
 ofImage * CentralMessage::getMessageTexture(Message message){
     switch (message) {
+        case CentralMessage::NO_MESSAGE:
+            return &noMessage;
+            break;
+        case CentralMessage::EYE:
+            return &eye;
+            break;
         case CentralMessage::READY:
             return &ready;
+            break;
+        case CentralMessage::INTRO_1:
+            return &intro1;
+            break;
+        case CentralMessage::INTRO_2:
+            return &intro2;
             break;
         case CentralMessage::SET:
             return &set;
@@ -109,11 +143,23 @@ ofImage * CentralMessage::getMessageTexture(Message message){
         case CentralMessage::SINK_WARNING:
             return &sinkWarning;
             break;
+        case CentralMessage::I_DONT_WANNA_DIE:
+            return &iDontWannaDie;
+            break;
         case CentralMessage::TIME_UP:
             return &timeUp;
             break;
         case CentralMessage::GAME_OVER:
             return &gameOver;
+            break;
+        case CentralMessage::ONE:
+            return &one;
+            break;
+        case CentralMessage::TWO:
+            return &two;
+            break;
+        case CentralMessage::THREE:
+            return &three;
             break;
     }
     return NULL;

@@ -40,19 +40,19 @@ void Water::reset(){
 
 void Water::update(){
     // add some particles every so often
-    if(ofGetFrameNum()% 2 == 0) {
+    //if(ofGetFrameNum()% 1 == 0) {
         WaterParticle* particle = getNextParticle();
         if(particle){
             particle->setPosition(width / 2 + ofRandom(-300,300), height - 50 );
             particle->setVelocity(0,0);
         }
-    }  
+    //}  
 }
 
 void Water::draw(){
     waterFbo.begin();
     ofPushStyle();
-    ofEnableAlphaBlending();
+   // ofEnableAlphaBlending();
     ofClear(0,0,0,0);    
     for(int i=0; i<particles.size(); i++) {	
         particles[i]->draw();
@@ -79,7 +79,7 @@ void Water::draw(){
     
     thresholdShader.begin();
     thresholdShader.setUniform1i("tex0", 0);
-    thresholdShader.setUniform1f("brightPassThreshold", 0.5);
+    thresholdShader.setUniform1f("brightPassThreshold", 0.8);
     waterFbo.draw(0,0, width, height);
     thresholdShader.end();
 }

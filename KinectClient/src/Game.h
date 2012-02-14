@@ -8,8 +8,9 @@
 #include "Boat.h"
 #include "Water.h"
 #include "CentralMessage.h"
+#include "Scenario.h"
 
-#define FBO_MARGIN 100
+#define FBO_MARGIN 256
 #define BOAT_LEVEL_OFFSET 256
 
 /**
@@ -61,7 +62,8 @@ private:
     // Main Objects
     CustomOfxBox2d box2d;    
     float width;
-    float height;    
+    float height;
+    float gamePlayHeight;
     GameState state;
     GameFinalState finalState;
     PlayerGame game1;
@@ -70,8 +72,20 @@ private:
     Player player2;    
     Boat boat;    
     Water water;
+    Scenario scenario;
+    ofTrueTypeFont timerFont;
+    ofTrueTypeFont playingTimerFont;
+    ofImage border;
+    
     CentralMessage centralMessage;
-           
+    
+    // States overlays
+    ofImage startOverlay;
+    ofImage transitionToPlayingOverlay;
+    ofImage playingOverlay;
+    ofImage endWinOverlay;
+    ofImage endLoseOverlay;
+    
     
     // Use as the timer for each state
     SimpleTweener startTimer;
@@ -80,6 +94,10 @@ private:
     SimpleTweener transitionToEndTimer;
     SimpleTweener endTimer;
     SimpleTweener transitionToStartTimer;
+    
+    // Flags for messages
+    bool hasSinkWarning;
+    bool hasTimeWarning;
     
     // Skin control
     PlayerSkin* getRandomSkin();

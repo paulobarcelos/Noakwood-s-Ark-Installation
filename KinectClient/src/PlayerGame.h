@@ -8,7 +8,7 @@
 #include "Water.h"
 #include "PlayerMessage.h"
 
-#define TOP_ICON_SIZE 128
+#define TOP_ICON_SIZE 138
 #define FINAL_ICON_SIZE 350
 
 class PlayerGame : public b2QueryCallback{
@@ -37,6 +37,8 @@ private:
     int points;
     float currentTime;
     float currentTimeNormalized;
+    
+    ofTrueTypeFont font;
         
     // AAQQ
     bool ReportFixture(b2Fixture* fixture);

@@ -8,13 +8,28 @@
 class WaterParticle : public ofxBox2dCircle {
 	
 public:
+    WaterParticle(){
+        ofxBox2dCircle::ofxBox2dCircle();
+        
+        vector<int> colors;
+        colors.resize(3);
+        colors[0] = 0x1e2d53;
+        colors[1] = 0x1e2d53;
+        colors[2] = 0x1e2d53;
+        colors[3] = 0x1e2d53;
+        
+        
+        color = colors[((int)ofRandom(2))];
+    }
 	void draw() {
         ofPushStyle();
         ofFill();
-        ofSetColor(0,0,255);
-        ofCircle(getPosition(), getRadius() + 10);
+        ofSetHexColor(color);
+        ofCircle(getPosition(), getRadius() + 15);
         ofPopStyle();
     };   
+    
+    int color;
     
 };
 

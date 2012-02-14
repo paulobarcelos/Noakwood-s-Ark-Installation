@@ -6,14 +6,28 @@
 
 class Scenario {
 public:
+    enum State{
+        NORMAL,
+        STRESS,
+        WIN,
+        LOSE
+    };
     void setup(float width, float height);
     void update();
     void drawBackground();
     void drawForeground();
+    
+    void setState(State state);
 
 private:
     float width;
     float height;
+    
+    State state;
+    
+    ofImage sky;
+    ofImage skyBlue;
+    ofImage skyRed;
     
     ofImage wave1;
     ofImage wave2;

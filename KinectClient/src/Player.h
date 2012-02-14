@@ -162,6 +162,8 @@ class Player {
     
     ofPoint position;
     
+    ofImage placeholder;
+    
     ofImage icon;
     ofImage iconDead;
     

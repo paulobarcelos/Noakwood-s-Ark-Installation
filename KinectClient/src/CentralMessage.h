@@ -8,15 +8,24 @@
 class CentralMessage {
 public:
     enum Message{
-        READY = 0,
+        NO_MESSAGE = -1,
+        EYE,
+        READY,
+        INTRO_1,
+        INTRO_2,
         SET,
         GO,
         SINK_WARNING,
+        I_DONT_WANNA_DIE,
         TIME_UP,
-        GAME_OVER
+        GAME_OVER,
+        ONE,
+        TWO,
+        THREE
     };
         
 	void setup(float x, float y, float width, float height, float duration = 0.5);
+    void setDuration(float duration);
     void update();
     void draw();
     
@@ -39,13 +48,22 @@ private:
     float opacity;
     
     vector<ofImage> messages;
+    Message lastMessage;
     
+    ofImage noMessage;
+    ofImage eye;
     ofImage ready;
+    ofImage intro1;
+    ofImage intro2;
     ofImage set;
     ofImage go;
     ofImage sinkWarning;
+    ofImage iDontWannaDie;
     ofImage timeUp;
     ofImage gameOver;
+    ofImage one;
+    ofImage two;
+    ofImage three;
     
     ofImage* texture;
     

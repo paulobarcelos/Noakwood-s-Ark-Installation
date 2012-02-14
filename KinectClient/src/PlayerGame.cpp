@@ -9,6 +9,8 @@ void PlayerGame::setup(b2World* world, Player* player, Water* water, Layout layo
     this->height = height;
     this->gameDuration = gameDuration;
     
+    font.loadFont("FuturaLT-Bold.ttf", 23);
+    
     
     sensorArea.set(0, height, 10000, 100);
     switch (layout) {
@@ -32,7 +34,7 @@ void PlayerGame::update(){
     currentTimeNormalized = currentTime / gameDuration;
     
     if(currentTimeNormalized < 0.01){
-        playerMessage.queueMessageOnce(PlayerMessage::GREETING);
+       // playerMessage.queueMessageOnce(PlayerMessage::GREETING);
     }
     
     playerMessage.update();
@@ -52,21 +54,31 @@ void PlayerGame::update(){
 
 void PlayerGame::draw(){
     switch (layout) {
-        case PlayerGame::LEFT:
+        case PlayerGame::LEFT:{
             ofPushMatrix();
-                ofTranslate(50, 50);
+                ofTranslate(20, 10);
                 player->icon.draw(0,0, TOP_ICON_SIZE, TOP_ICON_SIZE);
-                ofDrawBitmapString(ofToString(points), 0,TOP_ICON_SIZE);
+                int currentAlpha = ofGetStyle().color.a;
+                ofPushStyle();
+                ofSetColor(50,50,50, currentAlpha);
+                font.drawString(ofToString((int)((float)points/800.f * 10000)), TOP_ICON_SIZE + 10, TOP_ICON_SIZE/2 + 22);
+                ofPopStyle();
             ofPopMatrix();
             
-            break;            
-        case PlayerGame::RIGHT:
+            break;
+        }
+        case PlayerGame::RIGHT:{
             ofPushMatrix();
-                ofTranslate(width - 50 - TOP_ICON_SIZE, 50);
+                ofTranslate(width - 20 - TOP_ICON_SIZE, 10);
                 player->icon.draw(0,0, TOP_ICON_SIZE, TOP_ICON_SIZE);
-                ofDrawBitmapString(ofToString(points), 0,TOP_ICON_SIZE);
+                int currentAlpha = ofGetStyle().color.a;
+                ofPushStyle();
+                ofSetColor(50,50,50, currentAlpha);
+                font.drawString(ofToString((int)((float)points/800.f * 10000)), - TOP_ICON_SIZE + 45, TOP_ICON_SIZE/2 + 22);
+                ofPopStyle();
             ofPopMatrix();
             break;
+        }
     }
     playerMessage.draw();
 }

@@ -16,4 +16,5 @@ class testApp : public ofBaseApp{
 		ofxOscReceiver receiver;  
     
         Game game;
+    
 };

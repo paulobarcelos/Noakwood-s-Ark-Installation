@@ -12,6 +12,7 @@
 		3865465014E0A36D00CF58A0 /* ofxOscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3865464414E0A36D00CF58A0 /* ofxOscMessage.cpp */; };
 		3865465114E0A36D00CF58A0 /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3865464614E0A36D00CF58A0 /* ofxOscReceiver.cpp */; };
 		3865465214E0A36D00CF58A0 /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3865464714E0A36D00CF58A0 /* ofxOscSender.cpp */; };
+		388B8C7D14EC354200B812A4 /* ofxGLWarper.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 388B8C6614EC354200B812A4 /* ofxGLWarper.cpp */; };
 		38CDFA0C14E53188004547EB /* Game.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38CDFA0A14E53188004547EB /* Game.cpp */; };
 		38CFDCE914EA6D3F004CF678 /* PlayerMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38CFDCE714EA6D3F004CF678 /* PlayerMessage.cpp */; };
 		38CFDCEC14EA8FFD004CF678 /* Scenario.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 38CFDCEA14EA8FFD004CF678 /* Scenario.cpp */; };
@@ -135,6 +136,8 @@
 		3865464614E0A36D00CF58A0 /* ofxOscReceiver.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxOscReceiver.cpp; path = ../../../addons/ofxOsc/src/ofxOscReceiver.cpp; sourceTree = SOURCE_ROOT; };
 		3865464714E0A36D00CF58A0 /* ofxOscSender.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ofxOscSender.cpp; path = ../../../addons/ofxOsc/src/ofxOscSender.cpp; sourceTree = SOURCE_ROOT; };
 		3865464814E0A36D00CF58A0 /* ofxOscSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ofxOscSender.h; path = ../../../addons/ofxOsc/src/ofxOscSender.h; sourceTree = SOURCE_ROOT; };
+		388B8C6614EC354200B812A4 /* ofxGLWarper.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxGLWarper.cpp; sourceTree = "<group>"; };
+		388B8C6714EC354200B812A4 /* ofxGLWarper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxGLWarper.h; sourceTree = "<group>"; };
 		38CDFA0A14E53188004547EB /* Game.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Game.cpp; sourceTree = "<group>"; };
 		38CDFA0B14E53188004547EB /* Game.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Game.h; sourceTree = "<group>"; };
 		38CFDCE714EA6D3F004CF678 /* PlayerMessage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerMessage.cpp; sourceTree = "<group>"; };
@@ -340,6 +343,24 @@
 				3865464914E0A36D00CF58A0 /* src */,
 			);
 			name = ofxOsc;
+			sourceTree = "<group>";
+		};
+		388B8C5814EC354200B812A4 /* ofxGLWarper */ = {
+			isa = PBXGroup;
+			children = (
+				388B8C6514EC354200B812A4 /* src */,
+			);
+			name = ofxGLWarper;
+			path = ../../../addons/ofxGLWarper;
+			sourceTree = "<group>";
+		};
+		388B8C6514EC354200B812A4 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				388B8C6614EC354200B812A4 /* ofxGLWarper.cpp */,
+				388B8C6714EC354200B812A4 /* ofxGLWarper.h */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 		38E4519914E1C3FE0080AE06 /* ofxBox2d */ = {
@@ -576,6 +597,7 @@
 		BB4B014C10F69532006C3DED /* addons */ = {
 			isa = PBXGroup;
 			children = (
+				388B8C5814EC354200B812A4 /* ofxGLWarper */,
 				38F37CCB14E8385D007756C4 /* SimpleTweener */,
 				38E4519914E1C3FE0080AE06 /* ofxBox2d */,
 				3865464A14E0A36D00CF58A0 /* ofxOsc */,
@@ -831,6 +853,7 @@
 				38D02CA814E9B5BF00AEA2E3 /* CentralMessage.cpp in Sources */,
 				38CFDCE914EA6D3F004CF678 /* PlayerMessage.cpp in Sources */,
 				38CFDCEC14EA8FFD004CF678 /* Scenario.cpp in Sources */,
+				388B8C7D14EC354200B812A4 /* ofxGLWarper.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -915,6 +938,13 @@
 				GCC_MODEL_TUNING = G4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				HEADER_SEARCH_PATHS = (
+					"$(OF_CORE_HEADERS)",
+					"$(OF_PATH)/addons/ofxOsc/src",
+					"$(OF_PATH)/addons/ofxOsc/libs/oscpack/include/ip",
+					"$(OF_PATH)/addons/ofxOsc/libs/oscpack/include/osc",
+					"$(OF_OPENCV_HEADERS)",
+				);
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -981,6 +1011,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 				);
+				OF_OPENCV_HEADERS = "\"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include\" \"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include/opencv\" \"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include/opencv2\"";
 				PRODUCT_NAME = NoakwoodClientDebug;
 				WRAPPER_EXTENSION = app;
 			};
@@ -999,6 +1030,13 @@
 				GCC_MODEL_TUNING = G4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Carbon.framework/Headers/Carbon.h";
+				HEADER_SEARCH_PATHS = (
+					"$(OF_CORE_HEADERS)",
+					"$(OF_PATH)/addons/ofxOsc/src",
+					"$(OF_PATH)/addons/ofxOsc/libs/oscpack/include/ip",
+					"$(OF_PATH)/addons/ofxOsc/libs/oscpack/include/osc",
+					"$(OF_OPENCV_HEADERS)",
+				);
 				INFOPLIST_FILE = "openFrameworks-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
 				LIBRARY_SEARCH_PATHS = (
@@ -1065,6 +1103,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_50)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 				);
+				OF_OPENCV_HEADERS = "\"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include\" \"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include/opencv\" \"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include/opencv2\"";
 				PRODUCT_NAME = NoakwoodClient;
 				WRAPPER_EXTENSION = app;
 			};

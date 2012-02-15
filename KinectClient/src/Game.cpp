@@ -30,7 +30,7 @@ void Game::setup(float width, float height) {
     // Penguin skin
     PlayerSkin* penguin = new PlayerSkin();
     Player::loadSkin("penguin", penguin);    
-    penguin->globalScale = 0.4;
+    penguin->globalScale = 0.38;
     penguin->movingLimit.x = width;    
     skins.push_back(penguin);
     
@@ -47,6 +47,8 @@ void Game::setup(float width, float height) {
     bear->globalScale = 0.3;
     bear->movingLimit.x = width;    
     skins.push_back(bear);
+    
+    currentSkinID = (int)ofRandom(0, skins.size() -1);
        
     // Boat
     boat.setup(box2d.getWorld());

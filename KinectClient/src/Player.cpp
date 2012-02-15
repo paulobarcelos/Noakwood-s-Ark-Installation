@@ -64,7 +64,8 @@ void Player::setup(b2World* world, PlayerSkin* skin, ofPoint position) {
     connectLimb(hipRightToKneeRight, kneeRightToAnkleRight);
     connectLimb(kneeRightToAnkleRight, ankleRightToFootRight);*/
     
-    skin->movingLimit.y *= skin->globalScale; 
+    movingLimit = skin->movingLimit;
+    movingLimit.y = skin->movingLimit.y * skin->globalScale; 
     
     isReady = true;
 }
@@ -141,8 +142,8 @@ void Player::setData(ofxOscMessage &m){
         ofPoint center;
         ofPoint powMovingLimit;
         
-        center.y = position.y + powf(skin->movingLimit.y, 1.15) * data.targetOffset.y - skin->movingLimit.y;
-        center.x = position.x + skin->movingLimit.x * data.targetOffset.x;
+        center.y = position.y + powf(movingLimit.y, 1.15) * data.targetOffset.y - movingLimit.y;
+        center.x = position.x + movingLimit.x * data.targetOffset.x;
         
         calculateLimb(spineToShoulderCenter, center, data.spine, data.shoulderCenter);
         calculateLimb(spineToHipCenter, center, data.spine, data.hipCenter);

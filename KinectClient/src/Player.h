@@ -161,6 +161,7 @@ class Player {
     PlayerSkin* skin;
     
     ofPoint position;
+    ofPoint movingLimit;
     
     ofImage placeholder;
     

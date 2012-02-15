@@ -9,11 +9,11 @@
          continueAfterRunningActions = "No"
          isPathRelative = "1"
          filePath = "src/Game.cpp"
-         timestampString = "350955178.554464"
+         timestampString = "350957327.561952"
          startingColumnNumber = "9223372036854775807"
          endingColumnNumber = "9223372036854775807"
-         startingLineNumber = "268"
-         endingLineNumber = "268"
+         startingLineNumber = "274"
+         endingLineNumber = "274"
          landmarkName = "Game::draw()"
          landmarkType = "5">
       </FileBreakpoint>
@@ -43,6 +43,34 @@
          startingLineNumber = "121"
          endingLineNumber = "121"
          landmarkName = "CentralMessage::getMessageTexture(Message message)"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "src/PlayerMessage.cpp"
+         timestampString = "350957327.561952"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "86"
+         endingLineNumber = "86"
+         landmarkName = "PlayerMessage::prepareNextMessage()"
+         landmarkType = "5">
+      </FileBreakpoint>
+      <FileBreakpoint
+         shouldBeEnabled = "No"
+         ignoreCount = "0"
+         continueAfterRunningActions = "No"
+         isPathRelative = "1"
+         filePath = "src/PlayerMessage.cpp"
+         timestampString = "350957327.561952"
+         startingColumnNumber = "9223372036854775807"
+         endingColumnNumber = "9223372036854775807"
+         startingLineNumber = "87"
+         endingLineNumber = "87"
+         landmarkName = "PlayerMessage::prepareNextMessage()"
          landmarkType = "5">
       </FileBreakpoint>
    </FileBreakpoints>

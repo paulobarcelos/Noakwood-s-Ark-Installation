@@ -38,6 +38,8 @@ private:
     float currentTime;
     float currentTimeNormalized;
     
+    bool hasArrowWarning;
+    
     ofTrueTypeFont font;
         
     // AAQQ

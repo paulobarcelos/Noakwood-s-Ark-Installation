@@ -12,9 +12,15 @@ void Game::setup(float width, float height) {
     currentSkinID = 0;
     
     // State Timers
-    startTimer.setup(32);
+    /*startTimer.setup(48);
     transitionToPlayingTimer.setup(8);
-    playingTimer.setup(60);
+    playingTimer.setup(68);
+    transitionToEndTimer.setup(4);
+    endTimer.setup(10);
+    transitionToStartTimer.setup(2);*/
+    startTimer.setup(2);
+    transitionToPlayingTimer.setup(8);
+    playingTimer.setup(68);
     transitionToEndTimer.setup(4);
     endTimer.setup(10);
     transitionToStartTimer.setup(2);
@@ -435,8 +441,8 @@ void Game::initStart() {
     player1.setup(box2d.getWorld(), getRandomSkin());
     player2.setup(box2d.getWorld(), getRandomSkin());    
     
-    player1.position.set((width / 8) * 2 + 50, gamePlayHeight - 30);
-    player2.position.set((width / 8) * 6 - 50, gamePlayHeight - 30);
+    player1.position.set((width / 8) * 2, gamePlayHeight - 30);
+    player2.position.set((width / 8) * 6, gamePlayHeight - 30);
     
     scenario.setState(Scenario::NORMAL);
     
@@ -450,7 +456,7 @@ void Game::initTransitionToPlaying() {
     
     boat.position.y = gamePlayHeight + 256;
     boatPositionTweener.clearTweens();
-    boatPositionTweener.setup(6.f, 0, Elastic::easeOut);
+    boatPositionTweener.setup(6.f, 1.5f, Elastic::easeOut);
     boatPositionTweener.addTween( &(boat.position.y) , - 256);
     boatPositionTweener.start();
     
@@ -483,9 +489,6 @@ void Game::initPlaying() {
     state = Game::PLAYING;
     playingTimer.start();
     
-    player1.position.set((width / 8) * 2, gamePlayHeight - 30);
-    player2.position.set((width / 8) * 6, gamePlayHeight - 30);
-    
     gamePlayCapacityPositiveTweener.clearTweens();
     gamePlayCapacityPositiveTweener.setup(1.f);
     gamePlayCapacityPositiveTweener.addTween( &(gamePlayPosition.y) , BOAT_LEVEL_OFFSET);
@@ -498,7 +501,7 @@ void Game::initPlaying() {
     
     gamePlayInterfaceOpacity = 0;
     gamePlayInterfaceTweener.clearTweens();
-    gamePlayInterfaceTweener.setup(1.f, 6.f, Sine::easeOut);
+    gamePlayInterfaceTweener.setup(1.f, 8.f, Sine::easeOut);
     gamePlayInterfaceTweener.addTween(&gamePlayInterfaceOpacity, 1);
     gamePlayInterfaceTweener.start();
     
@@ -517,7 +520,7 @@ void Game::initPlaying() {
     
     scenario.setState(Scenario::STRESS);
     
-    centralMessage.setDuration(2.333333f);
+    centralMessage.setDuration(2.666666f);
     centralMessage.queueMessage(CentralMessage::INTRO_1);
     centralMessage.queueMessage(CentralMessage::NO_MESSAGE);
     centralMessage.queueMessage(CentralMessage::INTRO_2);

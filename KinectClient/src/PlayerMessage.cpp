@@ -6,12 +6,13 @@ void PlayerMessage::setup(float x, float y, float width, float height, float dur
     this->width = width;
     this->height = height;
     this->duration = duration;
+    setDuration(duration);
     
     texture = NULL;
+    lastMessage = PlayerMessage::NO_MESSAGE;
     
-    tweenerMovement.setup(duration, 0, Sine::easeIn);
-    tweenerOpacity.setup(duration/2, 0, Sine::easeIn, BACK_AND_FORTH);
-    
+    noMessage.loadImage("blank.png");
+    messages.push_back(noMessage);
     
     greeting.loadImage("messages/greeting.png");
     messages.push_back(greeting);
@@ -31,9 +32,19 @@ void PlayerMessage::setup(float x, float y, float width, float height, float dur
     youWillLose.loadImage("messages/youWillLose.png");
     messages.push_back(youWillLose);
     
+    arrowLeft.loadImage("messages/arrowLeft.png");
+    messages.push_back(arrowLeft);
+    
+    arrowRight.loadImage("messages/arrowRight.png");
+    messages.push_back(arrowRight);
+    
 
 }
-
+void PlayerMessage::setDuration(float duration){
+    this->duration = duration;
+    tweenerMovement.setup(duration, 0, Sine::easeIn);
+    tweenerOpacity.setup(duration/2, 0, Sine::easeIn, BACK_AND_FORTH);
+}
 void PlayerMessage::update(){
     float dt = 1.f / ofGetFrameRate();
     if(texture){
@@ -62,21 +73,14 @@ void PlayerMessage::draw(){
     }    
 }
 void PlayerMessage::queueMessage(Message message){
+    lastMessage = message;
     queue.push_back(message);
     if(!texture){
         prepareNextMessage();
-    }
+    } 
 }
 void PlayerMessage::queueMessageOnce(Message message){
-    bool shouldQueue = false;
-    if(queue.size() > 0){
-        if(queue[queue.size() - 1] != message){
-            shouldQueue = true;
-        }
-    }
-    else shouldQueue = true;
-   
-    if(shouldQueue) queueMessage(message);
+    if(message != lastMessage) queueMessage(message);
 }
 void PlayerMessage::prepareNextMessage(){
     ofImage * nextMessage = NULL;
@@ -103,6 +107,9 @@ void PlayerMessage::prepareNextMessage(){
 
 ofImage * PlayerMessage::getMessageTexture(Message message){
     switch (message) {
+        case PlayerMessage::NO_MESSAGE:
+            return &noMessage;
+            break;
         case PlayerMessage::GREETING:
             return &greeting;
             break;
@@ -120,6 +127,12 @@ ofImage * PlayerMessage::getMessageTexture(Message message){
             break;
         case PlayerMessage::YOU_WILL_LOSE:
             return &youWillLose;
+            break;
+        case PlayerMessage::ARROW_LEFT:
+            return &arrowLeft;
+            break;
+        case PlayerMessage::ARROW_RIGHT:
+            return &arrowRight;
             break;
     }
     return NULL;

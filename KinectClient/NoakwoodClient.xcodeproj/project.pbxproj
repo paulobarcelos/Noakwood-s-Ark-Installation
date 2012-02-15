@@ -1012,6 +1012,12 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_52)",
 				);
 				OF_OPENCV_HEADERS = "\"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include\" \"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include/opencv\" \"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include/opencv2\"";
+				OF_OPENCV_LIBS = "\"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a\"";
+				OTHER_LDFLAGS = (
+					"$(OF_CORE_LIBS)",
+					"$(OF_PATH)/addons/ofxOsc/libs/oscpack/lib/osx/osc.a",
+					"$(OF_OPENCV_LIBS)",
+				);
 				PRODUCT_NAME = NoakwoodClientDebug;
 				WRAPPER_EXTENSION = app;
 			};
@@ -1104,6 +1110,12 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_51)",
 				);
 				OF_OPENCV_HEADERS = "\"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include\" \"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include/opencv\" \"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/include/opencv2\"";
+				OF_OPENCV_LIBS = "\"$(OF_PATH)/addons/ofxOpenCv/libs/opencv/lib/osx/opencv.a\"";
+				OTHER_LDFLAGS = (
+					"$(OF_CORE_LIBS)",
+					"$(OF_PATH)/addons/ofxOsc/libs/oscpack/lib/osx/osc.a",
+					"$(OF_OPENCV_LIBS)",
+				);
 				PRODUCT_NAME = NoakwoodClient;
 				WRAPPER_EXTENSION = app;
 			};

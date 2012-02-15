@@ -12,7 +12,7 @@ void Game::setup(float width, float height) {
     currentSkinID = 0;
     
     // State Timers
-    startTimer.setup(48);
+    startTimer.setup(2);
     transitionToPlayingTimer.setup(8);
     playingTimer.setup(68);
     transitionToEndTimer.setup(4);
@@ -716,6 +716,7 @@ PlayerSkin* Game::getRandomSkin(){
     return skins[id];
 }
 void Game::beginGamePlayDraw() {
+    
     gamePlayFbo.begin();
     ofPushStyle();
     ofEnableAlphaBlending();

@@ -64,6 +64,8 @@ void Player::setup(b2World* world, PlayerSkin* skin, ofPoint position) {
     connectLimb(hipRightToKneeRight, kneeRightToAnkleRight);
     connectLimb(kneeRightToAnkleRight, ankleRightToFootRight);*/
     
+    skin->movingLimit.y *= skin->globalScale; 
+    
     isReady = true;
 }
 
@@ -76,7 +78,7 @@ void Player::setupLimb(Limb &limb, LimbSkin limbSkin){
 	limb.height = limbSkin.height * skin->globalScale;
     
     limb.body.fixture.filter.groupIndex = -1;
-    limb.body.setPhysics(5, 0, 0);
+    limb.body.setPhysics(10, 0, 0);
     limb.body.setup(world, position.x, position.y, limb.length/2, limb.thickness/2);    
 }
 
@@ -139,7 +141,7 @@ void Player::setData(ofxOscMessage &m){
         ofPoint center;
         ofPoint powMovingLimit;
         
-        center.y = position.y + powf(skin->movingLimit.y, 1.15) * data.targetOffset.y - skin->movingLimit.y * 0.7;
+        center.y = position.y + powf(skin->movingLimit.y, 1.15) * data.targetOffset.y - skin->movingLimit.y;
         center.x = position.x + skin->movingLimit.x * data.targetOffset.x;
         
         calculateLimb(spineToShoulderCenter, center, data.spine, data.shoulderCenter);
@@ -242,23 +244,23 @@ void Player::draw(){
         drawLimb(shoulderCenterToShoulderLeft);
         drawLimb(shoulderCenterToShoulderRight);
         
-        drawLimb(shoulderLeftToElbowLeft);
-        drawLimb(elbowLeftToWristLeft);
+        drawLimb(shoulderLeftToElbowLeft); 
         drawLimb(wristLeftToHandLeft);
+        drawLimb(elbowLeftToWristLeft);
         
-        drawLimb(shoulderRightToElbowRight);
-        drawLimb(elbowRightToWristRight);
         drawLimb(wristRightToHandRight);
+        drawLimb(elbowRightToWristRight);        
+        drawLimb(shoulderRightToElbowRight);
         
-        drawLimb(hipLeftToKneeLeft);
-        drawLimb(kneeLeftToAnkleLeft);
         drawLimb(ankleLeftToFootLeft);
+        drawLimb(kneeLeftToAnkleLeft);
+        drawLimb(hipLeftToKneeLeft);
         
-        drawLimb(hipRightToKneeRight);
-        drawLimb(kneeRightToAnkleRight);
         drawLimb(ankleRightToFootRight);
+        drawLimb(kneeRightToAnkleRight);
+        drawLimb(hipRightToKneeRight);        
     }
-    else placeholder.draw(position - ofPoint(0, 200));
+    else placeholder.draw(position - ofPoint(0, 150));
 }
 void Player::drawLimb (Limb &limb){
     ofPoint currentPositon(limb.body.body->GetPosition().x, limb.body.body->GetPosition().y);
@@ -271,7 +273,10 @@ void Player::drawLimb (Limb &limb){
                 limb.texture.draw(0,0, limb.height,limb.width);
 		ofPopMatrix();
     
-    //limb.body.draw();
+    /*ofPushStyle();
+    ofSetColor(255, 0, 0, 100);
+    limb.body.draw();
+    ofPopStyle();*/
 }
 
 void Player::flagIdle (){

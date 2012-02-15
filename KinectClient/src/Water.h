@@ -50,6 +50,8 @@ private:
     int capacity;
     int levelCount;
     
+    int sideSwitch;
+    
     float width;
     float height;
     b2World* world;

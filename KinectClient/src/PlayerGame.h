@@ -9,7 +9,6 @@
 #include "PlayerMessage.h"
 
 #define TOP_ICON_SIZE 138
-#define FINAL_ICON_SIZE 350
 
 class PlayerGame : public b2QueryCallback{
 public:
@@ -22,6 +21,7 @@ public:
     void reset();
     void update();
     void draw();
+    int getPoints();
 
 private:    
     b2World* world;
@@ -35,10 +35,16 @@ private:
     PlayerMessage playerMessage;
     
     int points;
+    int pointsControl;
+    float pointUsage;
+    float rawPointUsage;
     float currentTime;
     float currentTimeNormalized;
     
     bool hasArrowWarning;
+    bool hasPointWarning1;
+    bool hasPointWarning2;
+    bool hasPointWarning3;
     
     ofTrueTypeFont font;
         

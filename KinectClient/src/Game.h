@@ -12,6 +12,7 @@
 
 #define FBO_MARGIN 256
 #define BOAT_LEVEL_OFFSET 256
+#define FINAL_ICON_SIZE 256
 
 /**
  * Custom ofxBox2d that updates it's world accordingly to current FPS and not a fixed one.
@@ -75,9 +76,14 @@ private:
     Scenario scenario;
     ofTrueTypeFont timerFont;
     ofTrueTypeFont playingTimerFont;
-    ofImage border;
-    
+    ofImage border;    
     CentralMessage centralMessage;
+    
+    // End screen
+    ofImage winner;
+    ofImage loser;
+    ofTrueTypeFont winnerFont;
+    ofTrueTypeFont loserFont;
     
     // States overlays
     ofImage startOverlay;
@@ -120,6 +126,8 @@ private:
     
     // Animation specific tweeners
     SimpleTweener boatPositionTweener;
+    SimpleTweener winnerTweener;
+    float winnerScale;
     
     SimpleTweener playersOpacityTweener;
     float playersOpacity;

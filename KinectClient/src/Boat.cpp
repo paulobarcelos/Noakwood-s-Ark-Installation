@@ -34,6 +34,8 @@ void Boat::setup(b2World* world) {
     texture.loadImage("boat.png");
     texture.setAnchorPercent(0.5, 1);
     
+    position.y = 50000;
+    
 }
 void Boat::update(){
     float time = 1.f/ofGetFrameRate();
@@ -52,5 +54,5 @@ void Boat::draw(){
         
     /*for (int i=0; i<boat.size(); i++) 
         boat[i].draw();
-     */
+    */ 
 }

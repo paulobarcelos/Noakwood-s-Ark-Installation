@@ -16,7 +16,13 @@ public:
         YOU_WILL_WIN,
         YOU_WILL_LOSE,
         ARROW_LEFT,
-        ARROW_RIGHT
+        ARROW_RIGHT,
+        POINT_WARNING_1,
+        POINT_WARNING_1_BONUS,
+        POINT_WARNING_2,
+        POINT_WARNING_2_BONUS,
+        POINT_WARNING_3,
+        POINT_WARNING_3_BONUS
     };
     
 	void setup(float x, float y, float width, float height, float duration = 1.f);
@@ -54,6 +60,12 @@ private:
     ofImage youWillLose;
     ofImage arrowLeft;
     ofImage arrowRight;
+    ofImage pointWarning1;
+    ofImage pointWarning1Bonus;
+    ofImage pointWarning2;
+    ofImage pointWarning2Bonus;
+    ofImage pointWarning3;
+    ofImage pointWarning3Bonus;
     
     ofImage* texture;
     

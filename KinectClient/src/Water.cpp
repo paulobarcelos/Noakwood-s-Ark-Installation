@@ -36,6 +36,7 @@ void Water::reset(){
         inactivateParticle(particles[i]);
 	}
     levelCount = 0;
+    sideSwitch = 0;
 }
 
 void Water::update(){
@@ -43,7 +44,12 @@ void Water::update(){
     //if(ofGetFrameNum()% 1 == 0) {
         WaterParticle* particle = getNextParticle();
         if(particle){
-            particle->setPosition(width / 2 + ofRandom(-300,300), height - 50 );
+            sideSwitch++;
+            float side;
+            if(sideSwitch%2 == 0)side = -300;
+            else side = 300;
+            
+            particle->setPosition(width / 2 + side, height - 50 );
             particle->setVelocity(0,0);
         }
     //}  

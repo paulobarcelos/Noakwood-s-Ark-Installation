@@ -38,6 +38,21 @@ void PlayerMessage::setup(float x, float y, float width, float height, float dur
     arrowRight.loadImage("messages/arrowRight.png");
     messages.push_back(arrowRight);
     
+    pointWarning1.loadImage("messages/pointWarning1.png");
+    messages.push_back(pointWarning1);
+    pointWarning1Bonus.loadImage("messages/pointWarning1Bonus.png");
+    messages.push_back(pointWarning1Bonus);
+    
+    pointWarning2.loadImage("messages/pointWarning2.png");
+    messages.push_back(pointWarning2);
+    pointWarning2Bonus.loadImage("messages/pointWarning2Bonus.png");
+    messages.push_back(pointWarning2Bonus);
+    
+    pointWarning3.loadImage("messages/pointWarning3.png");
+    messages.push_back(pointWarning3);
+    pointWarning3Bonus.loadImage("messages/pointWarning3Bonus.png");
+    messages.push_back(pointWarning3Bonus);
+    
 
 }
 void PlayerMessage::setDuration(float duration){
@@ -133,6 +148,24 @@ ofImage * PlayerMessage::getMessageTexture(Message message){
             break;
         case PlayerMessage::ARROW_RIGHT:
             return &arrowRight;
+            break;
+        case PlayerMessage::POINT_WARNING_1:
+            return &pointWarning1;
+            break;
+        case PlayerMessage::POINT_WARNING_1_BONUS:
+            return &pointWarning1Bonus;
+            break;
+        case PlayerMessage::POINT_WARNING_2:
+            return &pointWarning2;
+            break;
+        case PlayerMessage::POINT_WARNING_2_BONUS:
+            return &pointWarning2Bonus;
+            break;
+        case PlayerMessage::POINT_WARNING_3:
+            return &pointWarning3;
+            break;
+        case PlayerMessage::POINT_WARNING_3_BONUS:
+            return &pointWarning3Bonus;
             break;
     }
     return NULL;

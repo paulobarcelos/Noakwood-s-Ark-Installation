@@ -12,26 +12,42 @@ void Game::setup(float width, float height) {
     currentSkinID = 0;
     
     // State Timers
-    /*startTimer.setup(48);
-    transitionToPlayingTimer.setup(8);
-    playingTimer.setup(68);
-    transitionToEndTimer.setup(4);
-    endTimer.setup(10);
-    transitionToStartTimer.setup(2);*/
-    startTimer.setup(2);
+    startTimer.setup(48);
     transitionToPlayingTimer.setup(8);
     playingTimer.setup(68);
     transitionToEndTimer.setup(4);
     endTimer.setup(10);
     transitionToStartTimer.setup(2);
-            
+    
+    // Panda skin
+    PlayerSkin* panda = new PlayerSkin();
+    Player::loadSkin("panda", panda);    
+    panda->globalScale = 0.3;
+    panda->movingLimit.x = width;    
+    skins.push_back(panda);
+    
+    
+    // Penguin skin
+    PlayerSkin* penguin = new PlayerSkin();
+    Player::loadSkin("penguin", penguin);    
+    penguin->globalScale = 0.4;
+    penguin->movingLimit.x = width;    
+    skins.push_back(penguin);
+    
+    // Giraff skin
+    PlayerSkin* giraff = new PlayerSkin();
+    Player::loadSkin("giraff", giraff);    
+    giraff->globalScale = 0.45;
+    giraff->movingLimit.x = width;    
+    skins.push_back(giraff);
+    
     // Bear skin
     PlayerSkin* bear = new PlayerSkin();
     Player::loadSkin("bear", bear);    
-    bear->globalScale = 0.6;
+    bear->globalScale = 0.3;
     bear->movingLimit.x = width;    
     skins.push_back(bear);
-    
+       
     // Boat
     boat.setup(box2d.getWorld());
     boat.position.set(width / 2, gamePlayHeight );
@@ -42,6 +58,14 @@ void Game::setup(float width, float height) {
     // Players and games
     game1.setup(box2d.getWorld(), &player1, &water, PlayerGame::LEFT, width, gamePlayHeight, playingTimer.getDuration());
     game2.setup(box2d.getWorld(), &player2, &water, PlayerGame::RIGHT, width, gamePlayHeight, playingTimer.getDuration());
+    
+    // End screen
+    winner.loadImage("winner.png");
+    winner.setAnchorPercent(0.5, 0.5);
+    loser.loadImage("loser.png");
+    loser.setAnchorPercent(0.5, 0.5);
+    winnerFont.loadFont("FuturaLT-Bold.ttf", 25);
+    loserFont.loadFont("FuturaLT-Bold.ttf", 25);
     
     // Scenario
     scenario.setup(width, height);
@@ -197,6 +221,8 @@ void Game::update(){
         case Game::END:            
             gamePlayInterfaceTweener.update(dt);
             
+            winnerTweener.update(dt);
+            
             endTimer.update(dt);
             if(endTimer.isComplete()){
                 initTransitionToStart();
@@ -204,6 +230,8 @@ void Game::update(){
             break;
         case Game::TRANSITION_TO_START:
             gamePlayInterfaceTweener.update(dt);
+            
+            winnerTweener.update(dt);
             
             transitionToStartTimer.update(dt);            
             if(transitionToStartTimer.isComplete()){             
@@ -244,8 +272,8 @@ void Game::draw(){
             
             startOverlay.draw(0,0, width, height);
             
-            ofDrawBitmapString("START", 20, 30);
-            ofDrawBitmapString(ofToString((startTimer.getDuration() - startTimer.getDuration() * startTimer.getProgress())), 20, 40);
+            //ofDrawBitmapString("START", 20, 30);
+            //ofDrawBitmapString(ofToString((startTimer.getDuration() - startTimer.getDuration() * startTimer.getProgress())), 20, 40);
             
             break;
         }
@@ -262,14 +290,14 @@ void Game::draw(){
             
             border.draw(0,0);
             
-            ofPushStyle();
-            ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
+            //ofPushStyle();
+            //ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
           //  transitionToPlayingOverlay.draw(0,0, width, height);
-            ofPopStyle();
+            //ofPopStyle();
             
             
-            ofDrawBitmapString("TRANSITION_TO_PLAYING", 20, 30);
-            ofDrawBitmapString(ofToString((transitionToPlayingTimer.getDuration() - transitionToPlayingTimer.getDuration() * transitionToPlayingTimer.getProgress())), 20, 40);
+            //ofDrawBitmapString("TRANSITION_TO_PLAYING", 20, 30);
+            //ofDrawBitmapString(ofToString((transitionToPlayingTimer.getDuration() - transitionToPlayingTimer.getDuration() * transitionToPlayingTimer.getProgress())), 20, 40);
             break;
         case Game::PLAYING:{
             scenario.drawBackground();
@@ -302,8 +330,8 @@ void Game::draw(){
             ofPopStyle();
             
            
-            ofDrawBitmapString("PLAYING", 20, 30);
-            ofDrawBitmapString(ofToString((playingTimer.getDuration() - playingTimer.getDuration() * playingTimer.getProgress())), 20, 40);
+            //ofDrawBitmapString("PLAYING", 20, 30);
+            //ofDrawBitmapString(ofToString((playingTimer.getDuration() - playingTimer.getDuration() * playingTimer.getProgress())), 20, 40);
             break;
         }
         case Game::TRANSITION_TO_END:
@@ -330,24 +358,66 @@ void Game::draw(){
             ofPopStyle();
             
             
-            ofDrawBitmapString("TRANSITION_TO_END", 20, 30);
-            ofDrawBitmapString(ofToString((transitionToEndTimer.getDuration() - transitionToEndTimer.getDuration() * transitionToEndTimer.getProgress())), 20, 40);
+            //ofDrawBitmapString("TRANSITION_TO_END", 20, 30);
+            //ofDrawBitmapString(ofToString((transitionToEndTimer.getDuration() - transitionToEndTimer.getDuration() * transitionToEndTimer.getProgress())), 20, 40);
             break;
         case Game::END:
             switch (finalState) {
-                case Game::NORMAL:
+                case Game::NORMAL:{
                     scenario.drawBackground();
                     
                     ofPushStyle();
                     ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
-           
+                   
+                    int currentAlpha = ofGetStyle().color.a;
+                    
+                    ofImage * player1Status;
+                    ofImage * player2Status;
+                    bool player1Winner;
+                    bool player2Winner;
+                    
+                    if(game1.getPoints() > game2.getPoints()){
+                        player1Status = &winner;
+                        player2Status = &loser;
+                        player1Winner = true;
+                        player2Winner = false;
+                    }
+                    else{
+                        player1Status = &loser;
+                        player2Status = &winner;
+                        player1Winner = false;
+                        player2Winner = true;
+                    }
+                    
                     ofPushMatrix();
-                    ofTranslate(width / 4, height / 2);
+                    ofTranslate(width / 4, height / 2 - 120);
+                    if(player1Winner) ofScale(winnerScale, winnerScale);
                     player1.icon.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    player1Status->draw(0, FINAL_ICON_SIZE / 2 + 25);
+                    
+                    stringstream winnerStream;
+                    winnerStream << ofToString(game1.getPoints()) << " POINTS";
+                    float winnerPointsWidth = winnerFont.getStringBoundingBox(winnerStream.str(), 0, 0).width;
+                    ofPushStyle();
+                    //ofSetColor(0, 0, 0, currentAlpha);
+                    winnerFont.drawString(winnerStream.str(), -winnerPointsWidth/2, FINAL_ICON_SIZE / 2 + 25 + 50);
+                    ofPopStyle();
+                    
                     ofPopMatrix();
+                    
                     ofPushMatrix();
-                    ofTranslate((width / 4) * 3 , height / 2);
+                    ofTranslate((width / 4) * 3 , height / 2 - 120);
+                    if(player2Winner) ofScale(winnerScale, winnerScale);
                     player2.icon.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    player2Status->draw(0, FINAL_ICON_SIZE / 2 + 25);
+                    
+                    stringstream loserStream;
+                    loserStream << ofToString(game2.getPoints()) << " POINTS";
+                    float loserPointsWidth = loserFont.getStringBoundingBox(loserStream.str(), 0, 0).width;
+                    ofPushStyle();
+                    //ofSetColor(0, 0, 0, currentAlpha);
+                    loserFont.drawString(loserStream.str(), -loserPointsWidth/2, FINAL_ICON_SIZE / 2 + 25 + 50);
+                    ofPopStyle();
                     ofPopMatrix();
                                         
                     ofPopStyle();
@@ -360,8 +430,8 @@ void Game::draw(){
                     endWinOverlay.draw(0,0, width, height);
                     ofPopStyle();
                     break;
-                    
-                case Game::GAME_OVER:
+                }
+                case Game::GAME_OVER:{
                     scenario.drawBackground();                    
                     scenario.drawForeground();
                     border.draw(0,0);
@@ -372,28 +442,71 @@ void Game::draw(){
                     ofPopStyle();
                     
                     break;
+                }
             }
             
             
-            ofDrawBitmapString("END", 20, 30);
-            ofDrawBitmapString(ofToString((endTimer.getDuration() - endTimer.getDuration() * endTimer.getProgress())), 20, 40);
+            //ofDrawBitmapString("END", 20, 30);
+            //ofDrawBitmapString(ofToString((endTimer.getDuration() - endTimer.getDuration() * endTimer.getProgress())), 20, 40);
             break;
         case Game::TRANSITION_TO_START:
             
             switch (finalState) {
-                case Game::NORMAL:
+                case Game::NORMAL:{
                     scenario.drawBackground();
                     
                     ofPushStyle();
                     ofSetColor(255, 255, 255, gamePlayInterfaceOpacity * (float) 255);
                     
+                    int currentAlpha = ofGetStyle().color.a;
+                    
+                    ofImage * player1Status;
+                    ofImage * player2Status;
+                    bool player1Winner;
+                    bool player2Winner;
+                    
+                    if(game1.getPoints() > game2.getPoints()){
+                        player1Status = &winner;
+                        player2Status = &loser;
+                        player1Winner = true;
+                        player2Winner = false;
+                    }
+                    else{
+                        player1Status = &loser;
+                        player2Status = &winner;
+                        player1Winner = false;
+                        player2Winner = true;
+                    }
+                    
                     ofPushMatrix();
-                    ofTranslate(width / 4, height / 2);
+                    ofTranslate(width / 4, height / 2 - 120);
+                    if(player1Winner) ofScale(winnerScale, winnerScale);
                     player1.icon.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    player1Status->draw(0, FINAL_ICON_SIZE / 2 + 25);
+                    
+                    stringstream winnerStream;
+                    winnerStream << ofToString(game1.getPoints()) << " POINTS";
+                    float winnerPointsWidth = winnerFont.getStringBoundingBox(winnerStream.str(), 0, 0).width;
+                    ofPushStyle();
+                    //ofSetColor(0, 0, 0, currentAlpha);
+                    winnerFont.drawString(winnerStream.str(), -winnerPointsWidth/2, FINAL_ICON_SIZE / 2 + 25 + 50);
+                    ofPopStyle();
+                    
                     ofPopMatrix();
+                    
                     ofPushMatrix();
-                    ofTranslate((width / 4) * 3 , height / 2);
+                    ofTranslate((width / 4) * 3 , height / 2 - 120);
+                    if(player2Winner) ofScale(winnerScale, winnerScale);
                     player2.icon.draw(-FINAL_ICON_SIZE / 2, -FINAL_ICON_SIZE / 2, FINAL_ICON_SIZE, FINAL_ICON_SIZE);
+                    player2Status->draw(0, FINAL_ICON_SIZE / 2 + 25);
+                    
+                    stringstream loserStream;
+                    loserStream << ofToString(game2.getPoints()) << " POINTS";
+                    float loserPointsWidth = loserFont.getStringBoundingBox(loserStream.str(), 0, 0).width;
+                    ofPushStyle();
+                    //ofSetColor(0, 0, 0, currentAlpha);
+                    loserFont.drawString(loserStream.str(), -loserPointsWidth/2, FINAL_ICON_SIZE / 2 + 25 + 50);
+                    ofPopStyle();
                     ofPopMatrix();
                     
                     ofPopStyle();
@@ -406,8 +519,8 @@ void Game::draw(){
                     endWinOverlay.draw(0,0, width, height);
                     ofPopStyle();
                     break;
-                    
-                case Game::GAME_OVER:
+                }
+                case Game::GAME_OVER:{
                     scenario.drawBackground();                    
                     scenario.drawForeground();
                     border.draw(0,0);
@@ -417,11 +530,12 @@ void Game::draw(){
                     endLoseOverlay.draw(0,0, width, height);
                     ofPopStyle();
                     break;
+                }
             }
                         
 
-            ofDrawBitmapString("TRANSITION_TO_START", 20, 30);
-            ofDrawBitmapString(ofToString((transitionToStartTimer.getDuration() - transitionToStartTimer.getDuration() * transitionToStartTimer.getProgress())), 20, 40);
+            //ofDrawBitmapString("TRANSITION_TO_START", 20, 30);
+            //ofDrawBitmapString(ofToString((transitionToStartTimer.getDuration() - transitionToStartTimer.getDuration() * transitionToStartTimer.getProgress())), 20, 40);
             break;        
             
     }
@@ -441,8 +555,8 @@ void Game::initStart() {
     player1.setup(box2d.getWorld(), getRandomSkin());
     player2.setup(box2d.getWorld(), getRandomSkin());    
     
-    player1.position.set((width / 8) * 2, gamePlayHeight - 30);
-    player2.position.set((width / 8) * 6, gamePlayHeight - 30);
+    player1.position.set((width / 8) * 2, gamePlayHeight - 40);
+    player2.position.set((width / 8) * 6, gamePlayHeight - 40);
     
     scenario.setState(Scenario::NORMAL);
     
@@ -456,7 +570,7 @@ void Game::initTransitionToPlaying() {
     
     boat.position.y = gamePlayHeight + 256;
     boatPositionTweener.clearTweens();
-    boatPositionTweener.setup(6.f, 1.5f, Elastic::easeOut);
+    boatPositionTweener.setup(4.f, 1.5f, Expo::easeOut);
     boatPositionTweener.addTween( &(boat.position.y) , - 256);
     boatPositionTweener.start();
     
@@ -572,6 +686,13 @@ void Game::initEnd() {
     gamePlayInterfaceTweener.setup(1.f, 0, Sine::easeOut);
     gamePlayInterfaceTweener.addTween(&gamePlayInterfaceOpacity, 1);
     gamePlayInterfaceTweener.start();
+    
+    winnerScale = 1;
+    winnerTweener.clearTweens();
+    winnerTweener.setup(1, 0, Sine::easeInOut, BACK_AND_FORTH);
+    winnerTweener.addTween(&winnerScale, 0.2);
+    winnerTweener.start();
+    
 }
 void Game::initTransitionToStart() {
     state = Game::TRANSITION_TO_START;

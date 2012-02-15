@@ -32,8 +32,8 @@ void testApp::update(){
 void testApp::draw(){
     game.draw();
     
-    ofPushStyle();
+    /*ofPushStyle();
     ofSetColor(255);
     ofDrawBitmapString(ofToString(ofGetFrameRate()), 20,20);
-    ofPopStyle();
+    ofPopStyle();*/
 }
